@@ -1,14 +1,15 @@
 
-from qc_gate.parsers.simple_file_parser import SimpleFileParser
-from qc_gate.handlers.qc_handlers import QCHandler
+from qc_gate.parsers.stats_json_parser import StatsJsonParser
+from qc_gate.handlers.yield_handler import YieldHandler
+from qc_gate.handlers.undetermined_percentage_handler import UndeterminedPercentageHandler
 
 
 def start():
 
-    parser = SimpleFileParser("test_file")
+    parser = StatsJsonParser("Stats.json")
 
-    s1 = QCHandler("row1")
-    s2 = QCHandler("row2")
+    s1 = YieldHandler()
+    s2 = UndeterminedPercentageHandler()
     subscribers = [s1, s2]
 
     parser.add_subscribers(subscribers)
