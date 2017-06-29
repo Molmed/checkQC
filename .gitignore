@@ -1,0 +1,9 @@
+*.swp
+*.pyc
+.idea/
+*.egg-info/
+build/
+dist/
+*.egg
+.python-env/
+.coverage
