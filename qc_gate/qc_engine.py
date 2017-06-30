@@ -8,6 +8,7 @@ class QCEngine(object):
         self.runfolder = runfolder
         self.handlers = []
         self.parsers = set()
+        self.exit_status = 0
 
     def create_handlers(self, handlers, runfolder):
         self.runfolder = runfolder
@@ -21,10 +22,11 @@ class QCEngine(object):
 
     def run(self):
         # TODO Conciser if it is a problem or not that run can have the same parser multiple times...
-        print(len(self.parsers))
         for parser in self.parsers:
             parser.run()
 
     def compile_reports(self):
         for handler in self.handlers:
             handler.report()
+            if handler.exit_status != 0:
+                self.exit_status = 1

@@ -24,10 +24,7 @@ class StatsJsonParser(object):
 
     def __init__(self, runfolder, *args, **kwargs):
         if not StatsJsonParser.instance:
-            print("Initiate a StatsJsonParser")
             StatsJsonParser.instance = StatsJsonParser.__StatsJsonParser(runfolder, *args, **kwargs)
-        else:
-            print("There is already a StatsJsonParser")
 
     def __getattr__(self, name):
         return getattr(self.instance, name)

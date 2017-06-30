@@ -1,5 +1,6 @@
 
 import yaml
+import sys
 
 from qc_gate.qc_engine import QCEngine
 
@@ -20,6 +21,8 @@ def start():
     qc_engine.initiate_parsers()
     qc_engine.run()
     qc_engine.compile_reports()
+
+    sys.exit(qc_engine.exit_status)
 
 
 if __name__ == '__main__':
