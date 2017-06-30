@@ -1,8 +1,6 @@
 
 import yaml
 
-from qc_gate.parsers.stats_json_parser import StatsJsonParser
-from qc_gate.handlers.qc_handler import QCHandler
 from qc_gate.qc_engine import QCEngine
 
 
@@ -22,14 +20,6 @@ def start():
     qc_engine.initiate_parsers()
     qc_engine.run()
     qc_engine.compile_reports()
-
-
-    #parser = StatsJsonParser("Stats.json")
-    #parser.add_subscribers(subscribers)
-    #parser.run()
-
-    #for subscriber in subscribers:
-    #    subscriber.report()
 
 
 if __name__ == '__main__':
