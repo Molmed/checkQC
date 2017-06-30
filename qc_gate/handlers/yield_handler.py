@@ -4,11 +4,13 @@ from math import pow
 from qc_gate.handlers.qc_handler import QCHandler, QCErrorWarning, QCErrorFatal
 from qc_gate.parsers.stats_json_parser import StatsJsonParser
 
+
 class YieldHandler(QCHandler):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, qc_config, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.conversion_results = None
+        self.qc_config = qc_config
 
     def parser(self, runfolder):
         return StatsJsonParser(runfolder)
@@ -24,9 +26,9 @@ class YieldHandler(QCHandler):
             lane_nbr = lane_dict["LaneNumber"]
             lane_yield = lane_dict["Yield"]
 
-            if lane_yield < 200*pow(10, 8):
+            if lane_yield < float(self.qc_config["error"]) * pow(10, 9):
                 yield QCErrorFatal("Yield was to low on lane {}, it was: {}".format(lane_nbr, lane_yield))
-            elif lane_yield < 400*pow(10, 8):
+            elif lane_yield < float(self.qc_config["warning"]) * pow(10, 9):
                 yield QCErrorWarning("Yield was to low on lane {}, it was: {}".format(lane_nbr, lane_yield))
             else:
                 continue

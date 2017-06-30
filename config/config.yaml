@@ -4,8 +4,8 @@ hiseq2500_rapid:
     paired_end:
       handlers:
         - name: YieldHandler
-          warning: 300 # Give lowest nbr in Gbp
-          error: 200 # Give lowest nbr in Gbp
+          warning: 30 # Give lowest nbr in Gbp
+          error: 20 # Give lowest nbr in Gbp
         - name: UndeterminedPercentageHandler
           warning: 0.01
           error: 0.02

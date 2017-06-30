@@ -27,6 +27,9 @@ class QCErrorFatal(object):
     def __str__(self):
         return "Fatal error: {}".format(self.message)
 
+    def __repr__(self):
+        return self.__str__()
+
 
 class QCErrorWarning(object):
     def __init__(self, msg):
@@ -34,6 +37,9 @@ class QCErrorWarning(object):
 
     def __str__(self):
         return "Warning: {}".format(self.message)
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class QCHandlerNotFoundException(Exception):
@@ -73,7 +79,14 @@ class QCHandler(Subscriber):
             print(element)
 
     @staticmethod
-    def create_subclass_instance(class_name):
+    def create_subclass_instance(class_name, class_config):
+        """
+        This method will look for a class with the given `class_name` in the `qc_gate.handlers` module.
+        If it can find a class with a matching name it will return a instance of that class.
+        :param class_name: the name of the class to instantiate
+        :param class_config: dictionary with configuration for the class
+        :return: A instance of the class represented by class_name
+        """
         pkgs = list(pkgutil.walk_packages('qc_gate.handlers'))
         for importer, modname, ispkg in pkgs:
             if "qc_gate.handlers" in modname:
@@ -81,7 +94,7 @@ class QCHandler(Subscriber):
         qc_handler_subclasses = list(QCHandler.__subclasses__())
         try:
             i = list(map(lambda clazz: clazz.__name__, qc_handler_subclasses)).index(class_name)
-            return qc_handler_subclasses[i]()
+            return qc_handler_subclasses[i](class_config)
         except ValueError:
             raise QCHandlerNotFoundException("Could not identify a QCHandler with name: {}".format(class_name))
 

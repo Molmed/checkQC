@@ -13,12 +13,15 @@ class StatsJsonParser(object):
             super().__init__(*args, **kwargs)
             # Update this to reflect the actual place where the file should like
             self.file_path = os.path.join(runfolder, "Stats.json")
+            self.has_executed = False
 
         def run(self):
-            with open(self.file_path, "r") as f:
-                data = json.load(f)
-                for key_value in data.items():
-                    self._send_to_subscribers(key_value)
+            if not self.has_executed:
+                with open(self.file_path, "r") as f:
+                    data = json.load(f)
+                    for key_value in data.items():
+                        self._send_to_subscribers(key_value)
+                self.has_executed = True
 
     instance = None
 
@@ -28,6 +31,4 @@ class StatsJsonParser(object):
 
     def __getattr__(self, name):
         return getattr(self.instance, name)
-
-
 

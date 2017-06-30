@@ -13,7 +13,7 @@ class QCEngine(object):
     def create_handlers(self, handlers, runfolder):
         self.runfolder = runfolder
         for clazz_config in handlers:
-            self.handlers.append(QCHandler.create_subclass_instance(clazz_config["name"]))
+            self.handlers.append(QCHandler.create_subclass_instance(clazz_config["name"], clazz_config))
 
     def initiate_parsers(self):
         for handler in self.handlers:
