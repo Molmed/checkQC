@@ -1,5 +1,8 @@
 
-class Subscriber:
+import importlib
+import pkgutil
+
+class Subscriber(object):
 
     def __init__(self):
         self.subscriber = self.subscribe()
@@ -25,12 +28,16 @@ class QCErrorFatal(object):
         return "Fatal error: {}".format(self.message)
 
 
-class QCErrorWarning(Exception):
+class QCErrorWarning(object):
     def __init__(self, msg):
         self.message = msg
 
     def __str__(self):
         return "Warning: {}".format(self.message)
+
+
+class QCHandlerNotFoundException(Exception):
+    pass
 
 
 class QCHandler(Subscriber):
@@ -52,4 +59,17 @@ class QCHandler(Subscriber):
             if isinstance(element, QCErrorFatal):
                 self.exit_status = 1
             print(element)
+
+    @staticmethod
+    def create_subclass_instance(class_name):
+        pkgs = list(pkgutil.walk_packages('qc_gate.handlers'))
+        for importer, modname, ispkg in pkgs:
+            if "qc_gate.handlers" in modname:
+                importlib.import_module(modname)
+        qc_handler_subclasses = list(QCHandler.__subclasses__())
+        try:
+            i = list(map(lambda clazz: clazz.__name__, qc_handler_subclasses)).index(class_name)
+            return qc_handler_subclasses[i]()
+        except ValueError:
+            raise QCHandlerNotFoundException("Could not identify a QCHandler with name: {}".format(class_name))
 

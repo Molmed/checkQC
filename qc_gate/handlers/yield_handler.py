@@ -1,8 +1,7 @@
 
 from math import pow
 
-from qc_gate.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
-
+from qc_gate.handlers.qc_handler import QCHandler, QCErrorWarning, QCErrorFatal
 
 class YieldHandler(QCHandler):
 
