@@ -73,7 +73,7 @@ class QCHandler(Subscriber):
             print(element)
 
     @staticmethod
-    def _create_subclass_instance(class_name):
+    def create_subclass_instance(class_name):
         pkgs = list(pkgutil.walk_packages('qc_gate.handlers'))
         for importer, modname, ispkg in pkgs:
             if "qc_gate.handlers" in modname:
