@@ -21,7 +21,6 @@ class QCEngine(object):
             self.parsers.add(parser)
 
     def run(self):
-        # TODO Conciser if it is a problem or not that run can have the same parser multiple times...
         for parser in self.parsers:
             parser.run()
 
