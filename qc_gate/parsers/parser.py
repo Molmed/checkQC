@@ -6,7 +6,10 @@ class Parser(object):
         self.subscribers = []
 
     def add_subscribers(self, new_subscribers):
-        self.subscribers = self.subscribers + new_subscribers
+        if isinstance(new_subscribers, list):
+            self.subscribers = self.subscribers + new_subscribers
+        else:
+            self.subscribers.append(new_subscribers)
 
     def _send_to_subscribers(self, value):
         for subscriber in self.subscribers:

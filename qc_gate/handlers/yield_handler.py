@@ -2,12 +2,16 @@
 from math import pow
 
 from qc_gate.handlers.qc_handler import QCHandler, QCErrorWarning, QCErrorFatal
+from qc_gate.parsers.stats_json_parser import StatsJsonParser
 
 class YieldHandler(QCHandler):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.conversion_results = None
+
+    def parser(self, runfolder):
+        return StatsJsonParser(runfolder)
 
     def collect(self, signal):
         key, value = signal

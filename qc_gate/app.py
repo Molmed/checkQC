@@ -3,6 +3,7 @@ import yaml
 
 from qc_gate.parsers.stats_json_parser import StatsJsonParser
 from qc_gate.handlers.qc_handler import QCHandler
+from qc_gate.qc_engine import QCEngine
 
 
 def start():
@@ -16,17 +17,19 @@ def start():
 
     handler_list = config[machine_type][read_length][run_mode]["handlers"]
 
-    subscribers = []
+    qc_engine = QCEngine(runfolder='.')
+    qc_engine.create_handlers(handler_list, runfolder='.')
+    qc_engine.initiate_parsers()
+    qc_engine.run()
+    qc_engine.compile_reports()
 
-    for clazz_config in handler_list:
-        subscribers.append(QCHandler.create_subclass_instance(clazz_config["name"]))
 
-    parser = StatsJsonParser("Stats.json")
-    parser.add_subscribers(subscribers)
-    parser.run()
+    #parser = StatsJsonParser("Stats.json")
+    #parser.add_subscribers(subscribers)
+    #parser.run()
 
-    for subscriber in subscribers:
-        subscriber.report()
+    #for subscriber in subscribers:
+    #    subscriber.report()
 
 
 if __name__ == '__main__':

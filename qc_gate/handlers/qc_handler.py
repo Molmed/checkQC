@@ -42,9 +42,21 @@ class QCHandlerNotFoundException(Exception):
 
 class QCHandler(Subscriber):
 
+    handlers = []
+    parsers = set()
+    runfolder = None
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.exit_status = 0
+
+    def initiate_parser(self, runfolder):
+        parser = self.parser(runfolder)
+        parser.add_subscribers(self)
+        return parser
+
+    def parser(self, runfolder):
+        raise NotImplementedError
 
     def collect(self, value):
         raise NotImplementedError
@@ -61,7 +73,7 @@ class QCHandler(Subscriber):
             print(element)
 
     @staticmethod
-    def create_subclass_instance(class_name):
+    def _create_subclass_instance(class_name):
         pkgs = list(pkgutil.walk_packages('qc_gate.handlers'))
         for importer, modname, ispkg in pkgs:
             if "qc_gate.handlers" in modname:

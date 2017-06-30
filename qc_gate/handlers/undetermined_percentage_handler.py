@@ -2,13 +2,16 @@
 from math import pow
 
 from qc_gate.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
-
+from qc_gate.parsers.stats_json_parser import StatsJsonParser
 
 class UndeterminedPercentageHandler(QCHandler):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.conversion_results = None
+
+    def parser(self, runfolder):
+        return StatsJsonParser(runfolder)
 
     def collect(self, signal):
         key, value = signal

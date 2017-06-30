@@ -1,5 +1,6 @@
 
 import json
+import os
 
 from qc_gate.parsers.parser import Parser
 
@@ -8,9 +9,10 @@ class StatsJsonParser(object):
 
     class __StatsJsonParser(Parser):
 
-        def __init__(self, file_path, *args, **kwargs):
+        def __init__(self, runfolder, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.file_path = file_path
+            # Update this to reflect the actual place where the file should like
+            self.file_path = os.path.join(runfolder, "Stats.json")
 
         def run(self):
             with open(self.file_path, "r") as f:
@@ -20,9 +22,12 @@ class StatsJsonParser(object):
 
     instance = None
 
-    def __init__(self, file_path, *args, **kwargs):
+    def __init__(self, runfolder, *args, **kwargs):
         if not StatsJsonParser.instance:
-            StatsJsonParser.instance = StatsJsonParser.__StatsJsonParser(file_path, *args, **kwargs)
+            print("Initiate a StatsJsonParser")
+            StatsJsonParser.instance = StatsJsonParser.__StatsJsonParser(runfolder, *args, **kwargs)
+        else:
+            print("There is already a StatsJsonParser")
 
     def __getattr__(self, name):
         return getattr(self.instance, name)
