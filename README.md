@@ -1,6 +1,7 @@
 checkQC
 =======
 [![Build Status](https://travis-ci.org/Molmed/checkQC.svg?branch=master)](https://travis-ci.org/Molmed/checkQC)
+[![codecov](https://codecov.io/gh/Molmed/checkQC/branch/master/graph/badge.svg)](https://codecov.io/gh/Molmed/checkQC)
 
 `checkQC` is a program designed to check a set of quality criteria against an Illumina runfolder. It has been designed
 to be modular, and exactly which "qc handlers" are executed with which parameters for a specific run type (i.e. machine
