@@ -1,0 +1,12 @@
+language: python
+python:
+  - "3.6"
+
+install:
+  - pip install -e . -r ./requirements/dev
+
+script:
+  - pytest tests/
+
+notifications:
+    email: false
