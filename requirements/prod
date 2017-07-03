@@ -1,1 +1,2 @@
 PyYAML==3.12
+git+https://github.com/Illumina/interop.git@1.0.25#egg=interop
