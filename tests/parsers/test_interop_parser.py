@@ -1,4 +1,6 @@
 
+import os
+
 import unittest
 
 from checkQC.parsers.interop_parser import InteropParser
@@ -20,7 +22,9 @@ class TestInteropParser(unittest.TestCase):
         def send(self, value):
             self.subscriber.send(value)
 
-    interop_parser = InteropParser(runfolder="MiSeqDemo")
+    runfolder = os.path.join(os.path.dirname(__file__), "..", "resources",
+                             "MiSeqDemo")
+    interop_parser = InteropParser(runfolder=runfolder)
     subscriber = Receiver()
     interop_parser.add_subscribers(subscriber)
     interop_parser.run()

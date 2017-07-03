@@ -1,2 +1,2 @@
 PyYAML==3.12
--f https://github.com/Illumina/interop/releases/tag/v1.0.25 interop
+https://github.com/Illumina/interop/releases/download/v1.0.25/interop-1.0.25-cp36-cp36m-manylinux1_x86_64.whl
