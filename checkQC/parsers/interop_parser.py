@@ -1,0 +1,53 @@
+
+from checkQC.parsers.parser import Parser
+
+from interop import py_interop_run_metrics, py_interop_run, py_interop_summary
+
+
+class InteropParser(object):
+
+    class __InteropParser(Parser):
+
+        def __init__(self, runfolder, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            # Update this to reflect the actual place where the file should like
+            self.runfolder = runfolder
+
+        def run(self):
+
+            run_metrics = py_interop_run_metrics.run_metrics()
+            run_metrics.run_info()
+
+            valid_to_load = py_interop_run.uchar_vector(py_interop_run.MetricCount, 0)
+            py_interop_run_metrics.list_summary_metrics_to_load(valid_to_load)
+            run_metrics.read(self.runfolder, valid_to_load)
+
+            summary = py_interop_summary.run_summary()
+            py_interop_summary.summarize_run_metrics(run_metrics, summary)
+
+            lanes = summary.lane_count()
+
+            for lane in range(lanes):
+                for read_nbr in range(summary.size()):
+                    read = summary.at(read_nbr).at(lane)
+                    error_rate = read.error_rate().mean()
+                    self._send_to_subscribers({"error_rate":
+                                                   {"lane": lane+1, "read": read_nbr+1, "error_rate": error_rate}})
+
+        def __eq__(self, other):
+            if isinstance(other, self.__class__) and self.file_path == other.runfolder:
+                return True
+            else:
+                return False
+
+        def __hash__(self):
+            return hash(self.runfolder)
+
+    instance = None
+
+    def __init__(self, runfolder, *args, **kwargs):
+        if not InteropParser.instance:
+            InteropParser.instance = InteropParser.__InteropParser(runfolder, *args, **kwargs)
+
+    def __getattr__(self, name):
+        return getattr(self.instance, name)
