@@ -15,11 +15,10 @@ class StatsJsonParser(object):
             self.file_path = os.path.join(runfolder, "Stats.json")
 
         def run(self):
-            if not self.has_executed:
-                with open(self.file_path, "r") as f:
-                    data = json.load(f)
-                    for key_value in data.items():
-                        self._send_to_subscribers(key_value)
+            with open(self.file_path, "r") as f:
+                data = json.load(f)
+                for key_value in data.items():
+                    self._send_to_subscribers(key_value)
 
         def __eq__(self, other):
             if isinstance(other, self.__class__) and self.file_path == other.file_path:

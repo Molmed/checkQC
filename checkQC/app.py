@@ -16,8 +16,9 @@ def start():
 
     handler_list = config[machine_type][read_length][run_mode]["handlers"]
 
-    qc_engine = QCEngine(runfolder='.')
-    qc_engine.create_handlers(handler_list, runfolder='.')
+    runfolder = "./tests/resources/150418_SN7001335_0149_AH32CYBCXX"
+    qc_engine = QCEngine(runfolder=runfolder)
+    qc_engine.create_handlers(handler_list, runfolder=runfolder)
     qc_engine.initiate_parsers()
     qc_engine.run()
     qc_engine.compile_reports()

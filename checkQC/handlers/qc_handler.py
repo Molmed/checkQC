@@ -87,9 +87,9 @@ class QCHandler(Subscriber):
         :param class_config: dictionary with configuration for the class
         :return: A instance of the class represented by class_name
         """
-        pkgs = list(pkgutil.walk_packages('qc_gate.handlers'))
+        pkgs = list(pkgutil.walk_packages('checkQC.handlers'))
         for importer, modname, ispkg in pkgs:
-            if "qc_gate.handlers" in modname:
+            if "checkQC.handlers" in modname:
                 importlib.import_module(modname)
         qc_handler_subclasses = list(QCHandler.__subclasses__())
         try:
