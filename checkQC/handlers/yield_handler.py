@@ -1,8 +1,8 @@
 
 from math import pow
 
-from qc_gate.handlers.qc_handler import QCHandler, QCErrorWarning, QCErrorFatal
-from qc_gate.parsers.stats_json_parser import StatsJsonParser
+from checkQC.handlers.qc_handler import QCHandler, QCErrorWarning, QCErrorFatal
+from checkQC.parsers.stats_json_parser import StatsJsonParser
 
 
 class YieldHandler(QCHandler):

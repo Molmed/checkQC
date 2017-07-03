@@ -1,7 +1,7 @@
 import unittest
 
-from qc_gate.handlers.yield_handler import YieldHandler
-from qc_gate.handlers.qc_handler import QCErrorFatal, QCErrorWarning
+from checkQC.handlers.yield_handler import YieldHandler
+from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
 
 from tests.test_utils import get_stats_json
 

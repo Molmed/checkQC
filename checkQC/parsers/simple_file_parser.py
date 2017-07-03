@@ -1,5 +1,5 @@
 
-from qc_gate.parsers.parser import Parser
+from checkQC.parsers.parser import Parser
 
 
 class SimpleFileParser(Parser):

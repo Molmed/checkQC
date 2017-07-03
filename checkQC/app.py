@@ -2,7 +2,7 @@
 import yaml
 import sys
 
-from qc_gate.qc_engine import QCEngine
+from checkQC.qc_engine import QCEngine
 
 
 def start():

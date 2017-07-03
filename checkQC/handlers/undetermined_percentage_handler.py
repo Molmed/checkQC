@@ -1,6 +1,6 @@
 
-from qc_gate.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
-from qc_gate.parsers.stats_json_parser import StatsJsonParser
+from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
+from checkQC.parsers.stats_json_parser import StatsJsonParser
 
 
 class UndeterminedPercentageHandler(QCHandler):
