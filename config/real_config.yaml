@@ -1,0 +1,53 @@
+
+hiseq2500_v4:
+  50-70:
+    handlers:
+      - name: UndeterminedPercentageHandler
+        warning: unknown
+        error: 10
+      - name: PoolingEvennessHandler
+        error: 50 # Each sample should have  >= x % of the clusters divded by the number of samples in the pool
+        warning: unknown
+      - name: ClusterPassFilterHandler
+        error: 180
+        warning: unknown
+      - name: Q30YieldHander
+        warning: unknown # Give lowest nbr in Gbp
+        error: 7 # Give lowest nbr in Gbp
+      - name: ErrorRateHAndler
+        warning: unknown
+        error: 1.5
+  100-110:
+    handlers:
+      - name: UndeterminedPercentageHandler
+        warning: unknown
+        error: 10
+      - name: PoolingEvennessHandler
+        error: 50 # Each sample should have  >= x % of the clusters divded by the number of samples in the pool
+        warning: unknown
+      - name: ClusterPassFilterHandler
+        error: 180
+        warning: unknown
+      - name: Q30YieldHander
+        warning: unknown # Give lowest nbr in Gbp
+        error: 14 # Give lowest nbr in Gbp
+      - name: ErrorRateHAndler
+        warning: unknown
+        error: 2
+  120-130:
+    handlers:
+      - name: UndeterminedPercentageHandler
+        warning: unknown
+        error: 10
+      - name: PoolingEvennessHandler
+        error: 50 # Each sample should have  >= x % of the clusters divded by the number of samples in the pool
+        warning: unknown
+      - name: ClusterPassFilterHandler
+        error: 180
+        warning: unknown
+      - name: Q30YieldHander
+        warning: unknown # Give lowest nbr in Gbp
+        error: 18 # Give lowest nbr in Gbp
+      - name: ErrorRateHAndler
+        warning: unknown
+        error: 2
