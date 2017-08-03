@@ -40,10 +40,6 @@ class QCErrorWarning(object):
         return self.__str__()
 
 
-class QCHandlerNotFoundException(Exception):
-    pass
-
-
 class QCHandler(Subscriber):
 
     handlers = []
@@ -52,7 +48,10 @@ class QCHandler(Subscriber):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.exit_status = 0
+        self._exit_status = 0
+
+    def exit_status(self):
+        return self._exit_status
 
     def parser(self):
         raise NotImplementedError("A parser needs to return the class of the parser it needs!")
@@ -68,6 +67,7 @@ class QCHandler(Subscriber):
 
         for element in errors_and_warnings:
             if isinstance(element, QCErrorFatal):
-                self.exit_status = 1
+                self._exit_status = 1
+            # TODO Switch to proper logging!
             print(element)
 
