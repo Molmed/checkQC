@@ -51,11 +51,11 @@ class MyQCHandler(QCHandler):
 ```
 
 The `parser` method determines which type of files in the runfolder that this handler wants its information from. If
-you e.g. want to make it pick up information from the `Stats.json` file, make it instantiate a `StatsJsonParser`, i.e.
+you e.g. want to make it pick up information from the `Stats.json` file, give it a `StatsJsonParser` class, i.e.
 
 ```
     def parser(self, runfolder):
-        return StatsJsonParser(runfolder)
+        return StatsJsonParser
 ```
 
 Once the program has set up and begins to execute, the parsers will send information to all the handlers which are
@@ -103,7 +103,7 @@ class MyQCHandler(QCHandler):
         self.qc_config = qc_config
 
     def parser(self, runfolder):
-        return StatsJsonParser(runfolder)
+        return StatsJsonParser
 
     def collect(self, signal):
         key, value = signal
