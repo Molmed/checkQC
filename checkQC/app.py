@@ -1,22 +1,23 @@
 
-import yaml
 import sys
 
 from checkQC.qc_engine import QCEngine
+from checkQC.config import get_config
+from checkQC.run_type_recognizer import RunTypeRecognizer
 
 
 def start():
 
-    with open("config/config.yaml") as stream:
-        config = yaml.load(stream)
+    config = get_config("config/config.yaml")
 
-    machine_type = "hiseq2500_rapid"
-    read_length = '100-120'
-    run_mode = "paired_end"
+    runfolder = "./tests/resources/MiSeqDemo"
 
-    handler_config = config[machine_type][read_length][run_mode]["handlers"]
+    run_type_recognizer = RunTypeRecognizer(config=config, runfolder=runfolder)
+    instrument_type = run_type_recognizer.instrument_type()
+    run_mode = run_type_recognizer.single_or_paired_end()
+    read_length = run_type_recognizer.read_length()
 
-    runfolder = "./tests/resources/150418_SN7001335_0149_AH32CYBCXX"
+    handler_config = config[instrument_type][read_length][run_mode]["handlers"]
 
     qc_engine = QCEngine(runfolder=runfolder, handler_config=handler_config)
     qc_engine.run()
