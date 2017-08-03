@@ -14,15 +14,12 @@ def start():
     read_length = '100-120'
     run_mode = "paired_end"
 
-    handler_list = config[machine_type][read_length][run_mode]["handlers"]
+    handler_config = config[machine_type][read_length][run_mode]["handlers"]
 
     runfolder = "./tests/resources/150418_SN7001335_0149_AH32CYBCXX"
-    qc_engine = QCEngine(runfolder=runfolder)
-    qc_engine.create_handlers(handler_list, runfolder=runfolder)
-    qc_engine.initiate_parsers()
-    qc_engine.run()
-    qc_engine.compile_reports()
 
+    qc_engine = QCEngine(runfolder=runfolder, handler_config=handler_config)
+    qc_engine.run()
     sys.exit(qc_engine.exit_status)
 
 

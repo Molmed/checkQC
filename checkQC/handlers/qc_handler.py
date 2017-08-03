@@ -57,13 +57,8 @@ class QCHandler(Subscriber):
         super().__init__(*args, **kwargs)
         self.exit_status = 0
 
-    def initiate_parser(self, runfolder):
-        parser = self.parser(runfolder)
-        parser.add_subscribers(self)
-        return parser
-
-    def parser(self, runfolder):
-        raise NotImplementedError
+    def parser(self):
+        raise NotImplementedError("A parser needs to return the class of the parser it needs!")
 
     def collect(self, value):
         raise NotImplementedError
