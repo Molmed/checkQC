@@ -1,3 +1,12 @@
+# First letter in instrument name is indicative of model
+# i.e. SN7001335 is a HiSeq3500 since its name begins with
+# SN
+instrument_type_mappings:
+  SN: hiseq2000
+  M: miseq
+  D: hiseq2500
+  ST: hiseqx
+
 
 hiseq2500_rapid:
   100-120:
