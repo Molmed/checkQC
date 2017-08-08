@@ -1,6 +1,4 @@
 
-import importlib
-import pkgutil
 
 class Subscriber(object):
 
@@ -42,10 +40,6 @@ class QCErrorWarning(object):
         return self.__str__()
 
 
-class QCHandlerNotFoundException(Exception):
-    pass
-
-
 class QCHandler(Subscriber):
 
     handlers = []
@@ -54,15 +48,13 @@ class QCHandler(Subscriber):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.exit_status = 0
+        self._exit_status = 0
 
-    def initiate_parser(self, runfolder):
-        parser = self.parser(runfolder)
-        parser.add_subscribers(self)
-        return parser
+    def exit_status(self):
+        return self._exit_status
 
-    def parser(self, runfolder):
-        raise NotImplementedError
+    def parser(self):
+        raise NotImplementedError("A parser needs to return the class of the parser it needs!")
 
     def collect(self, value):
         raise NotImplementedError
@@ -75,26 +67,7 @@ class QCHandler(Subscriber):
 
         for element in errors_and_warnings:
             if isinstance(element, QCErrorFatal):
-                self.exit_status = 1
+                self._exit_status = 1
+            # TODO Switch to proper logging!
             print(element)
-
-    @staticmethod
-    def create_subclass_instance(class_name, class_config):
-        """
-        This method will look for a class with the given `class_name` in the `qc_gate.handlers` module.
-        If it can find a class with a matching name it will return a instance of that class.
-        :param class_name: the name of the class to instantiate
-        :param class_config: dictionary with configuration for the class
-        :return: A instance of the class represented by class_name
-        """
-        pkgs = list(pkgutil.walk_packages('checkQC.handlers'))
-        for importer, modname, ispkg in pkgs:
-            if "checkQC.handlers" in modname:
-                importlib.import_module(modname)
-        qc_handler_subclasses = list(QCHandler.__subclasses__())
-        try:
-            i = list(map(lambda clazz: clazz.__name__, qc_handler_subclasses)).index(class_name)
-            return qc_handler_subclasses[i](class_config)
-        except ValueError:
-            raise QCHandlerNotFoundException("Could not identify a QCHandler with name: {}".format(class_name))
 

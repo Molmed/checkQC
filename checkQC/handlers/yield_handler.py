@@ -12,8 +12,8 @@ class YieldHandler(QCHandler):
         self.conversion_results = None
         self.qc_config = qc_config
 
-    def parser(self, runfolder):
-        return StatsJsonParser(runfolder)
+    def parser(self):
+        return StatsJsonParser
 
     def collect(self, signal):
         key, value = signal
