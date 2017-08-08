@@ -1,22 +1,48 @@
 
-import yaml
 import sys
+import os
+
+import click
 
 from checkQC.qc_engine import QCEngine
+from checkQC.config import get_config
+from checkQC.run_type_recognizer import RunTypeRecognizer
 
+from pkg_resources import Requirement, resource_filename
 
-def start():
+@click.command("checkQC")
+@click.option("--config_file", help="Path to the checkQC configuration file", type=click.Path())
+@click.argument('runfolder', type=click.Path())
+def start(config_file, runfolder):
+    """
+    checkQC is a command line utility designed to quickly gather and assess quality control metrics from a
+    Illumina sequencing run. It is highly customizable and which quality controls modules should be run
+    for a particular run type should be specified in the provided configuration file.
+    """
 
-    with open("config/config.yaml") as stream:
-        config = yaml.load(stream)
+    try:
+        if not config_file:
+            config_file = resource_filename(Requirement.parse('checkQC'), 'checkQC/default_config/config.yaml')
+            print("No config file specified, using default config from {}.".format(config_file))
+            config = get_config(config_file)
+    except FileNotFoundError as e:
+        print("Could not find config file: {}".format(e))
+        sys.exit(1)
 
-    machine_type = "hiseq2500_rapid"
-    read_length = '100-120'
-    run_mode = "paired_end"
+    run_type_recognizer = RunTypeRecognizer(config=config, runfolder=runfolder)
+    instrument_type = run_type_recognizer.instrument_type()
+    run_mode = run_type_recognizer.single_or_paired_end()
+    read_length = run_type_recognizer.read_length()
 
-    handler_config = config[machine_type][read_length][run_mode]["handlers"]
-
-    runfolder = "./tests/resources/150418_SN7001335_0149_AH32CYBCXX"
+    try:
+        handler_config = config[instrument_type][read_length][run_mode]["handlers"]
+    except KeyError:
+        print("Could not find a config entry for instrument '{}' "
+              "with read length '{}' and mode '{}'. Please check the provided config "
+              "file ".format(instrument_type,
+                             read_length,
+                             run_mode))
+        sys.exit(1)
 
     qc_engine = QCEngine(runfolder=runfolder, handler_config=handler_config)
     qc_engine.run()
