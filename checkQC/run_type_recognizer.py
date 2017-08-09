@@ -55,7 +55,9 @@ class RunTypeRecognizer(object):
         read_lengths = []
         for read in reads:
             if not read['@IsIndexedRead'] == 'Y':
-                #TODO unsure about the -1 here...
+                # The -1 is necessary for the number of cycles to correspond to the
+                # way it is specified in the docs. I.e. read length 300 in the docs
+                # means 301 cycles were run...
                 read_lengths.append(int(read['@NumCycles']) - 1)
 
         if len(read_lengths) < 1:
