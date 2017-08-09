@@ -23,3 +23,8 @@ class TestRunTypeRecognizer(TestCase):
         expected = "300-300"
         actual = self.runtype_recognizer.read_length()
         self.assertEqual(expected, actual)
+
+    def test_find_reagent_version(self):
+        expected = "v3"
+        actual = self.runtype_recognizer.reagent_version()
+        self.assertEqual(expected, actual)

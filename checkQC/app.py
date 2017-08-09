@@ -31,14 +31,19 @@ def start(config_file, runfolder):
 
     run_type_recognizer = RunTypeRecognizer(config=config, runfolder=runfolder)
     instrument_type = run_type_recognizer.instrument_type()
-    read_length = run_type_recognizer.read_length()
+    reagent_version = run_type_recognizer.reagent_version()
+
+    # TODO For now assume symmetric read lengths
+    read_length = int(run_type_recognizer.read_length().split("-")[0])
+
+    instrument_and_reagent_type = "_".join([instrument_type, reagent_version])
 
     try:
-        handler_config = config[instrument_type][read_length]["handlers"]
+        handler_config = config[instrument_and_reagent_type][read_length]["handlers"]
     except KeyError:
         print("Could not find a config entry for instrument '{}' "
               "with read length '{}'. Please check the provided config "
-              "file ".format(instrument_type,
+              "file ".format(instrument_and_reagent_type,
                              read_length))
         sys.exit(1)
 

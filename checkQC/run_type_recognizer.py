@@ -29,6 +29,28 @@ class RunTypeRecognizer(object):
         with open(os.path.join(self._runfolder, "RunInfo.xml")) as f:
             self._run_info = xmltodict.parse(f.read())
 
+        with open(self._find_run_parameters_xml()) as f:
+            self._run_parameters = xmltodict.parse(f.read())
+
+    def _find_run_parameters_xml(self):
+        first_option = os.path.join(self._runfolder, "RunParameters.xml")
+        second_option = os.path.join(self._runfolder, "runParameters.xml")
+        if os.path.isfile(first_option):
+            return first_option
+        elif os.path.isfile(second_option):
+            return second_option
+        else:
+            raise FileNotFoundError("Could not find [R|r]arameters.xml for runfolder {}".format(self._runfolder))
+
+    def reagent_version(self):
+        """
+        Find the reagent version used for this run
+        :return: reagent version of format v[number] e.g. v3
+        """
+        reagent_version = self._run_parameters["RunParameters"]["ReagentKitVersion"]
+        return reagent_version.replace("Version", "v")
+
+
     def instrument_type(self):
         """
         This will look in the RunInfo.xml and determine the run type, based on the
