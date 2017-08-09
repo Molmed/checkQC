@@ -45,21 +45,6 @@ class RunTypeRecognizer(object):
 
         raise InstrumentTypeUnknown("Did not recognize instrument type of: {}".format(instrument_name))
 
-    def single_or_paired_end(self):
-        """
-        Attempts to determine if the run has been run as single or paired end run.
-        :return: "single_end" or "paired_end"
-        :raises: RunModeUnknown
-        """
-        reads = self._run_info["RunInfo"]["Run"]["Reads"]["Read"]
-        nbr_of_reads = len(reads)
-        if nbr_of_reads == 1:
-            return "single_end"
-        elif nbr_of_reads == 2:
-            return "paired_end"
-        else:
-            raise RunModeUnknown("Did not recognize {} number of reads as a valid run type".format(nbr_of_reads))
-
     def read_length(self):
         """
         Gathers information on the read length of the run.

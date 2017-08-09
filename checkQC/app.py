@@ -14,10 +14,9 @@ def start():
 
     run_type_recognizer = RunTypeRecognizer(config=config, runfolder=runfolder)
     instrument_type = run_type_recognizer.instrument_type()
-    run_mode = run_type_recognizer.single_or_paired_end()
     read_length = run_type_recognizer.read_length()
 
-    handler_config = config[instrument_type][read_length][run_mode]["handlers"]
+    handler_config = config[instrument_type][read_length]["handlers"]
 
     qc_engine = QCEngine(runfolder=runfolder, handler_config=handler_config)
     qc_engine.run()

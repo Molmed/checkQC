@@ -19,11 +19,6 @@ class TestRunTypeRecognizer(TestCase):
         actual = self.runtype_recognizer.instrument_type()
         self.assertEqual(expected, actual)
 
-    def test_single_or_paired_end(self):
-        expected = "paired_end"
-        actual = self.runtype_recognizer.single_or_paired_end()
-        self.assertEqual(expected, actual)
-
     def test_read_length(self):
         expected = "300-300"
         actual = self.runtype_recognizer.read_length()
