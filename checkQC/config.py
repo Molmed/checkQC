@@ -4,15 +4,14 @@ from pkg_resources import Requirement, resource_filename
 import yaml
 
 
-def get_config(config_file):
+def get_config(config_path):
     try:
-        if not config_file:
-            config_file = resource_filename(Requirement.parse('checkQC'), 'checkQC/default_config/config.yaml')
-            print("No config file specified, using default config from {}.".format(config_file))
+        if not config_path:
+            config_path = resource_filename(Requirement.parse('checkQC'), 'checkQC/default_config/config.yaml')
+            print("No config file specified, using default config from {}.".format(config_path))
 
-        with open(config_file) as stream:
-            config = yaml.load(stream)
-        return config
+        with open(config_path) as stream:
+            return yaml.load(stream)
     except FileNotFoundError as e:
         print("Could not find config file: {}".format(e))
         raise e
