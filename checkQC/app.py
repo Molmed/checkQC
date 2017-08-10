@@ -1,14 +1,12 @@
 
 import sys
-import os
 
 import click
 
 from checkQC.qc_engine import QCEngine
-from checkQC.config import get_config
+from checkQC.config import get_config, get_handler_config
 from checkQC.run_type_recognizer import RunTypeRecognizer
 
-from pkg_resources import Requirement, resource_filename
 
 @click.command("checkQC")
 @click.option("--config_file", help="Path to the checkQC configuration file", type=click.Path())
@@ -19,38 +17,43 @@ def start(config_file, runfolder):
     Illumina sequencing run. It is highly customizable and which quality controls modules should be run
     for a particular run type should be specified in the provided configuration file.
     """
+    # -----------------------------------
+    # This is the application entry point
+    # -----------------------------------
 
-    try:
-        if not config_file:
-            config_file = resource_filename(Requirement.parse('checkQC'), 'checkQC/default_config/config.yaml')
-            print("No config file specified, using default config from {}.".format(config_file))
-            config = get_config(config_file)
-    except FileNotFoundError as e:
-        print("Could not find config file: {}".format(e))
-        sys.exit(1)
+    app = App(config_file, runfolder)
+    app.run()
+    sys.exit(app.exit_status)
 
-    run_type_recognizer = RunTypeRecognizer(config=config, runfolder=runfolder)
-    instrument_type = run_type_recognizer.instrument_type()
-    reagent_version = run_type_recognizer.reagent_version()
 
-    # TODO For now assume symmetric read lengths
-    read_length = int(run_type_recognizer.read_length().split("-")[0])
+class App(object):
 
-    instrument_and_reagent_type = "_".join([instrument_type, reagent_version])
+    def __init__(self, runfolder, config_file=None):
+        self._runfolder = runfolder
+        self._config_file = config_file
+        self.exit_status = 0
 
-    try:
-        handler_config = config[instrument_and_reagent_type][read_length]["handlers"]
-    except KeyError:
-        print("Could not find a config entry for instrument '{}' "
-              "with read length '{}'. Please check the provided config "
-              "file ".format(instrument_and_reagent_type,
-                             read_length))
-        sys.exit(1)
+    def run(self):
+        try:
+            config = get_config(self._config_file)
 
-    qc_engine = QCEngine(runfolder=runfolder, handler_config=handler_config)
-    qc_engine.run()
-    sys.exit(qc_engine.exit_status)
+            run_type_recognizer = RunTypeRecognizer(config=config, runfolder=self._runfolder)
+            instrument_type = run_type_recognizer.instrument_type()
+            reagent_version = run_type_recognizer.reagent_version()
 
+            # TODO For now assume symmetric read lengths
+            read_length = int(run_type_recognizer.read_length().split("-")[0])
+
+            instrument_and_reagent_type = "_".join([instrument_type, reagent_version])
+
+            handler_config = get_handler_config(config, instrument_and_reagent_type, read_length)
+            qc_engine = QCEngine(runfolder=self._runfolder, handler_config=handler_config)
+            qc_engine.run()
+            self.exit_status = qc_engine.exit_status
+
+        except Exception as e:
+            print("Got an exception when running checkQC: {}".format(e))
+            self.exit_status = 1
 
 if __name__ == '__main__':
     start()
