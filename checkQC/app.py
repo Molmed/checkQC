@@ -8,7 +8,7 @@ from checkQC.config import get_config, get_handler_config
 from checkQC.run_type_recognizer import RunTypeRecognizer
 
 
-@click.command("checkQC")
+@click.command("checkqc")
 @click.option("--config_file", help="Path to the checkQC configuration file", type=click.Path())
 @click.argument('runfolder', type=click.Path())
 def start(config_file, runfolder):
