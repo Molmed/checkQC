@@ -12,6 +12,6 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     entry_points={
-        'console_scripts': ['checkQC = checkQC.app:start']
+        'console_scripts': ['checkqc = checkQC.app:start']
     },
 )

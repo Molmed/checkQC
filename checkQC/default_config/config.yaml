@@ -1,0 +1,19 @@
+# First letter in instrument name is indicative of model
+# i.e. SN7001335 is a HiSeq3500 since its name begins with
+# SN
+instrument_type_mappings:
+  SN: hiseq2000
+  M: miseq
+  D: hiseq2500
+  ST: hiseqx
+
+
+miseq_v3:
+  300:
+    handlers:
+      - name: YieldHandler
+        warning: 300 # Give lowest nbr in Gbp
+        error: 200 # Give lowest nbr in Gbp
+      - name: UndeterminedPercentageHandler
+        warning: 0.01
+        error: 0.02

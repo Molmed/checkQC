@@ -1,27 +1,54 @@
 
 import sys
 
+import click
+
 from checkQC.qc_engine import QCEngine
-from checkQC.config import get_config
+from checkQC.config import get_config, get_handler_config
 from checkQC.run_type_recognizer import RunTypeRecognizer
 
 
-def start():
+@click.command("checkqc")
+@click.option("--config_file", help="Path to the checkQC configuration file", type=click.Path())
+@click.argument('runfolder', type=click.Path())
+def start(config_file, runfolder):
+    """
+    checkQC is a command line utility designed to quickly gather and assess quality control metrics from a
+    Illumina sequencing run. It is highly customizable and which quality controls modules should be run
+    for a particular run type should be specified in the provided configuration file.
+    """
+    # -----------------------------------
+    # This is the application entry point
+    # -----------------------------------
 
-    config = get_config("config/config.yaml")
+    app = App(runfolder, config_file)
+    app.run()
+    sys.exit(app.exit_status)
 
-    runfolder = "./tests/resources/MiSeqDemo"
 
-    run_type_recognizer = RunTypeRecognizer(config=config, runfolder=runfolder)
-    instrument_type = run_type_recognizer.instrument_type()
-    read_length = run_type_recognizer.read_length()
+class App(object):
 
-    handler_config = config[instrument_type][read_length]["handlers"]
+    def __init__(self, runfolder, config_file=None):
+        self._runfolder = runfolder
+        self._config_file = config_file
+        self.exit_status = 0
 
-    qc_engine = QCEngine(runfolder=runfolder, handler_config=handler_config)
-    qc_engine.run()
-    sys.exit(qc_engine.exit_status)
+    def run(self):
+        config = get_config(self._config_file)
 
+        run_type_recognizer = RunTypeRecognizer(config=config, runfolder=self._runfolder)
+        instrument_type = run_type_recognizer.instrument_type()
+        reagent_version = run_type_recognizer.reagent_version()
+
+        # TODO For now assume symmetric read lengths
+        read_length = int(run_type_recognizer.read_length().split("-")[0])
+
+        instrument_and_reagent_type = "_".join([instrument_type, reagent_version])
+
+        handler_config = get_handler_config(config, instrument_and_reagent_type, read_length)
+        qc_engine = QCEngine(runfolder=self._runfolder, handler_config=handler_config)
+        qc_engine.run()
+        self.exit_status = qc_engine.exit_status
 
 if __name__ == '__main__':
     start()
