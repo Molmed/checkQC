@@ -40,7 +40,7 @@ class RunTypeRecognizer(object):
         elif os.path.isfile(second_option):
             return second_option
         else:
-            raise FileNotFoundError("Could not find [R|r]arameters.xml for runfolder {}".format(self._runfolder))
+            raise FileNotFoundError("Could not find [R|r]unParameters.xml for runfolder {}".format(self._runfolder))
 
     def reagent_version(self):
         """
