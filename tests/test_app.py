@@ -10,10 +10,10 @@ class TestApp(unittest.TestCase):
     def setUp(self):
         self.app = App(runfolder=os.path.join(os.path.dirname(__file__), "resources", "MiSeqDemo"))
 
-    def test_run(self):
+    def test_run_with_non_existent_file(self):
         # TODO Improve this test once we have better test data
-        self.app.run()
-        self.assertEqual(self.app.exit_status, 1)
+        with self.assertRaises(FileNotFoundError):
+            self.app.run()
 
 
 if __name__ == '__main__':
