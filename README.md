@@ -11,6 +11,22 @@ Please return once we have a release. :D
 to be modular, and exactly which "qc handlers" are executed with which parameters for a specific run type (i.e. machine
 type and run length) is determined by a configuration file.
 
+Running in a Singularity container
+----------------------------------
+
+[Singularity](http://singularity.lbl.gov/index.html) is a container system focusing on scientific use cases. 
+`checkQC` can be run in a Singularity container by first creating a container using the following:
+
+```
+singularity create checkQC.img
+sudo singularity bootstrap checkQC.img Singularity
+```
+
+And then the program itself can be run in the following way:
+
+```
+singularity run checkQC.img tests/resources/MiSeqDemo/
+```
 
 General architecture notes
 --------------------------
