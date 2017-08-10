@@ -20,6 +20,28 @@ pip install -f https://github.com/Illumina/interop/releases/latest interop
 pip install checkQC
 ```
 
+Running checkQC
+---------------
+
+After installing `checkQC` you can run it by specifying the path to the runfolder you want to
+analyze like this:
+
+```
+checkqc <RUNFOLDER>
+```
+
+This will use the default configuration file packaged with `checkQC` if you want to specify
+your own custom file, you can do so by adding a path to the config like this:
+
+```
+checkqc --config_file <path to your config> <RUNFOLDER>
+```
+
+When `checkQC` starts and no path to the config file is specified it will give you
+the path to where the default file is located on your system, if you want a template
+that you can customize according to your own needs.
+
+
 Running in a Singularity container
 ----------------------------------
 
