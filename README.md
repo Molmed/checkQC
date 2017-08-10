@@ -11,6 +11,37 @@ Please return once we have a release. :D
 to be modular, and exactly which "qc handlers" are executed with which parameters for a specific run type (i.e. machine
 type and run length) is determined by a configuration file.
 
+Install instructions
+--------------------
+
+TODO: Note that this is still a work in progress description
+```
+pip install -f https://github.com/Illumina/interop/releases/latest interop
+pip install checkQC
+```
+
+Running checkQC
+---------------
+
+After installing `checkQC` you can run it by specifying the path to the runfolder you want to
+analyze like this:
+
+```
+checkqc <RUNFOLDER>
+```
+
+This will use the default configuration file packaged with `checkQC` if you want to specify
+your own custom file, you can do so by adding a path to the config like this:
+
+```
+checkqc --config_file <path to your config> <RUNFOLDER>
+```
+
+When `checkQC` starts and no path to the config file is specified it will give you
+the path to where the default file is located on your system, if you want a template
+that you can customize according to your own needs.
+
+
 Running in a Singularity container
 ----------------------------------
 
@@ -27,6 +58,7 @@ And then the program itself can be run in the following way:
 ```
 singularity run checkQC.img tests/resources/MiSeqDemo/
 ```
+
 
 General architecture notes
 --------------------------
@@ -137,4 +169,16 @@ class MyQCHandler(QCHandler):
                 yield QCErrorWarning("Yield was to low on lane {}, it was: {}".format(lane_nbr, lane_yield))
             else:
                 continue
+```
+
+Upload to PyPi
+--------------
+TODO: This has only been tested for pypitest so far, but everything appears to be working so far. Rewrite this
+once a real version has been deployed to PyPi.
+
+First create a `~/.pypirc` file with your PyPi credentials, and then run:
+
+```
+python setup.py sdist bdist_wheel
+twine upload -r pypitest dist/*
 ```
