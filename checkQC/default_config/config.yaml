@@ -8,8 +8,8 @@ instrument_type_mappings:
   ST: hiseqx
 
 
-miseq_v2:
-  99:
+miseq_v3:
+  300:
     handlers:
       - name: YieldHandler
         warning: 300 # Give lowest nbr in Gbp
