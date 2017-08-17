@@ -8,8 +8,8 @@ instrument_type_mappings:
   ST: hiseqx
 
 
-miseq_v3:
-  300:
+miseq_v2:
+  99:
     handlers:
       - name: YieldHandler
         warning: 300 # Give lowest nbr in Gbp
@@ -17,3 +17,6 @@ miseq_v3:
       - name: UndeterminedPercentageHandler
         warning: 0.01
         error: 0.02
+      - name: ClusterPFHandler
+        warning: 18
+        error: unknown
