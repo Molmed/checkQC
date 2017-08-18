@@ -1,12 +1,12 @@
 import unittest
 
 from checkQC.handlers.yield_handler import YieldHandler
-from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
 
 from tests.test_utils import get_stats_json
+from tests.handlers.handler_test_base import HandlerTestBase
 
 
-class TestYieldHandler(unittest.TestCase):
+class TestYieldHandler(HandlerTestBase):
 
     def setUp(self):
         key = "ConversionResults"
@@ -18,10 +18,6 @@ class TestYieldHandler(unittest.TestCase):
 
     def set_qc_config(self, qc_config):
         self.yield_handler.qc_config = qc_config
-
-    def map_errors_and_warnings_to_class_names(self, errors_and_warnings):
-        class_names = list(map(lambda x: type(x).__name__, errors_and_warnings))
-        return class_names
 
     def test_all_is_fine(self):
         qc_config = {'name': 'YieldHandler', 'error': 10, 'warning': 20}

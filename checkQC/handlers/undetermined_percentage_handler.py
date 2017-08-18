@@ -5,10 +5,9 @@ from checkQC.parsers.stats_json_parser import StatsJsonParser
 
 class UndeterminedPercentageHandler(QCHandler):
 
-    def __init__(self, qc_config, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.conversion_results = None
-        self.qc_config = qc_config
 
     def parser(self):
         return StatsJsonParser
@@ -28,10 +27,10 @@ class UndeterminedPercentageHandler(QCHandler):
 
             percentage_undetermined = undetermined_yield / total_yield
 
-            if percentage_undetermined > self.qc_config["error"]:
+            if self.error() != self.UNKNOWN and percentage_undetermined > self.error():
                 yield QCErrorFatal("The percentage of undetermined indexes was"
                                    " to high on lane {}, it was: {}".format(lane_nbr, percentage_undetermined))
-            elif percentage_undetermined > self.qc_config["warning"]:
+            elif self.warning() != self.UNKNOWN and percentage_undetermined > self.warning():
                 yield QCErrorWarning("The percentage of undetermined indexes was "
                                      "to high on lane {}, it was: {}".format(lane_nbr, percentage_undetermined))
             else:
