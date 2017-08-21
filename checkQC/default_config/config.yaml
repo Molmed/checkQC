@@ -15,5 +15,8 @@ miseq_v3:
         warning: 300 # Give lowest nbr in Gbp
         error: 200 # Give lowest nbr in Gbp
       - name: UndeterminedPercentageHandler
-        warning: 0.01
-        error: 0.02
+        warning: 0.1
+        error: 0.2
+      - name: ClusterPFHandler
+        warning: 18 # Give lowest nbr in M clusters
+        error: unknown

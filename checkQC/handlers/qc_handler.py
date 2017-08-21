@@ -46,9 +46,20 @@ class QCHandler(Subscriber):
     parsers = set()
     runfolder = None
 
-    def __init__(self, *args, **kwargs):
+    UNKNOWN = 'unknown'
+    ERROR = 'error'
+    WARNING = 'warning'
+
+    def __init__(self, qc_config, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._exit_status = 0
+        self.qc_config = qc_config
+
+    def error(self):
+        return self.qc_config[self.ERROR]
+
+    def warning(self):
+        return self.qc_config[self.WARNING]
 
     def exit_status(self):
         return self._exit_status

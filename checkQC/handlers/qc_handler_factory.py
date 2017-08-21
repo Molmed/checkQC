@@ -27,7 +27,7 @@ class QCHandlerFactory(object):
         qc_handler_subclasses = list(QCHandler.__subclasses__())
         try:
             i = list(map(lambda clazz: clazz.__name__, qc_handler_subclasses)).index(class_name)
-            return qc_handler_subclasses[i](class_config)
+            return qc_handler_subclasses[i](qc_config=class_config)
         except ValueError:
             raise QCHandlerNotFoundException("Could not identify a QCHandler with name: {}".format(class_name))
 
