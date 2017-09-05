@@ -1,4 +1,6 @@
 
+# Please note that intervals for read lengths are specified as: min < x <= max (i.e. upper inclusive, lower exclusive)
+
 default_handlers:
     - name: UndeterminedPercentageHandler
       warning: unknown

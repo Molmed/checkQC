@@ -4,7 +4,7 @@ import sys
 import click
 
 from checkQC.qc_engine import QCEngine
-from checkQC.config import get_config, get_handler_config
+from checkQC.config import ConfigFactory
 from checkQC.run_type_recognizer import RunTypeRecognizer
 
 
@@ -34,8 +34,7 @@ class App(object):
         self.exit_status = 0
 
     def run(self):
-        config = get_config(self._config_file)
-
+        config = ConfigFactory.from_config_path(self._config_file)
         run_type_recognizer = RunTypeRecognizer(config=config, runfolder=self._runfolder)
         instrument_type = run_type_recognizer.instrument_type()
         reagent_version = run_type_recognizer.reagent_version()
@@ -45,7 +44,7 @@ class App(object):
 
         instrument_and_reagent_type = "_".join([instrument_type, reagent_version])
 
-        handler_config = get_handler_config(config, instrument_and_reagent_type, read_length)
+        handler_config = config.get_handler_config(instrument_and_reagent_type, read_length)
         qc_engine = QCEngine(runfolder=self._runfolder, handler_config=handler_config)
         qc_engine.run()
         self.exit_status = qc_engine.exit_status
