@@ -30,6 +30,6 @@ class TestStatsJsonParser(unittest.TestCase):
     stats_json_parser.add_subscribers(subscriber)
     stats_json_parser.run()
 
-    def test_read_error_rate(self):
+    def test_read_flowcell_name(self):
         self.assertListEqual(self.subscriber.values, ["H32CYBCXX"])
 
