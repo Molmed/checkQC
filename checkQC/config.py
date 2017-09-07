@@ -47,7 +47,7 @@ class Config(object):
     def get_handler_config(self, instrument_and_reagent_type, read_length):
         """
         :param instrument_and_reagent_type: type of instrument and reagents to match from config
-        :param read_length: give the read length either as str or in
+        :param read_length: give the read length either as str or int
         :return: the corresponding handler configuration(s)
         """
         try:
