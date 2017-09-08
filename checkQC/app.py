@@ -7,6 +7,14 @@ from checkQC.qc_engine import QCEngine
 from checkQC.config import ConfigFactory
 from checkQC.run_type_recognizer import RunTypeRecognizer
 
+import logging
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(levelname)s %(message)s')
+
+console_log_handler = logging.StreamHandler()
+logging.getLogger("").addHandler(console_log_handler)
+
 
 @click.command("checkqc")
 @click.option("--config_file", help="Path to the checkQC configuration file", type=click.Path())
