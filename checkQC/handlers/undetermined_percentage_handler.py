@@ -29,10 +29,12 @@ class UndeterminedPercentageHandler(QCHandler):
 
             if self.error() != self.UNKNOWN and percentage_undetermined > self.error():
                 yield QCErrorFatal("The percentage of undetermined indexes was"
-                                   " to high on lane {}, it was: {}".format(lane_nbr, percentage_undetermined))
+                                   " to high on lane {}, it was: {}".format(lane_nbr, percentage_undetermined),
+                                   ordering=int(lane_nbr))
             elif self.warning() != self.UNKNOWN and percentage_undetermined > self.warning():
                 yield QCErrorWarning("The percentage of undetermined indexes was "
-                                     "to high on lane {}, it was: {}".format(lane_nbr, percentage_undetermined))
+                                     "to high on lane {}, it was: {}".format(lane_nbr, percentage_undetermined),
+                                     ordering=int(lane_nbr))
             else:
                 continue
 
