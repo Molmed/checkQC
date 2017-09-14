@@ -1,3 +1,4 @@
+
 import unittest
 
 from checkQC.handlers.qc_handler import QCHandler, QCErrorWarning, QCErrorFatal
@@ -5,13 +6,17 @@ from checkQC.handlers.qc_handler import QCHandler, QCErrorWarning, QCErrorFatal
 
 class TestQCHandler(unittest.TestCase):
 
-    random_qc_errors_and_warning = [QCErrorFatal("1", 1), QCErrorWarning("2", 2),
-                                    QCErrorWarning("3", 3), QCErrorFatal("4", 4)]
+    expected_qc_errors_and_warning = [QCErrorFatal("1", 1), QCErrorWarning("2", 2),
+                                      QCErrorWarning("3", 3), QCErrorFatal("4", 4)]
+
+    random_order_qc_errors_and_warning = [QCErrorWarning("2", 2), QCErrorFatal("1", 1),
+                                          QCErrorFatal("4", 4), QCErrorWarning("3", 3)]
+
 
     class MockQCHandler(QCHandler):
         # This is a method to mock returning results from the handler
         def check_qc(self):
-            return TestQCHandler.random_qc_errors_and_warning
+            return TestQCHandler.random_order_qc_errors_and_warning
 
     def setUp(self):
         qc_config = {}
@@ -24,7 +29,7 @@ class TestQCHandler(unittest.TestCase):
             else:
                 return "WARNING:root:{}".format(obj)
 
-        expected_logs = list(map(fix_names, TestQCHandler.random_qc_errors_and_warning))
+        expected_logs = list(map(fix_names, TestQCHandler.expected_qc_errors_and_warning))
 
         with self.assertLogs() as log_checker:
             self.qc_handler.report()
