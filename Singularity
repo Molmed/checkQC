@@ -6,7 +6,7 @@ LC_ALL=C.UTF-8
 LANG=C.UTF-8
 
 %setup
-  rsync -r --exclude ubuntu.img $PWD $SINGULARITY_ROOTFS/
+  rsync -r --exclude *.img $PWD $SINGULARITY_ROOTFS/
 
 %post
   apt update -y
@@ -17,4 +17,4 @@ LANG=C.UTF-8
 
 %runscript
   echo "Running CheckQC in Singularity container"
-  exec checkQC "$@"
+  exec checkqc "$@"
