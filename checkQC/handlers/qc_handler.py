@@ -1,4 +1,7 @@
 
+import logging
+
+log = logging.getLogger()
 
 class Subscriber(object):
 
@@ -19,32 +22,30 @@ class Subscriber(object):
 
 
 class QCErrorFatal(object):
-    def __init__(self, msg):
+    def __init__(self, msg, ordering=1):
         self.message = msg
+        self.ordering = ordering
 
     def __str__(self):
-        return "Fatal error: {}".format(self.message)
+        return "Fatal QC error: {}".format(self.message)
 
     def __repr__(self):
         return self.__str__()
 
 
 class QCErrorWarning(object):
-    def __init__(self, msg):
+    def __init__(self, msg, ordering=1):
         self.message = msg
+        self.ordering = ordering
 
     def __str__(self):
-        return "Warning: {}".format(self.message)
+        return "QC warning: {}".format(self.message)
 
     def __repr__(self):
         return self.__str__()
 
 
 class QCHandler(Subscriber):
-
-    handlers = []
-    parsers = set()
-    runfolder = None
 
     UNKNOWN = 'unknown'
     ERROR = 'error'
@@ -75,10 +76,12 @@ class QCHandler(Subscriber):
 
     def report(self):
         errors_and_warnings = self.check_qc()
+        sorted_errors_and_warnings = sorted(errors_and_warnings, key=lambda x: x.ordering)
 
-        for element in errors_and_warnings:
+        for element in sorted_errors_and_warnings:
             if isinstance(element, QCErrorFatal):
                 self._exit_status = 1
-            # TODO Switch to proper logging!
-            print(element)
+                log.error(element)
+            else:
+                log.warning(element)
 

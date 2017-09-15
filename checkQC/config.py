@@ -1,7 +1,10 @@
 
 from pkg_resources import Requirement, resource_filename
+import logging
 
 import yaml
+
+log = logging.getLogger("")
 
 
 class ConfigFactory(object):
@@ -16,12 +19,12 @@ class ConfigFactory(object):
         try:
             if not config_path:
                 config_path = resource_filename(Requirement.parse('checkQC'), 'checkQC/default_config/config.yaml')
-                print("No config file specified, using default config from {}.".format(config_path))
+                log.info("No config file specified, using default config from {}.".format(config_path))
 
             with open(config_path) as stream:
                 return yaml.load(stream)
         except FileNotFoundError as e:
-            print("Could not find config file: {}".format(e))
+            log.error("Could not find config file: {}".format(e))
             raise e
 
 
@@ -54,10 +57,10 @@ class Config(object):
             handler_config = self._get_matching_handler(instrument_and_reagent_type, read_length)
             return handler_config
         except KeyError as e:
-            print("Could not find a config entry for instrument '{}' "
-                  "with read length '{}'. Please check the provided config "
-                  "file ".format(instrument_and_reagent_type,
-                                 read_length))
+            log.error("Could not find a config entry for instrument '{}' "
+                      "with read length '{}'. Please check the provided config "
+                      "file ".format(instrument_and_reagent_type,
+                                     read_length))
             raise e
 
     def __getitem__(self, item):

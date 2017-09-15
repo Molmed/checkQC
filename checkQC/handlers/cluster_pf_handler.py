@@ -25,8 +25,10 @@ class ClusterPFHandler(QCHandler):
             lane_pf = lane_dict["TotalClustersPF"]
 
             if self.error() != self.UNKNOWN and lane_pf <= float(self.error())*pow(10, 6):
-                yield QCErrorFatal("Clusters PF was to low on lane {}, it was: {}".format(lane_nbr, lane_pf))
+                yield QCErrorFatal("Clusters PF was to low on lane {}, it was: {}".format(lane_nbr, lane_pf),
+                                   ordering=int(lane_nbr))
             elif self.warning() != self.UNKNOWN and lane_pf <= float(self.warning())*pow(10, 6):
-                yield QCErrorWarning("Cluster PF was to low on lane {}, it was: {}".format(lane_nbr, lane_pf))
+                yield QCErrorWarning("Cluster PF was to low on lane {}, it was: {}".format(lane_nbr, lane_pf),
+                                     ordering=int(lane_nbr))
             else:
                 continue
