@@ -21,22 +21,22 @@ class TestErrorRateHandler(HandlerTestBase):
         self.error_handler.qc_config = qc_config
 
     def test_all_is_fine(self):
-        qc_config = {'name': 'ErrorHandler', 'error': 5, 'warning': 6}
+        qc_config = {'name': 'ErrorHandler', 'error': 6, 'warning': 5}
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.error_handler.check_qc())
         self.assertEqual(errors_and_warnings, [])
 
     def test_warning(self):
-        qc_config = {'name': 'ErrorHandler', 'error': 3, 'warning': 5}
+        qc_config = {'name': 'ErrorHandler', 'error': 5, 'warning': 3}
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.error_handler.check_qc())
         self.assertTrue(len(errors_and_warnings), 2)
 
         class_names = self.map_errors_and_warnings_to_class_names(errors_and_warnings)
-        self.assertListEqual(class_names, ['QCErrorFatal'])
+        self.assertListEqual(class_names, ['QCErrorWarning'])
 
     def test_error(self):
-        qc_config = {'name': 'ErrorHandler', 'error': 1, 'warning': 3}
+        qc_config = {'name': 'ErrorHandler', 'error': 2.9, 'warning': 1}
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.error_handler.check_qc())
         self.assertTrue(len(errors_and_warnings), 2)
