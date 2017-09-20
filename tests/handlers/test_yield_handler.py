@@ -29,7 +29,7 @@ class TestYieldHandler(HandlerTestBase):
         qc_config = {'name': 'YieldHandler', 'error': 10, 'warning': 40}
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.yield_handler.check_qc())
-        self.assertTrue(len(errors_and_warnings), 2)
+        self.assertEqual(len(errors_and_warnings), 2)
 
         class_names = self.map_errors_and_warnings_to_class_names(errors_and_warnings)
         self.assertListEqual(class_names, ['QCErrorWarning', 'QCErrorWarning'])
@@ -38,7 +38,7 @@ class TestYieldHandler(HandlerTestBase):
         qc_config = {'name': 'YieldHandler', 'error': 40, 'warning': 50}
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.yield_handler.check_qc())
-        self.assertTrue(len(errors_and_warnings), 2)
+        self.assertEqual(len(errors_and_warnings), 2)
 
         class_names = self.map_errors_and_warnings_to_class_names(errors_and_warnings)
         self.assertListEqual(class_names, ['QCErrorFatal', 'QCErrorFatal'])

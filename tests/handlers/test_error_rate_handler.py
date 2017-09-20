@@ -30,7 +30,7 @@ class TestErrorRateHandler(HandlerTestBase):
         qc_config = {'name': 'ErrorHandler', 'error': 5, 'warning': 3}
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.error_handler.check_qc())
-        self.assertTrue(len(errors_and_warnings), 2)
+        self.assertEqual(len(errors_and_warnings), 1)
 
         class_names = self.map_errors_and_warnings_to_class_names(errors_and_warnings)
         self.assertListEqual(class_names, ['QCErrorWarning'])
@@ -39,7 +39,7 @@ class TestErrorRateHandler(HandlerTestBase):
         qc_config = {'name': 'ErrorHandler', 'error': 2.9, 'warning': 1}
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.error_handler.check_qc())
-        self.assertTrue(len(errors_and_warnings), 2)
+        self.assertEqual(len(errors_and_warnings), 2)
 
         class_names = self.map_errors_and_warnings_to_class_names(errors_and_warnings)
         self.assertListEqual(class_names, ['QCErrorFatal', 'QCErrorFatal'])
