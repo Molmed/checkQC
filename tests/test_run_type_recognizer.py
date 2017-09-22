@@ -17,14 +17,10 @@ class TestRunTypeRecognizer(TestCase):
     def test_instrument_type(self):
         expected = "miseq"
         actual = self.runtype_recognizer.instrument_type()
-        self.assertEqual(expected, actual)
+        self.assertEqual(expected, actual.name())
 
     def test_read_length(self):
         expected = "300-300"
         actual = self.runtype_recognizer.read_length()
         self.assertEqual(expected, actual)
 
-    def test_find_reagent_version(self):
-        expected = "v3"
-        actual = self.runtype_recognizer.reagent_version()
-        self.assertEqual(expected, actual)
