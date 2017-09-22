@@ -7,6 +7,10 @@ instrument_type_mappings:
   D: hiseq2500
   ST: hiseqx
 
+default_handlers:
+    - name: UndeterminedPercentageHandler
+      warning: unknown
+      error: 10
 
 miseq_v3:
   300:
