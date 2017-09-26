@@ -69,7 +69,17 @@ class HiSeq2500(IlluminaInstrument):
     @staticmethod
     def reagent_version(runtype_recognizer):
         # TODO This is where to figure out if this is a rapid, reagent version etc...
-        raise NotImplementedError()
+        try:
+            run_mode = runtype_recognizer.run_parameters["RunParameters"]["Setup"]["RunMode"]
+        except KeyError:
+            raise RunModeUnknown("No run mode specified for this instrument type")
+
+        try:
+            reagent_version = runtype_recognizer.run_parameters["RunParameters"]["Setup"]["Sbs"]
+        except KeyError:
+            raise ReagentVersionUnknown("No reagent version specified for this instrument type and run mode")
+
+        return run_mode.lower()+"_"+reagent_version.split(" ")[-1].strip()
 
 
 class HiSeq2000(IlluminaInstrument):
@@ -81,7 +91,17 @@ class HiSeq2000(IlluminaInstrument):
     @staticmethod
     def reagent_version(runtype_recognizer):
         # TODO This is where to figure out if this is a rapid, reagent version etc...
-        raise NotImplementedError()
+        try:
+            run_mode = runtype_recognizer.run_parameters["RunParameters"]["Setup"]["RunMode"]
+        except KeyError:
+            raise RunModeUnknown("No run mode specified for this instrument type")
+
+        try:
+            reagent_version = runtype_recognizer.run_parameters["RunParameters"]["Setup"]["Sbs"]
+        except KeyError:
+            raise ReagentVersionUnknown("No reagent version specified for this instrument type and run mode")
+
+        return run_mode.lower()+"_"+reagent_version.split(" ")[-1].strip()
 
 
 class RunTypeRecognizer(object):
