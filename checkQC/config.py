@@ -47,6 +47,16 @@ class Config(object):
                     return self._config[instrument_and_reagent_type][int(config_read_length)]["handlers"]
         raise KeyError
 
+    def _add_default_config(self, current_handler_config):
+
+        current_handler_names = set(map(lambda x: x["name"], current_handler_config))
+        default_handlers = self._config["default_handlers"]
+        for default_handler in default_handlers:
+            if not default_handler["name"] in current_handler_names:
+                current_handler_config.append(default_handler)
+        return current_handler_config
+
+
     def get_handler_config(self, instrument_and_reagent_type, read_length):
         """
         :param instrument_and_reagent_type: type of instrument and reagents to match from config
@@ -55,7 +65,8 @@ class Config(object):
         """
         try:
             handler_config = self._get_matching_handler(instrument_and_reagent_type, read_length)
-            return handler_config
+            handler_config_with_defaults = self._add_default_config(handler_config)
+            return handler_config_with_defaults
         except KeyError as e:
             log.error("Could not find a config entry for instrument '{}' "
                       "with read length '{}'. Please check the provided config "

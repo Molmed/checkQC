@@ -1,4 +1,13 @@
 
+# First letter in instrument name is indicative of model
+# i.e. SN7001335 is a HiSeq3500 since its name begins with
+# SN
+instrument_type_mappings:
+  SN: hiseq2000
+  M: miseq
+  D: hiseq2500
+  ST: hiseqx
+
 # Please note that intervals for read lengths are specified as: min < x <= max (i.e. upper inclusive, lower exclusive)
 
 default_handlers:
@@ -90,7 +99,7 @@ hiseq2500_rapid_v2:
         warning: unknown
         error: 5
 
-hiseqX_v2:
+hiseqx_v2:
   150:
     handlers:
       - name: ClusterPassFilterHandler
