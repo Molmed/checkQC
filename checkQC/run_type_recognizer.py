@@ -68,7 +68,11 @@ class HiSeq2500(IlluminaInstrument):
 
     @staticmethod
     def reagent_version(runtype_recognizer):
-        # TODO This is where to figure out if this is a rapid, reagent version etc...
+        """
+        Find run mode (rapid or not) and reagent version used for this run
+        :return run mode (as specified in RunInfo.xml) and reagent version
+        joint as one string
+        """
         try:
             run_mode = runtype_recognizer.run_parameters["RunParameters"]["Setup"]["RunMode"]
         except KeyError:
@@ -90,7 +94,11 @@ class HiSeq2000(IlluminaInstrument):
 
     @staticmethod
     def reagent_version(runtype_recognizer):
-        # TODO This is where to figure out if this is a rapid, reagent version etc...
+        """
+        Find run mode (rapid or not) and reagent version used for this run
+        :return run mode (as specified in RunInfo.xml) and reagent version
+        joint as one string
+        """
         try:
             run_mode = runtype_recognizer.run_parameters["RunParameters"]["Setup"]["RunMode"]
         except KeyError:
