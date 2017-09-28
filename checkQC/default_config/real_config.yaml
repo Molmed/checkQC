@@ -3,7 +3,6 @@
 # i.e. SN7001335 is a HiSeq3500 since its name begins with
 # SN
 instrument_type_mappings:
-  SN: hiseq2000
   M: miseq
   D: hiseq2500
   ST: hiseqx
@@ -12,161 +11,161 @@ instrument_type_mappings:
 
 default_handlers:
     - name: UndeterminedPercentageHandler
-      warning: unknown
-      error: 10
+      warning: 10
+      error: 30
     - name: PoolingEvennessHandler
-      warning: unknown
-      error: 50 # Each sample should have  >= x % of the clusters divded by the number of samples in the pool
+      warning: 50
+      error: unknown # Each sample should have  >= x % of the clusters divded by the number of samples in the pool
 
-hiseq2500_highouput_v4:
+hiseq2500_rapidhighoutput_v4:
   50-70:
     handlers:
       - name: ClusterPassFilterHandler
-        warning: unknown
-        error: 180
-      - name: Q30YieldHander
-        warning: unknown # Give lowest nbr in Gbp
-        error: 7 # Give lowest nbr in Gbp
-      - name: ErrorRateHAndler
-        warning: unknown
-        error: 1.5
+        warning: 180
+        error: unknown
+      - name: Q30YieldHandler
+        warning: 7 # Give lowest nbr in Gbp
+        error: unknown # Give lowest nbr in Gbp
+      - name: ErrorRateHandler
+        warning: 1.5
+        error: unknown
   100-110:
     handlers:
       - name: ClusterPassFilterHandler
-        warning: unknown
-        error: 180
-      - name: Q30YieldHander
-        warning: unknown # Give lowest nbr in Gbp
-        error: 14 # Give lowest nbr in Gbp
-      - name: ErrorRateHAndler
-        warning: unknown
-        error: 2
+        warning: 180
+        error: unknown
+      - name: Q30YieldHandler
+        warning: 14 # Give lowest nbr in Gbp
+        error: unknown # Give lowest nbr in Gbp
+      - name: ErrorRateHandler
+        warning: 2
+        error: unknown
   120-130:
     handlers:
       - name: ClusterPassFilterHandler
-        warning: unknown
-        error: 180
-      - name: Q30YieldHander
-        warning: unknown # Give lowest nbr in Gbp
-        error: 18 # Give lowest nbr in Gbp
-      - name: ErrorRateHAndler
-        warning: unknown
-        error: 2
+        warning: 180
+        error: unknown
+      - name: Q30YieldHandler
+        warning: 18 # Give lowest nbr in Gbp
+        error: unknown # Give lowest nbr in Gbp
+      - name: ErrorRateHandler
+        warning: 2
+        error: unknown
 
-hiseq2500_rapid_v2:
+hiseq2500_rapidrun_v2:
   50-70:
     handlers:
       - name: ClusterPassFilterHandler
-        warning: unknown
-        error: 110
-      - name: Q30YieldHander
-        warning: unknown # Give lowest nbr in Gbp
-        error: 4.4 # Give lowest nbr in Gbp
-      - name: ErrorRateHAndler
-        warning: unknown
-        error: 1.5
+        warning: 110
+        error: unknown
+      - name: Q30YieldHandler
+        warning: 4.4 # Give lowest nbr in Gbp
+        error: uknown # Give lowest nbr in Gbp
+      - name: ErrorRateHandler
+        warning: 1.5
+        error: unknown
   100-125:
     handlers:
       - name: ClusterPassFilterHandler
-        warning: unknown
-        error: 110
-      - name: Q30YieldHander
-        warning: unknown # Give lowest nbr in Gbp
-        error: 8.8 # Give lowest nbr in Gbp
-      - name: ErrorRateHAndler
-        warning: unknown
-        error: 2
+        warning: 110
+        error: unknown
+      - name: Q30YieldHandler
+        warning: 8.8 # Give lowest nbr in Gbp
+        error: unknown # Give lowest nbr in Gbp
+      - name: ErrorRateHandler
+        warning: 2
+        error: unknown
   150-175:
     handlers:
       - name: ClusterPassFilterHandler
-        warning: unknown
-        error: 110
-      - name: Q30YieldHander
+        warning: 110
+        error: unknown
+      - name: Q30YieldHandler
         warning: unknown # Give lowest nbr in Gbp
         error: 12.3 # Give lowest nbr in Gbp
-      - name: ErrorRateHAndler
+      - name: ErrorRateHandler
         warning: unknown
         error: 3
   250-265:
     handlers:
       - name: ClusterPassFilterHandler
-        warning: unknown
-        error: 110
-      - name: Q30YieldHander
-        warning: unknown # Give lowest nbr in Gbp
-        error: 20 # Give lowest nbr in Gbp
-      - name: ErrorRateHAndler
-        warning: unknown
-        error: 5
+        warning: 110
+        error: unknown
+      - name: Q30YieldHandler
+        warning: 20 # Give lowest nbr in Gbp
+        error: unknown # Give lowest nbr in Gbp
+      - name: ErrorRateHandler
+        warning: 5
+        error: unknown
 
 hiseqx_v2:
   150:
     handlers:
       - name: ClusterPassFilterHandler
-        warning: unknown
-        error: 350
-      - name: Q30YieldHander
-        warning: unknown # Give lowest nbr in Gbp
-        error: 39 # Give lowest nbr in Gbp
-      - name: ErrorRateHAndler
-        warning: unknown
-        error: 5
+        warning: 400
+        error: unknown
+      - name: Q30YieldHandler
+        warning: 39 # Give lowest nbr in Gbp
+        error: unknown # Give lowest nbr in Gbp
+      - name: ErrorRateHandler
+        warning: 5
+        error: unknown
 
 miseq_v2:
   25-50:
     handlers:
       - name: ClusterPassFilterHandler
-        warning: unknown
-        error: 10
-      - name: Q30YieldHander
-        warning: unknown # Give lowest nbr in Gbp
-        error: 0.2 # Give lowest nbr in Gbp
-      - name: ErrorRateHAndler
-        warning: unknown
-        error: 1
+        warning: 10
+        error: unknown
+      - name: Q30YieldHandler
+        warning: 0.2 # Give lowest nbr in Gbp
+        error: unknown # Give lowest nbr in Gbp
+      - name: ErrorRateHandler
+        warning: 1
+        error: unknown
   150:
     handlers:
       - name: ClusterPassFilterHandler
-        warning: unknown
-        error: 10
-      - name: Q30YieldHander
-        warning: unknown # Give lowest nbr in Gbp
-        error: 1.1 # Give lowest nbr in Gbp
-      - name: ErrorRateHAndler
-        warning: unknown
-        error: 2
+        warning: 10
+        error: unknown
+      - name: Q30YieldHandler
+        warning: 1.1 # Give lowest nbr in Gbp
+        error: unknown # Give lowest nbr in Gbp
+      - name: ErrorRateHandler
+        warning: 2
+        error: uknown
   250:
     handlers:
       - name: ClusterPassFilterHandler
-        warning: unknown
-        error: 10
-      - name: Q30YieldHander
-        warning: unknown # Give lowest nbr in Gbp
-        error: 1.8 # Give lowest nbr in Gbp
-      - name: ErrorRateHAndler
-        warning: unknown
-        error: 5
+        warning: 10
+        error: unknown
+      - name: Q30YieldHandler
+        warning: 1.8 # Give lowest nbr in Gbp
+        error: unknown # Give lowest nbr in Gbp
+      - name: ErrorRateHandler
+        warning: 5
+        error: unknown
 
 miseq_v3:
   75:
     handlers:
       - name: ClusterPassFilterHandler
-        warning: unknown
-        error: 18
-      - name: Q30YieldHander
-        warning: unknown # Give lowest nbr in Gbp
-        error: 1.1 # Give lowest nbr in Gbp
-      - name: ErrorRateHAndler
-        warning: unknown
-        error: 1.5
+        warning: 18
+        error: unknown
+      - name: Q30YieldHandler
+        warning: 1.1 # Give lowest nbr in Gbp
+        error: unknown # Give lowest nbr in Gbp
+      - name: ErrorRateHandler
+        warning: 1.5
+        error: unknown
   300:
     handlers:
       - name: ClusterPassFilterHandler
-        warning: unknown
-        error: 18
-      - name: Q30YieldHander
-        warning: unknown # Give lowest nbr in Gbp
-        error: 3.7 # Give lowest nbr in Gbp
-      - name: ErrorRateHAndler
-        warning: unknown
-        error: 5
+        warning: 18
+        error: unknown
+      - name: Q30YieldHandler
+        warning: 3.7 # Give lowest nbr in Gbp
+        error: unknown # Give lowest nbr in Gbp
+      - name: ErrorRateHandler
+        warning: 5
+        error: unknown

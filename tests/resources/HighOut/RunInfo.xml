@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<RunInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+  <Run Id="170726_D00118_0303_BCB1TVANXX" Number="303">
+    <Flowcell>CB1TVANXX</Flowcell>
+    <Instrument>D00118</Instrument>
+    <Date>170726</Date>
+    <Reads>
+      <Read Number="1" NumCycles="126" IsIndexedRead="N" />
+      <Read Number="2" NumCycles="8" IsIndexedRead="Y" />
+      <Read Number="3" NumCycles="8" IsIndexedRead="Y" />
+      <Read Number="4" NumCycles="126" IsIndexedRead="N" />
+    </Reads>
+    <FlowcellLayout LaneCount="8" SurfaceCount="2" SwathCount="3" TileCount="16" />
+    <AlignToPhiX>
+      <Lane>1</Lane>
+      <Lane>2</Lane>
+      <Lane>3</Lane>
+      <Lane>4</Lane>
+      <Lane>5</Lane>
+      <Lane>6</Lane>
+      <Lane>7</Lane>
+      <Lane>8</Lane>
+    </AlignToPhiX>
+  </Run>
+</RunInfo>

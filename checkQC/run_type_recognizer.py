@@ -68,20 +68,24 @@ class HiSeq2500(IlluminaInstrument):
 
     @staticmethod
     def reagent_version(runtype_recognizer):
-        # TODO This is where to figure out if this is a rapid, reagent version etc...
-        raise NotImplementedError()
+        """
+        Find run mode (rapid or not) and reagent version used for this run
+        :return run mode (as specified in RunInfo.xml) and reagent version
+        joint as one string e.g. rapidhighoutput_v4 or rapidrun_v2
+        """
+        try:
+            run_mode = runtype_recognizer.run_parameters["RunParameters"]["Setup"]["RunMode"].lower()
+        except KeyError:
+            raise RunModeUnknown("No run mode specified for this instrument type")
 
+        try:
+            reagent_version = runtype_recognizer.run_parameters["RunParameters"]["Setup"]["Sbs"]
+            #Select last element from string "HiSeq SBS Kit v4"
+            format_reagent_version= reagent_version.split(" ")[-1].strip().lower()
+        except KeyError:
+            raise ReagentVersionUnknown("No reagent version specified for this instrument type and run mode")
 
-class HiSeq2000(IlluminaInstrument):
-
-    @staticmethod
-    def name():
-        return "hiseq2000"
-
-    @staticmethod
-    def reagent_version(runtype_recognizer):
-        # TODO This is where to figure out if this is a rapid, reagent version etc...
-        raise NotImplementedError()
+        return "{}_{}".format(run_mode, format_reagent_version)
 
 
 class RunTypeRecognizer(object):
