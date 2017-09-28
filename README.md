@@ -11,6 +11,11 @@ Please return once we have a release. :D
 to be modular, and exactly which "qc handlers" are executed with which parameters for a specific run type (i.e. machine
 type and run length) is determined by a configuration file.
 
+Instrument types supported in checkQC are the following:
+ - HiSeqX
+ - HiSeq2500
+ - MiSeq
+
 Install instructions
 --------------------
 
