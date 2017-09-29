@@ -18,6 +18,7 @@ Adapter,,,,,,,,,,,
 AdapterRead2,,,,,,,,,,,
 ,,,,,,,,,,,
 [Data],,,,,,,,,,,
+Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description,GenomeFolder
 1,Sample_oo-1,oo-1,,,,CTGAAGCT,,,OO-1234,LIBRARY_NAME:SX899_Pool9.v1,C:\Test
 1,Sample_oo-2,oo-2,,,,TAATGCGC,,,OO-1234,LIBRARY_NAME:SX899_Pool9.v1,C:\Test
 1,Sample_oo-3,oo-3,,,,CGGCTATG,,,OO-1234,LIBRARY_NAME:SX899_Pool9.v1,C:\Test
