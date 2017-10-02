@@ -10,11 +10,10 @@ from checkQC.run_type_recognizer import RunTypeRecognizer
 import logging
 
 logging.basicConfig(level=logging.DEBUG,
-                    format='%(levelname)s %(message)s')
+                    format='%(levelname)-8s %(message)s')
 
 console_log_handler = logging.StreamHandler()
-logging.getLogger("").addHandler(console_log_handler)
-
+log = logging.getLogger("")
 
 @click.command("checkqc")
 @click.option("--config", help="Path to the checkQC configuration file", type=click.Path())
@@ -42,6 +41,10 @@ class App(object):
         self.exit_status = 0
 
     def run(self):
+        log.info("----------------")
+        log.info("Starting checkQC")
+        log.info("----------------")
+        log.info("Runfolder is: {}".format(self._runfolder))
         config = ConfigFactory.from_config_path(self._config_file)
         run_type_recognizer = RunTypeRecognizer(config=config, runfolder=self._runfolder)
         instrument_and_reagent_version = run_type_recognizer.instrument_and_reagent_version()
@@ -52,6 +55,10 @@ class App(object):
         qc_engine = QCEngine(runfolder=self._runfolder, handler_config=handler_config)
         qc_engine.run()
         self.exit_status = qc_engine.exit_status
+        if self.exit_status == 0:
+            log.info("Finished without finding any fatal qc errors.")
+        else:
+            log.info("Finished with fatal qc errors and will exit with non-zero exit status.")
 
 if __name__ == '__main__':
     start()
