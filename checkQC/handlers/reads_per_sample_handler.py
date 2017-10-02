@@ -2,7 +2,7 @@ from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
 from checkQC.parsers.stats_json_parser import StatsJsonParser
 from math import pow
 
-class SampleFractionHandler(QCHandler):
+class ReadsPerSampleHandler(QCHandler):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -28,10 +28,10 @@ class SampleFractionHandler(QCHandler):
                 sample_total_reads = sample_id_info["NumberReads"] / pow(10,6)
 
                 if self.error() != self.UNKNOWN and sample_total_reads <= (float(self.error()) / float(len(lane_demux))):
-                    yield QCErrorFatal("Sample fraction for sample {} was to low on lane {}, it was: {}".format(sample_id, lane_nbr, sample_total_reads),
+                    yield QCErrorFatal("Number of reads for sample {} was too low on lane {}, it was: {} M".format(sample_id, lane_nbr, sample_total_reads),
                                        ordering=int(lane_nbr))
                 elif self.warning() != self.UNKNOWN and sample_total_reads <= (float(self.warning()) / float(len(lane_demux))):
-                    yield QCErrorWarning("Sample fraction for sample {} was to low on lane {}, it was: {}".format(sample_id, lane_nbr, sample_total_reads),
+                    yield QCErrorWarning("Number of reads for sample {} was too low on lane {}, it was: {} M".format(sample_id, lane_nbr, sample_total_reads),
                                          ordering=int(lane_nbr))
                 else:
                     continue
