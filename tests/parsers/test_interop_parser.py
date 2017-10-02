@@ -36,12 +36,12 @@ class TestInteropParser(unittest.TestCase):
 
     def test_read_error_rate(self):
         self.assertListEqual(self.subscriber.error_rate_values,
-                             [{'error_rate': {'lane': 1, 'read': 1, 'error_rate': 1.5317546129226685}},
-                              {'error_rate': {'lane': 1, 'read': 2, 'error_rate': 1.9201501607894897}}])
+                             [('error_rate', {'lane': 1, 'read': 1, 'error_rate': 1.5317546129226685}),
+                              ('error_rate', {'lane': 1, 'read': 2, 'error_rate': 1.9201501607894897})])
 
 
     def test_percent_q30(self):
         self.assertListEqual(self.subscriber.percent_q30_values,
-                            [{'percent_q30': {'lane': 1, 'read': 1, 'percent_q30': 93.42070007324219}},
-                             {'percent_q30': {'lane': 1, 'read': 2, 'percent_q30': 84.4270248413086}}])
+                             [('percent_q30', {'lane': 1, 'read': 1, 'percent_q30': 93.42070007324219}),
+                              ('percent_q30', {'lane': 1, 'read': 2, 'percent_q30': 84.4270248413086})])
 

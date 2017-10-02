@@ -24,12 +24,12 @@ class TestStatsJsonParser(unittest.TestCase):
             self.subscriber.send(value)
 
     runfolder = os.path.join(os.path.dirname(__file__), "..", "resources",
-                             "150418_SN7001335_0149_AH32CYBCXX")
+                             "170726_D00118_0303_BCB1TVANXX")
     stats_json_parser = StatsJsonParser(runfolder=runfolder)
     subscriber = Receiver()
     stats_json_parser.add_subscribers(subscriber)
     stats_json_parser.run()
 
     def test_read_flowcell_name(self):
-        self.assertListEqual(self.subscriber.values, ["H32CYBCXX"])
+        self.assertListEqual(self.subscriber.values, ["CB1TVANXX"])
 

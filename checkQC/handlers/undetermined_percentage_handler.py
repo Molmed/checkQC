@@ -20,21 +20,24 @@ class UndeterminedPercentageHandler(QCHandler):
     def check_qc(self):
 
         for lane_dict in self.conversion_results:
-            lane_nbr = lane_dict["LaneNumber"]
-            total_yield = lane_dict["Yield"]
+            # If no index was specified for a lane, there will be no undetermined
+            # Undetermined key for that lane in the Stats.json file. /JD 2017-10-02
+            if lane_dict.get("Undetermined"):
+                lane_nbr = lane_dict["LaneNumber"]
+                total_yield = lane_dict["Yield"]
 
-            undetermined_yield = lane_dict["Undetermined"]["Yield"]
+                undetermined_yield = lane_dict["Undetermined"]["Yield"]
 
-            percentage_undetermined = undetermined_yield / total_yield
+                percentage_undetermined = (undetermined_yield / total_yield)*100
 
-            if self.error() != self.UNKNOWN and percentage_undetermined > self.error():
-                yield QCErrorFatal("The percentage of undetermined indexes was"
-                                   " to high on lane {}, it was: {}".format(lane_nbr, percentage_undetermined),
-                                   ordering=int(lane_nbr))
-            elif self.warning() != self.UNKNOWN and percentage_undetermined > self.warning():
-                yield QCErrorWarning("The percentage of undetermined indexes was "
-                                     "to high on lane {}, it was: {}".format(lane_nbr, percentage_undetermined),
-                                     ordering=int(lane_nbr))
-            else:
-                continue
+                if self.error() != self.UNKNOWN and percentage_undetermined > self.error():
+                    yield QCErrorFatal("The percentage of undetermined indexes was"
+                                       " to high on lane {}, it was: {}".format(lane_nbr, percentage_undetermined),
+                                       ordering=int(lane_nbr))
+                elif self.warning() != self.UNKNOWN and percentage_undetermined > self.warning():
+                    yield QCErrorWarning("The percentage of undetermined indexes was "
+                                         "to high on lane {}, it was: {}".format(lane_nbr, percentage_undetermined),
+                                         ordering=int(lane_nbr))
+                else:
+                    continue
 

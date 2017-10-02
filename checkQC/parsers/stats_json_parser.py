@@ -9,8 +9,7 @@ class StatsJsonParser(Parser):
 
     def __init__(self, runfolder, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Update this to reflect the actual place where the file should like
-        self.file_path = os.path.join(runfolder, "Stats.json")
+        self.file_path = os.path.join(runfolder, "Unaligned", "Stats", "Stats.json")
 
     def run(self):
         with open(self.file_path, "r") as f:

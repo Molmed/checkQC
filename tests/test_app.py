@@ -8,12 +8,10 @@ from checkQC.app import App
 class TestApp(unittest.TestCase):
 
     def setUp(self):
-        self.app = App(runfolder=os.path.join(os.path.dirname(__file__), "resources", "MiSeqDemo"))
+        self.app = App(runfolder=os.path.join(os.path.dirname(__file__), "resources", "170726_D00118_0303_BCB1TVANXX/"))
 
-    def test_run_with_non_existent_file(self):
-        # TODO Improve this test once we have better test data
-        with self.assertRaises(FileNotFoundError):
-            self.app.run()
+    def test_run(self):
+        self.app.run()
 
 
 if __name__ == '__main__':
