@@ -2,7 +2,8 @@ from unittest import TestCase
 
 import os
 
-from checkQC.run_type_recognizer import RunTypeRecognizer, HiSeq2500, MiSeq, RunModeUnknown, ReagentVersionUnknown
+from checkQC.run_type_recognizer import RunTypeRecognizer, HiSeq2500, MiSeq, NovaSeq, \
+    RunModeUnknown, ReagentVersionUnknown
 
 class TestRunTypeRecognizer(TestCase):
 
@@ -38,6 +39,7 @@ class TestHiSeq2500(TestCase):
     def setUp(self):
         self.hiseq2500 = HiSeq2500()
         self.miseq = MiSeq()
+        self.novaseq = NovaSeq()
 
     def test_all_is_well(self):
         runtype_dict = {"RunParameters": {"Setup": {"RunMode": "RapidHighOutput", "Sbs": "HiSeq SBS Kit v4"}}}
@@ -79,3 +81,13 @@ class TestHiSeq2500(TestCase):
 
         with self.assertRaises(ReagentVersionUnknown):
             self.miseq.reagent_version(mock_runtype_recognizer)
+
+    def test_novaseq_reagent_version(self):
+        runtype_dict = {"RunParameters": {"ReagentKitVersion": "Version2"}}
+        mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
+
+        actual = self.novaseq.reagent_version(mock_runtype_recognizer)
+
+        expected = "novaseq_v1"
+
+        self.assertTrue(actual, expected)
