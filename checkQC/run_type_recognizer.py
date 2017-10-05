@@ -29,6 +29,15 @@ class IlluminaInstrument(object):
             if instrument_name == subclass.name():
                 return subclass()
 
+class NovaSeq(IlluminaInstrument):
+
+    @staticmethod
+    def name():
+        return "novaseq"
+
+    @staticmethod
+    def reagent_version(runtype_recognizer):
+        return "v1"
 
 class HiSeqX(IlluminaInstrument):
 

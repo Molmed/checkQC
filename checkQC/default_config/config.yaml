@@ -6,6 +6,7 @@ instrument_type_mappings:
   M: miseq
   D: hiseq2500
   ST: hiseqx
+  A: novaseq
 
 # Please note that intervals for read lengths are specified as: min < x <= max (i.e. upper inclusive, lower exclusive)
 
@@ -99,6 +100,21 @@ hiseq2500_rapidrun_v2:
         error: unknown
 
 hiseqx_v2:
+  150:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 400
+        error: unknown
+      - name: Q30Handler
+        warning: 39 # Give lowest nbr in Gbp
+        error: unknown # Give lowest nbr in Gbp
+      - name: ErrorRateHandler
+        warning: 5
+        error: unknown
+
+# TODO These are not the real novaseq qc criteria, but they need to be determined
+#      once we know what they are. /JD 2017-10-05
+novaseq_v1:
   150:
     handlers:
       - name: ClusterPFHandler
