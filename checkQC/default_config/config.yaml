@@ -29,6 +29,9 @@ hiseq2500_rapidhighoutput_v4:
       - name: ErrorRateHandler
         warning: 1.5
         error: unknown
+      - name: ReadsPerSampleHandler
+        warning: 90 # 50 % of threshold for clusters pass filter
+        error: unknown
   100-110:
     handlers:
       - name: ClusterPFHandler
@@ -40,6 +43,9 @@ hiseq2500_rapidhighoutput_v4:
       - name: ErrorRateHandler
         warning: 2
         error: unknown
+      - name: ReadsPerSampleHandler
+        warning: 90 # 50 % of threshold for clusters pass filter
+        error: unknown
   120-130:
     handlers:
       - name: ClusterPFHandler
@@ -50,6 +56,9 @@ hiseq2500_rapidhighoutput_v4:
         error: unknown # Give lowest nbr in Gbp
       - name: ErrorRateHandler
         warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: 90 # 50 % of threshold for clusters pass filter
         error: unknown
 
 hiseq2500_rapidrun_v2:
@@ -64,6 +73,9 @@ hiseq2500_rapidrun_v2:
       - name: ErrorRateHandler
         warning: 1.5
         error: unknown
+      - name: ReadsPerSampleHandler
+        warning: 55 # 50 % of threshold for clusters pass filter
+        error: unknown
   100-125:
     handlers:
       - name: ClusterPFHandler
@@ -74,6 +86,9 @@ hiseq2500_rapidrun_v2:
         error: unknown # Give lowest nbr in Gbp
       - name: ErrorRateHandler
         warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: 55 # 50 % of threshold for clusters pass filter
         error: unknown
   150-175:
     handlers:
@@ -86,6 +101,9 @@ hiseq2500_rapidrun_v2:
       - name: ErrorRateHandler
         warning: unknown
         error: 3
+      - name: ReadsPerSampleHandler
+        warning: 55 # 50 % of threshold for clusters pass filter
+        error: unknown
   250-265:
     handlers:
       - name: ClusterPFHandler
@@ -96,6 +114,9 @@ hiseq2500_rapidrun_v2:
         error: unknown # Give lowest nbr in Gbp
       - name: ErrorRateHandler
         warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: 55 # 50 % of threshold for clusters pass filter
         error: unknown
 
 hiseqx_v2:
@@ -110,6 +131,9 @@ hiseqx_v2:
       - name: ErrorRateHandler
         warning: 5
         error: unknown
+      - name: ReadsPerSampleHandler
+        warning: 200 # 50 % of threshold for clusters pass filter
+        error: unknown
 
 miseq_v2:
   25-50:
@@ -123,6 +147,9 @@ miseq_v2:
       - name: ErrorRateHandler
         warning: 1
         error: unknown
+      - name: ReadsPerSampleHandler
+        warning: 5 # 50 % of threshold for clusters pass filter
+        error: unknown
   150:
     handlers:
       - name: ClusterPFHandler
@@ -134,6 +161,9 @@ miseq_v2:
       - name: ErrorRateHandler
         warning: 2
         error: uknown
+      - name: ReadsPerSampleHandler
+        warning: 5 # 50 % of threshold for clusters pass filter
+        error: unknown
   250:
     handlers:
       - name: ClusterPFHandler
@@ -144,6 +174,9 @@ miseq_v2:
         error: unknown # Give lowest nbr in Gbp
       - name: ErrorRateHandler
         warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: 5 # 50 % of threshold for clusters pass filter
         error: unknown
 
 miseq_v3:
@@ -158,6 +191,9 @@ miseq_v3:
       - name: ErrorRateHandler
         warning: 1.5
         error: unknown
+      - name: ReadsPerSampleHandler
+        warning: 9 # 50 % of threshold for clusters pass filter
+        error: unknown
   300:
     handlers:
       - name: ClusterPFHandler
@@ -168,4 +204,7 @@ miseq_v3:
         error: unknown # Give lowest nbr in Gbp
       - name: ErrorRateHandler
         warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: 9 # 50 % of threshold for clusters pass filter
         error: unknown
