@@ -3,12 +3,13 @@ checkQC
 [![Build Status](https://travis-ci.org/Molmed/checkQC.svg?branch=master)](https://travis-ci.org/Molmed/checkQC)
 [![codecov](https://codecov.io/gh/Molmed/checkQC/branch/master/graph/badge.svg)](https://codecov.io/gh/Molmed/checkQC)
 
-**NOTICE**<br>
-This is is pre-alpha stage software, it is not yet ready for any kind of real usage.
-Please return once we have a release. :D
+CheckQC is a program designed to check a set of quality criteria against an Illumina runfolder.
 
-`checkQC` is a program designed to check a set of quality criteria against an Illumina runfolder. It has been designed
-to be modular, and exactly which "qc handlers" are executed with which parameters for a specific run type (i.e. machine
+This is useful as part of a pipeline, where one needs to evaluate a set of quality criteria after having demultiplexing 
+i.e. in a few seconds. It will warn if there are problems breaching warning criteria, and will emit a non-zero exit status if it finds
+any errors, thus making it easy to stop further processing if the run that is being evaluated needs troubleshooting.
+
+CheckQC has been designed to be modular, and exactly which "qc handlers" are executed with which parameters for a specific run type (i.e. machine
 type and run length) is determined by a configuration file.
 
 Instrument types supported in checkQC are the following:
@@ -19,31 +20,32 @@ Instrument types supported in checkQC are the following:
 
 Install instructions
 --------------------
+Right now the Illumina Interop library needs to be installed separately before moving on to
+installing checkqc.
 
-TODO: Note that this is still a work in progress description
 ```
-pip install -f https://github.com/Illumina/interop/releases/latest interop
-pip install checkQC
+pip install -f https://github.com/Illumina/interop/releases/tag/v1.1.1 interop
+pip install checkqc
 ```
 
 Running checkQC
 ---------------
 
-After installing `checkQC` you can run it by specifying the path to the runfolder you want to
+After installing CheckQC you can run it by specifying the path to the runfolder you want to
 analyze like this:
 
 ```
 checkqc <RUNFOLDER>
 ```
 
-This will use the default configuration file packaged with `checkQC` if you want to specify
+This will use the default configuration file packaged with CheckQC if you want to specify
 your own custom file, you can do so by adding a path to the config like this:
 
 ```
 checkqc --config_file <path to your config> <RUNFOLDER>
 ```
 
-When `checkQC` starts and no path to the config file is specified it will give you
+When CheckQC starts and no path to the config file is specified it will give you
 the path to where the default file is located on your system, if you want a template
 that you can customize according to your own needs.
 
@@ -52,7 +54,7 @@ Running in a Singularity container
 ----------------------------------
 
 [Singularity](http://singularity.lbl.gov/index.html) is a container system focusing on scientific use cases. 
-`checkQC` can be run in a Singularity container by first creating a container using the following:
+CheckQC can be run in a Singularity container by first creating a container using the following:
 
 ```
 singularity create checkQC.img
@@ -69,10 +71,10 @@ singularity run checkQC.img tests/resources/MiSeqDemo/
 General architecture notes
 --------------------------
 
-`checkQC` attempts to be as modular as possible, with respect to adding support for reading more file types (via
+CheckQC attempts to be as modular as possible, with respect to adding support for reading more file types (via
 the implementation of new parsers) and QC criteria (via the implementation of new handlers).
 
-Once `checkQC` starts it will read the configuration file provided, and based on the run type of being analyzed, it will
+Once CheckQC starts it will read the configuration file provided, and based on the run type of being analyzed, it will
 determine which handlers should be run, and with which parameters. The handlers specify which parser they require
 and a single instance of each such parser will be instantiated (i.e. if multiple handlers use the same parser, there
 should still only be a single parser instance of that type present). The handlers are then subscribed to events
