@@ -29,6 +29,7 @@ class IlluminaInstrument(object):
             if instrument_name == subclass.name():
                 return subclass()
 
+
 class NovaSeq(IlluminaInstrument):
 
     @staticmethod
@@ -38,6 +39,7 @@ class NovaSeq(IlluminaInstrument):
     @staticmethod
     def reagent_version(runtype_recognizer):
         return "v1"
+
 
 class HiSeqX(IlluminaInstrument):
 
@@ -130,12 +132,15 @@ class RunTypeRecognizer(object):
     def instrument_type(self):
         """
         This will look in the RunInfo.xml and determine the run type, based on the
-        mappings from instrument names to instrument types present in the config file.
+        mappings from instrument names to instrument types
         :raises: InstrumentTypeUnknown
         :return: the instrument type of the runfolder
         """
         instrument_name = self.run_info["RunInfo"]["Run"]["Instrument"]
-        machine_type_mappings = self._config["instrument_type_mappings"]
+        machine_type_mappings = {"M": "miseq",
+                                 "D": "hiseq2500",
+                                 "ST": "hiseqx",
+                                 "A": "novaseq"}
 
         for key, value in machine_type_mappings.items():
             if instrument_name.startswith(key):

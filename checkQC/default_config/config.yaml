@@ -17,14 +17,6 @@
 #    it is possible to specify handlers per instrument and read length interval.
 #
 
-# First letter in instrument name is indicative of model
-# i.e. SN7001335 is a HiSeq3500 since its name begins with
-# SN
-instrument_type_mappings:
-  M: miseq
-  D: hiseq2500
-  ST: hiseqx
-  A: novaseq
 
 default_handlers:
     - name: UndeterminedPercentageHandler
