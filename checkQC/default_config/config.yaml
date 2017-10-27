@@ -9,14 +9,12 @@ instrument_type_mappings:
   A: novaseq
 
 # Please note that intervals for read lengths are specified as: min < x <= max (i.e. upper inclusive, lower exclusive)
+# All other intervals are exclusive.
 
 default_handlers:
     - name: UndeterminedPercentageHandler
       warning: 10
       error: 30
-#    - name: PoolingEvennessHandler
-#      warning: 50
-#      error: unknown # Each sample should have  >= x % of the clusters divded by the number of samples in the pool
 
 hiseq2500_rapidhighoutput_v4:
   50-70:
@@ -149,6 +147,9 @@ novaseq_v1:
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: 200 # 50 % of threshold for clusters pass filter
         error: unknown
 
 miseq_v2:
