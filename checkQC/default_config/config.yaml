@@ -25,8 +25,8 @@ hiseq2500_rapidhighoutput_v4:
         warning: 180
         error: unknown
       - name: Q30Handler
-        warning: 7 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 1.5
         error: unknown
@@ -39,8 +39,8 @@ hiseq2500_rapidhighoutput_v4:
         warning: 180
         error: unknown
       - name: Q30Handler
-        warning: 14 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 2
         error: unknown
@@ -53,8 +53,8 @@ hiseq2500_rapidhighoutput_v4:
         warning: 180
         error: unknown
       - name: Q30Handler
-        warning: 18 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 2
         error: unknown
@@ -69,8 +69,8 @@ hiseq2500_rapidrun_v2:
         warning: 110
         error: unknown
       - name: Q30Handler
-        warning: 4.4 # Give lowest nbr in Gbp
-        error: uknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 1.5
         error: unknown
@@ -83,8 +83,8 @@ hiseq2500_rapidrun_v2:
         warning: 110
         error: unknown
       - name: Q30Handler
-        warning: 8.8 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 2
         error: unknown
@@ -97,11 +97,11 @@ hiseq2500_rapidrun_v2:
         warning: 110
         error: unknown
       - name: Q30Handler
-        warning: unknown # Give lowest nbr in Gbp
-        error: 12.3 # Give lowest nbr in Gbp
+        warning: unknown # Give percentage for reads greater than Q30
+        error: 12.3 # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: unknown
-        error: 3
+        error: 80
       - name: ReadsPerSampleHandler
         warning: 55 # 50 % of threshold for clusters pass filter
         error: unknown
@@ -111,8 +111,8 @@ hiseq2500_rapidrun_v2:
         warning: 110
         error: unknown
       - name: Q30Handler
-        warning: 20 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 5
         error: unknown
@@ -127,8 +127,8 @@ hiseqx_v2:
         warning: 400
         error: unknown
       - name: Q30Handler
-        warning: 39 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 5
         error: unknown
@@ -145,8 +145,8 @@ novaseq_v1:
         warning: 400
         error: unknown
       - name: Q30Handler
-        warning: 39 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 5
         error: unknown
@@ -158,8 +158,8 @@ miseq_v2:
         warning: 10
         error: unknown
       - name: Q30Handler
-        warning: 0.2 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 1
         error: unknown
@@ -172,8 +172,8 @@ miseq_v2:
         warning: 10
         error: unknown
       - name: Q30Handler
-        warning: 1.1 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 2
         error: uknown
@@ -186,8 +186,8 @@ miseq_v2:
         warning: 10
         error: unknown
       - name: Q30Handler
-        warning: 1.8 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 5
         error: unknown
@@ -202,8 +202,8 @@ miseq_v3:
         warning: 18
         error: unknown
       - name: Q30Handler
-        warning: 1.1 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 1.5
         error: unknown
@@ -216,8 +216,8 @@ miseq_v3:
         warning: 18
         error: unknown
       - name: Q30Handler
-        warning: 3.7 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 5
         error: unknown
