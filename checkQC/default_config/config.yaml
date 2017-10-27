@@ -20,7 +20,7 @@ hiseq2500_rapidhighoutput_v4:
   50-70:
     handlers:
       - name: ClusterPFHandler
-        warning: 180
+        warning: 180 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30
@@ -34,7 +34,7 @@ hiseq2500_rapidhighoutput_v4:
   100-110:
     handlers:
       - name: ClusterPFHandler
-        warning: 180
+        warning: 180 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30
@@ -48,7 +48,7 @@ hiseq2500_rapidhighoutput_v4:
   120-130:
     handlers:
       - name: ClusterPFHandler
-        warning: 180
+        warning: 180 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30
@@ -64,7 +64,7 @@ hiseq2500_rapidrun_v2:
   50-70:
     handlers:
       - name: ClusterPFHandler
-        warning: 110
+        warning: 110 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30
@@ -78,7 +78,7 @@ hiseq2500_rapidrun_v2:
   100-125:
     handlers:
       - name: ClusterPFHandler
-        warning: 110
+        warning: 110 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30
@@ -92,7 +92,7 @@ hiseq2500_rapidrun_v2:
   150-175:
     handlers:
       - name: ClusterPFHandler
-        warning: 110
+        warning: 110 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: unknown # Give percentage for reads greater than Q30
@@ -106,7 +106,7 @@ hiseq2500_rapidrun_v2:
   250-265:
     handlers:
       - name: ClusterPFHandler
-        warning: 110
+        warning: 110 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30
@@ -122,7 +122,7 @@ hiseqx_v2:
   150:
     handlers:
       - name: ClusterPFHandler
-        warning: 400
+        warning: 400 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30
@@ -140,7 +140,7 @@ novaseq_v1:
   150:
     handlers:
       - name: ClusterPFHandler
-        warning: 400
+        warning: 400 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30
@@ -156,7 +156,7 @@ miseq_v2:
   25-50:
     handlers:
       - name: ClusterPFHandler
-        warning: 10
+        warning: 10 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30
@@ -170,7 +170,7 @@ miseq_v2:
   150:
     handlers:
       - name: ClusterPFHandler
-        warning: 10
+        warning: 10 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30
@@ -184,7 +184,7 @@ miseq_v2:
   250:
     handlers:
       - name: ClusterPFHandler
-        warning: 10
+        warning: 10 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30
@@ -200,7 +200,7 @@ miseq_v3:
   75:
     handlers:
       - name: ClusterPFHandler
-        warning: 18
+        warning: 18 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30
@@ -214,7 +214,7 @@ miseq_v3:
   300:
     handlers:
       - name: ClusterPFHandler
-        warning: 18
+        warning: 18 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30

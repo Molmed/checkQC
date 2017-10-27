@@ -31,12 +31,12 @@ class ReadsPerSampleHandler(QCHandler):
 
                 if self.error() != self.UNKNOWN and sample_total_reads < (float(self.error()) / float(nbr_of_samples)):
                     yield QCErrorFatal("Number of reads for sample {} was too low on lane {}, "
-                                       "it was: {} M".format(sample_id, lane_nbr, sample_total_reads),
+                                       "it was: {:.3f} M".format(sample_id, lane_nbr, sample_total_reads),
                                        ordering=int(lane_nbr))
                 elif self.warning() != self.UNKNOWN and \
                                 sample_total_reads < (float(self.warning()) / float(nbr_of_samples)):
                     yield QCErrorWarning("Number of reads for sample {} was too low on lane {}, "
-                                         "it was: {} M".format(sample_id, lane_nbr, sample_total_reads),
+                                         "it was: {:.3f} M".format(sample_id, lane_nbr, sample_total_reads),
                                          ordering=int(lane_nbr))
                 else:
                     continue

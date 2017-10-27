@@ -25,14 +25,14 @@ class Q30Handler(QCHandler):
             percent_q30 = error_dict["percent_q30"]
 
             if self.error() != self.UNKNOWN and percent_q30 < self.error():
-                yield QCErrorFatal("% Q30 {} was too low on lane: {} for read: {}".format(percent_q30,
-                                                                                               lane_nbr,
-                                                                                               read),
+                yield QCErrorFatal("%Q30 {:.2f} was too low on lane: {} for read: {}".format(percent_q30,
+                                                                                             lane_nbr,
+                                                                                             read),
                                    ordering=int(lane_nbr))
             elif self.warning() != self.UNKNOWN and percent_q30 < self.warning():
-                yield QCErrorWarning("% Q30 {} was too low on lane: {} for read: {}".format(percent_q30,
-                                                                                                 lane_nbr,
-                                                                                                 read),
+                yield QCErrorWarning("%Q30 {:.2f} was too low on lane: {} for read: {}".format(percent_q30,
+                                                                                               lane_nbr,
+                                                                                               read),
                                      ordering=int(lane_nbr))
             else:
                 continue
