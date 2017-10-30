@@ -1,32 +1,37 @@
 
-# First letter in instrument name is indicative of model
-# i.e. SN7001335 is a HiSeq3500 since its name begins with
-# SN
-instrument_type_mappings:
-  M: miseq
-  D: hiseq2500
-  ST: hiseqx
-  A: novaseq
 
-# Please note that intervals for read lengths are specified as: min < x <= max (i.e. upper inclusive, lower exclusive)
+# Usage instruction for config
+# -----------------------------
+#  - Please note that intervals for read lengths are specified as: min < x <= max (i.e. upper inclusive, lower exclusive)
+#  - All other intervals are exclusive.
+#  - Values that are specified under each handler, e.g.
+#
+#      - name: ClusterPFHandler
+#        warning: 180 # Millons of clusters
+#        error: unknown
+#
+#    are specific to that partiular handler, but in general any value can be substituted with "unknown", in which case
+#    this will not be evaluated.
+#
+#  - Handlers specified under "default_handlers" will be run regardless of instrument type. For all other cases
+#    it is possible to specify handlers per instrument and read length interval.
+#
+
 
 default_handlers:
     - name: UndeterminedPercentageHandler
       warning: 10
       error: 30
-#    - name: PoolingEvennessHandler
-#      warning: 50
-#      error: unknown # Each sample should have  >= x % of the clusters divded by the number of samples in the pool
 
 hiseq2500_rapidhighoutput_v4:
   50-70:
     handlers:
       - name: ClusterPFHandler
-        warning: 180
+        warning: 180 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 7 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 1.5
         error: unknown
@@ -36,11 +41,11 @@ hiseq2500_rapidhighoutput_v4:
   100-110:
     handlers:
       - name: ClusterPFHandler
-        warning: 180
+        warning: 180 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 14 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 2
         error: unknown
@@ -50,11 +55,11 @@ hiseq2500_rapidhighoutput_v4:
   120-130:
     handlers:
       - name: ClusterPFHandler
-        warning: 180
+        warning: 180 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 18 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 2
         error: unknown
@@ -66,11 +71,11 @@ hiseq2500_rapidrun_v2:
   50-70:
     handlers:
       - name: ClusterPFHandler
-        warning: 110
+        warning: 110 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 4.4 # Give lowest nbr in Gbp
-        error: uknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 1.5
         error: unknown
@@ -80,11 +85,11 @@ hiseq2500_rapidrun_v2:
   100-125:
     handlers:
       - name: ClusterPFHandler
-        warning: 110
+        warning: 110 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 8.8 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 2
         error: unknown
@@ -94,25 +99,25 @@ hiseq2500_rapidrun_v2:
   150-175:
     handlers:
       - name: ClusterPFHandler
-        warning: 110
+        warning: 110 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: unknown # Give lowest nbr in Gbp
-        error: 12.3 # Give lowest nbr in Gbp
+        warning: unknown # Give percentage for reads greater than Q30
+        error: 12.3 # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: unknown
-        error: 3
+        error: 80
       - name: ReadsPerSampleHandler
         warning: 55 # 50 % of threshold for clusters pass filter
         error: unknown
   250-265:
     handlers:
       - name: ClusterPFHandler
-        warning: 110
+        warning: 110 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 20 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 5
         error: unknown
@@ -124,11 +129,11 @@ hiseqx_v2:
   150:
     handlers:
       - name: ClusterPFHandler
-        warning: 400
+        warning: 400 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 39 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 5
         error: unknown
@@ -142,24 +147,27 @@ novaseq_v1:
   150:
     handlers:
       - name: ClusterPFHandler
-        warning: 400
+        warning: 400 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 39 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: 200 # 50 % of threshold for clusters pass filter
         error: unknown
 
 miseq_v2:
   25-50:
     handlers:
       - name: ClusterPFHandler
-        warning: 10
+        warning: 10 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 0.2 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 1
         error: unknown
@@ -169,11 +177,11 @@ miseq_v2:
   150:
     handlers:
       - name: ClusterPFHandler
-        warning: 10
+        warning: 10 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 1.1 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 2
         error: uknown
@@ -183,11 +191,11 @@ miseq_v2:
   250:
     handlers:
       - name: ClusterPFHandler
-        warning: 10
+        warning: 10 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 1.8 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 5
         error: unknown
@@ -199,11 +207,11 @@ miseq_v3:
   75:
     handlers:
       - name: ClusterPFHandler
-        warning: 18
+        warning: 18 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 1.1 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 1.5
         error: unknown
@@ -213,11 +221,11 @@ miseq_v3:
   300:
     handlers:
       - name: ClusterPFHandler
-        warning: 18
+        warning: 18 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 3.7 # Give lowest nbr in Gbp
-        error: unknown # Give lowest nbr in Gbp
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         warning: 5
         error: unknown
