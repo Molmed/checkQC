@@ -5,8 +5,8 @@ checkQC
 
 CheckQC is a program designed to check a set of quality criteria against an Illumina runfolder.
 
-This is useful as part of a pipeline, where one needs to evaluate a set of quality criteria after having demultiplexing 
-i.e. in a few seconds. It will warn if there are problems breaching warning criteria, and will emit a non-zero exit status if it finds
+This is useful as part of a pipeline, where one needs to evaluate a set of quality criteria after demultiplexing. CheckQC is fast, and
+should finish a few seconds. It will warn if there are problems breaching warning criteria, and will emit a non-zero exit status if it finds
 any errors, thus making it easy to stop further processing if the run that is being evaluated needs troubleshooting.
 
 CheckQC has been designed to be modular, and exactly which "qc handlers" are executed with which parameters for a specific run type (i.e. machine
