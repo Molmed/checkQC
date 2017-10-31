@@ -2,6 +2,7 @@
 import unittest
 
 from checkQC.handlers.qc_handler import QCHandler, QCErrorWarning, QCErrorFatal
+from checkQC.config import ConfigurationError
 
 
 class TestQCHandler(unittest.TestCase):
@@ -35,6 +36,11 @@ class TestQCHandler(unittest.TestCase):
             self.qc_handler.report()
 
         self.assertEqual(log_checker.output, expected_logs)
+
+    def test_validate_configuration(self):
+        mock_handler = self.MockQCHandler({})
+        with self.assertRaises(ConfigurationError):
+            mock_handler.validate_configuration()
 
 if __name__ == '__main__':
     unittest.main()
