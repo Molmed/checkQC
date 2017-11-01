@@ -18,7 +18,7 @@ log = logging.getLogger("")
 
 @click.command("checkqc")
 @click.option("--config", help="Path to the checkQC configuration file", type=click.Path())
-@click.option('--json', is_flag=True, default=False)
+@click.option('--json', is_flag=True, default=False, help="Print the results of the run as json to stdout")
 @click.argument('runfolder', type=click.Path())
 def start(config, json, runfolder):
     """
