@@ -44,5 +44,36 @@ class TestErrorRateHandler(HandlerTestBase):
         class_names = self.map_errors_and_warnings_to_class_names(errors_and_warnings)
         self.assertListEqual(class_names, ['QCErrorFatal', 'QCErrorFatal'])
 
+    def test_error_rate_zero_not_allowed(self):
+        key = "error_rate"
+        value_1 = {"lane": 1, "read": 1, "error_rate": 0}
+        value_2 = {"lane": 1, "read": 2, "error_rate": 0}
+        # Empty the default list, and then add some more values
+        self.error_handler.error_results = []
+        self.error_handler.collect((key, value_1))
+        self.error_handler.collect((key, value_2))
+
+        qc_config = {'name': 'ErrorHandler', 'error': 2.9, 'warning': 1, 'allow_missing_error_rate': False}
+        self.set_qc_config(qc_config)
+        errors_and_warnings = list(self.error_handler.check_qc())
+        self.assertEqual(len(errors_and_warnings), 2)
+
+        class_names = self.map_errors_and_warnings_to_class_names(errors_and_warnings)
+        self.assertListEqual(class_names, ['QCErrorFatal', 'QCErrorFatal'])
+
+    def test_error_rate_zero_is_allowed(self):
+        key = "error_rate"
+        value_1 = {"lane": 1, "read": 1, "error_rate": 0}
+        value_2 = {"lane": 1, "read": 2, "error_rate": 0}
+        # Empty the default list, and then add some more values
+        self.error_handler.error_results = []
+        self.error_handler.collect((key, value_1))
+        self.error_handler.collect((key, value_2))
+
+        qc_config = {'name': 'ErrorHandler', 'error': 2.9, 'warning': 1, 'allow_missing_error_rate': True}
+        self.set_qc_config(qc_config)
+        errors_and_warnings = list(self.error_handler.check_qc())
+        self.assertEqual(len(errors_and_warnings), 0)
+
 if __name__ == '__main__':
     unittest.main()

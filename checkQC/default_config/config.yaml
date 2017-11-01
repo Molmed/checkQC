@@ -33,6 +33,7 @@ hiseq2500_rapidhighoutput_v4:
         warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: 1.5
         error: unknown
       - name: ReadsPerSampleHandler
@@ -47,6 +48,7 @@ hiseq2500_rapidhighoutput_v4:
         warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: 2
         error: unknown
       - name: ReadsPerSampleHandler
@@ -61,6 +63,7 @@ hiseq2500_rapidhighoutput_v4:
         warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: 2
         error: unknown
       - name: ReadsPerSampleHandler
@@ -77,6 +80,7 @@ hiseq2500_rapidrun_v2:
         warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: 1.5
         error: unknown
       - name: ReadsPerSampleHandler
@@ -91,6 +95,7 @@ hiseq2500_rapidrun_v2:
         warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: 2
         error: unknown
       - name: ReadsPerSampleHandler
@@ -105,6 +110,7 @@ hiseq2500_rapidrun_v2:
         warning: unknown # Give percentage for reads greater than Q30
         error: 12.3 # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: unknown
         error: 80
       - name: ReadsPerSampleHandler
@@ -119,6 +125,7 @@ hiseq2500_rapidrun_v2:
         warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: 5
         error: unknown
       - name: ReadsPerSampleHandler
@@ -135,6 +142,7 @@ hiseqx_v2:
         warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: 5
         error: unknown
       - name: ReadsPerSampleHandler
@@ -153,6 +161,7 @@ novaseq_v1:
         warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: 5
         error: unknown
       - name: ReadsPerSampleHandler
@@ -169,6 +178,7 @@ miseq_v2:
         warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: 1
         error: unknown
       - name: ReadsPerSampleHandler
@@ -183,6 +193,7 @@ miseq_v2:
         warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: 2
         error: uknown
       - name: ReadsPerSampleHandler
@@ -197,6 +208,7 @@ miseq_v2:
         warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: 5
         error: unknown
       - name: ReadsPerSampleHandler
@@ -213,6 +225,7 @@ miseq_v3:
         warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: 1.5
         error: unknown
       - name: ReadsPerSampleHandler
@@ -227,6 +240,7 @@ miseq_v3:
         warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
+        allow_missing_error_rate: False
         warning: 5
         error: unknown
       - name: ReadsPerSampleHandler

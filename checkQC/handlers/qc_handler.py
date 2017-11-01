@@ -1,7 +1,10 @@
 
 import logging
 
+from checkQC.config import ConfigurationError
+
 log = logging.getLogger()
+
 
 class Subscriber(object):
 
@@ -56,6 +59,21 @@ class QCHandler(Subscriber):
         self._exit_status = 0
         self.qc_config = qc_config
 
+    def custom_configuration_validation(self):
+        """
+        Override this method in subclass to provide additional configuration behaviour.
+        Raise a `ConfigurationError` if there is a problem with the provided config.
+        """
+        pass
+
+    def validate_configuration(self):
+        try:
+            self.qc_config[self.ERROR]
+            self.qc_config[self.WARNING]
+        except KeyError as e:
+            raise ConfigurationError("Configuration expects key: {}. Perhaps it is missing?".format(e.args[0]))
+        self.custom_configuration_validation()
+
     def error(self):
         return self.qc_config[self.ERROR]
 
@@ -66,7 +84,7 @@ class QCHandler(Subscriber):
         return self._exit_status
 
     def parser(self):
-        raise NotImplementedError("A parser needs to return the class of the parser it needs!")
+        raise NotImplementedError("A handler needs to return the class of the parser it needs!")
 
     def collect(self, value):
         raise NotImplementedError

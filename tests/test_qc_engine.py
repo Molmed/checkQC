@@ -6,7 +6,7 @@ from checkQC.handlers.qc_handler_factory import QCHandlerFactory
 from checkQC.handlers.yield_handler import YieldHandler
 from checkQC.handlers.undetermined_percentage_handler import UndeterminedPercentageHandler
 from checkQC.parsers.parser import Parser
-
+from checkQC.config import ConfigurationError
 
 class TestQCEngine(TestCase):
 
@@ -62,6 +62,19 @@ class TestQCEngine(TestCase):
         self.assertTrue(len(self.qc_engine._parsers_and_handlers.keys()) == 1)
         self.assertTrue(len(self.qc_engine._parsers_and_handlers.values()) == 1)
         self.assertListEqual(list(self.qc_engine._parsers_and_handlers.values())[0], self.handlers)
+
+    def test__validate_configurations_all_ok(self):
+        self.qc_engine._handlers = self.handlers
+        self.qc_engine._parsers_and_handlers = self.parsers_and_handlers
+        result = self.qc_engine._validate_configurations()
+        self.assertTrue(result)
+
+    def test__validate_configurations_has_problem(self):
+        self.qc_engine._handlers = self.handlers
+        self.qc_engine._parsers_and_handlers = self.parsers_and_handlers
+        self.mock_yield_handler.validate_configuration.side_effect = ConfigurationError
+        with self.assertRaises(ConfigurationError):
+            self.qc_engine._validate_configurations()
 
     def test__subscribe_handlers_to_parsers(self):
         self.qc_engine._handlers = self.handlers
@@ -120,4 +133,9 @@ class TestQCEngine(TestCase):
         for parser in self.qc_engine._parsers_and_handlers.keys():
             self.assertTrue(parser.has_been_run)
 
+        self.assertEqual(self.qc_engine.exit_status, 1)
+
+    def test_run_with_config_error(self):
+        self.mock_yield_handler.validate_configuration.side_effect = ConfigurationError
+        self.qc_engine.run()
         self.assertEqual(self.qc_engine.exit_status, 1)

@@ -7,6 +7,10 @@ import yaml
 log = logging.getLogger("")
 
 
+class ConfigurationError(Exception):
+    pass
+
+
 class ConfigFactory(object):
 
     @staticmethod
@@ -55,7 +59,6 @@ class Config(object):
             if not default_handler["name"] in current_handler_names:
                 current_handler_config.append(default_handler)
         return current_handler_config
-
 
     def get_handler_config(self, instrument_and_reagent_type, read_length):
         """

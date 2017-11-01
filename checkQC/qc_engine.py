@@ -1,7 +1,11 @@
 
 from collections import defaultdict
+import logging
 
 from checkQC.handlers.qc_handler_factory import QCHandlerFactory
+from checkQC.config import ConfigurationError
+
+log = logging.getLogger("")
 
 
 class QCEngine(object):
@@ -18,16 +22,29 @@ class QCEngine(object):
             self._qc_handler_factory = QCHandlerFactory()
 
     def run(self):
-        self._create_handlers()
-        self._initiate_parsers()
-        self._subscribe_handlers_to_parsers()
-        self._run_parsers()
-        self._compile_reports()
+        try:
+            self._create_handlers()
+            self._validate_configurations()
+            self._initiate_parsers()
+            self._subscribe_handlers_to_parsers()
+            self._run_parsers()
+            self._compile_reports()
+        except ConfigurationError:
+            self.exit_status = 1
 
     def _create_handlers(self):
         for clazz_config in self.handlers_config:
             self._handlers.append(self._qc_handler_factory.
                                   create_subclass_instance(clazz_config["name"], clazz_config))
+
+    def _validate_configurations(self):
+        try:
+            for handler in self._handlers:
+                handler.validate_configuration()
+            return True
+        except ConfigurationError as e:
+            log.error("Error in configuration found for handler: {}. {}".format(type(handler).__name__, e))
+            raise e
 
     def _initiate_parsers(self):
         for handler in self._handlers:
