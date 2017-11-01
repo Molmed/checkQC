@@ -33,7 +33,7 @@ class ErrorRateHandler(QCHandler):
     def check_qc(self):
 
         for error_dict in self.error_results:
-            lane_nbr = error_dict["lane"]
+            lane_nbr = int(error_dict["lane"])
             read = error_dict["read"]
             error_rate = error_dict["error_rate"]
 
@@ -46,12 +46,16 @@ class ErrorRateHandler(QCHandler):
                 yield QCErrorFatal("Error rate {} was to high on lane: {} for read: {}".format(error_rate,
                                                                                                lane_nbr,
                                                                                                read),
-                                   ordering=int(lane_nbr))
+                                   ordering=lane_nbr,
+                                   data={"lane": lane_nbr, "read": read,
+                                         "error_rate": error_rate, "threshold": self.error()})
             elif self.warning() != self.UNKNOWN and error_rate > self.warning():
                 yield QCErrorWarning("Error rate {} was to high on lane: {} for read: {}".format(error_rate,
                                                                                                  lane_nbr,
                                                                                                  error_rate),
-                                     ordering=int(lane_nbr))
+                                     ordering=lane_nbr,
+                                     data={"lane": lane_nbr, "read": read,
+                                           "error_rate": error_rate, "threshold": self.warning()})
             else:
                 continue
 

@@ -13,6 +13,11 @@ class TestApp(unittest.TestCase):
     def test_run(self):
         self.app.run()
 
+    def test_run_json_mode(self):
+        app = App(runfolder=os.path.join(os.path.dirname(__file__), "resources", "170726_D00118_0303_BCB1TVANXX/"),
+                  json_mode=True)
+        app.run()
+
 
 if __name__ == '__main__':
     unittest.main()

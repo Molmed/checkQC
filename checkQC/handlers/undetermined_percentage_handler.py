@@ -23,7 +23,7 @@ class UndeterminedPercentageHandler(QCHandler):
             # If no index was specified for a lane, there will be no undetermined
             # Undetermined key for that lane in the Stats.json file. /JD 2017-10-02
             if lane_dict.get("Undetermined"):
-                lane_nbr = lane_dict["LaneNumber"]
+                lane_nbr = int(lane_dict["LaneNumber"])
                 total_yield = lane_dict["Yield"]
 
                 undetermined_yield = lane_dict["Undetermined"]["Yield"]
@@ -33,11 +33,15 @@ class UndeterminedPercentageHandler(QCHandler):
                 if self.error() != self.UNKNOWN and percentage_undetermined > self.error():
                     yield QCErrorFatal("The percentage of undetermined indexes was"
                                        " to high on lane {}, it was: {:.2f}%".format(lane_nbr, percentage_undetermined),
-                                       ordering=int(lane_nbr))
+                                       ordering=lane_nbr,
+                                       data={"lane": lane_nbr, "percentage_undetermined": percentage_undetermined,
+                                             "threshold": self.error()})
                 elif self.warning() != self.UNKNOWN and percentage_undetermined > self.warning():
                     yield QCErrorWarning("The percentage of undetermined indexes was "
                                          "to high on lane {}, it was: {:.2f}%".format(lane_nbr, percentage_undetermined),
-                                         ordering=int(lane_nbr))
+                                         ordering=lane_nbr,
+                                         data={"lane": lane_nbr, "percentage_undetermined": percentage_undetermined,
+                                               "threshold": self.warning()})
                 else:
                     continue
 
