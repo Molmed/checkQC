@@ -22,7 +22,7 @@ log = logging.getLogger("")
 @click.argument('runfolder', type=click.Path())
 def start(config, json, runfolder):
     """
-    checkQC is a command line utility designed to quickly gather and assess quality control metrics from a
+    checkQC is a command line utility designed to quickly gather and assess quality control metrics from an
     Illumina sequencing run. It is highly customizable and which quality controls modules should be run
     for a particular run type should be specified in the provided configuration file.
     """
