@@ -4,7 +4,7 @@ import logging
 
 import yaml
 
-log = logging.getLogger("")
+log = logging.getLogger(__name__)
 
 
 class ConfigurationError(Exception):
@@ -27,6 +27,18 @@ class ConfigFactory(object):
 
             with open(config_path) as stream:
                 return yaml.load(stream)
+        except FileNotFoundError as e:
+            log.error("Could not find config file: {}".format(e))
+            raise e
+
+    @staticmethod
+    def get_logging_config_file(config_path):
+        try:
+            if not config_path:
+                config_path = resource_filename(Requirement.parse('checkQC'), 'checkQC/default_config/logger.yaml')
+                log.info("No logging config file specified, using default config from {}.".format(config_path))
+                with open(config_path) as stream:
+                    return yaml.load(stream)
         except FileNotFoundError as e:
             log.error("Could not find config file: {}".format(e))
             raise e

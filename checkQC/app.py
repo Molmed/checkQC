@@ -16,6 +16,7 @@ logging.basicConfig(level=logging.DEBUG,
 console_log_handler = logging.StreamHandler()
 log = logging.getLogger("")
 
+
 @click.command("checkqc")
 @click.option("--config", help="Path to the checkQC configuration file", type=click.Path())
 @click.option('--json', is_flag=True, default=False, help="Print the results of the run as json to stdout")
@@ -43,11 +44,7 @@ class App(object):
         self._json_mode = json_mode
         self.exit_status = 0
 
-    def run(self):
-        log.info("----------------")
-        log.info("Starting checkQC")
-        log.info("----------------")
-        log.info("Runfolder is: {}".format(self._runfolder))
+    def configure_and_run(self):
         config = ConfigFactory.from_config_path(self._config_file)
         run_type_recognizer = RunTypeRecognizer(config=config, runfolder=self._runfolder)
         instrument_and_reagent_version = run_type_recognizer.instrument_and_reagent_version()
@@ -58,6 +55,14 @@ class App(object):
         qc_engine = QCEngine(runfolder=self._runfolder, handler_config=handler_config)
         reports = qc_engine.run()
         self.exit_status = qc_engine.exit_status
+        return reports
+
+    def run(self):
+        log.info("----------------")
+        log.info("Starting checkQC")
+        log.info("----------------")
+        log.info("Runfolder is: {}".format(self._runfolder))
+        reports = self.configure_and_run()
         if self.exit_status == 0:
             log.info("Finished without finding any fatal qc errors.")
         else:
