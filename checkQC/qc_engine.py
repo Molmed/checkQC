@@ -62,7 +62,7 @@ class QCEngine(object):
             parser.run()
 
     def _compile_reports(self):
-        reports = {}
+        reports = {"exit_status": 0}
         for handler in self._handlers:
             handler_report = handler.report()
             if handler_report:
