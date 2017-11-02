@@ -28,11 +28,11 @@ class ClusterPFHandler(QCHandler):
                 yield QCErrorFatal("Clusters PF was to low on lane {}, "
                                    "it was: {:.2f} M".format(lane_nbr, lane_pf/pow(10, 6)),
                                    ordering=lane_nbr,
-                                   data={'lane': lane_nbr, 'lane_pf': lane_pf, 'threshold': self.warning()})
+                                   data={'lane': lane_nbr, 'lane_pf': lane_pf, 'threshold': self.error()})
             elif self.warning() != self.UNKNOWN and lane_pf < float(self.warning())*pow(10, 6):
                 yield QCErrorWarning("Cluster PF was to low on lane {}, "
                                      "it was: {:.2f} M".format(lane_nbr, lane_pf/pow(10, 6)),
                                      ordering=lane_nbr,
-                                     data={'lane': lane_nbr, 'lane_pf': lane_pf, 'threshold': self.error()})
+                                     data={'lane': lane_nbr, 'lane_pf': lane_pf, 'threshold': self.warning()})
             else:
                 continue
