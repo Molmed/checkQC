@@ -1,5 +1,6 @@
 
 import logging
+import json
 
 from checkQC.config import ConfigurationError
 
@@ -25,9 +26,10 @@ class Subscriber(object):
 
 
 class QCErrorFatal(object):
-    def __init__(self, msg, ordering=1):
+    def __init__(self, msg, ordering=1, data=None) :
         self.message = msg
         self.ordering = ordering
+        self.data = data
 
     def __str__(self):
         return "Fatal QC error: {}".format(self.message)
@@ -35,17 +37,24 @@ class QCErrorFatal(object):
     def __repr__(self):
         return self.__str__()
 
+    def as_dict(self):
+        return {'type': 'error', 'message': self.message, 'data': self.data}
+
 
 class QCErrorWarning(object):
-    def __init__(self, msg, ordering=1):
+    def __init__(self, msg, ordering=1, data=None):
         self.message = msg
         self.ordering = ordering
+        self.data = data
 
     def __str__(self):
         return "QC warning: {}".format(self.message)
 
     def __repr__(self):
         return self.__str__()
+
+    def as_dict(self):
+        return {'type': 'warning', 'message': self.message, 'data': self.data}
 
 
 class QCHandler(Subscriber):
@@ -102,4 +111,6 @@ class QCHandler(Subscriber):
                 log.error(element)
             else:
                 log.warning(element)
+
+        return sorted_errors_and_warnings
 

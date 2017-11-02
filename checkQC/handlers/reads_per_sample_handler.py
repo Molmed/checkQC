@@ -20,7 +20,7 @@ class ReadsPerSampleHandler(QCHandler):
     def check_qc(self):
 
         for lane_dict in self.conversion_results:
-            lane_nbr = lane_dict["LaneNumber"]
+            lane_nbr = int(lane_dict["LaneNumber"])
             lane_demux = lane_dict["DemuxResults"]
             nbr_of_samples = len(lane_demux)
 
@@ -32,11 +32,17 @@ class ReadsPerSampleHandler(QCHandler):
                 if self.error() != self.UNKNOWN and sample_total_reads < (float(self.error()) / float(nbr_of_samples)):
                     yield QCErrorFatal("Number of reads for sample {} was too low on lane {}, "
                                        "it was: {:.3f} M".format(sample_id, lane_nbr, sample_total_reads),
-                                       ordering=int(lane_nbr))
+                                       ordering=lane_nbr,
+                                       data={"lane": lane_nbr, "number_of_samples": nbr_of_samples,
+                                             "sample_id": sample_id, "sample_reads": sample_total_reads,
+                                             "threshold": self.error()})
                 elif self.warning() != self.UNKNOWN and \
                                 sample_total_reads < (float(self.warning()) / float(nbr_of_samples)):
                     yield QCErrorWarning("Number of reads for sample {} was too low on lane {}, "
                                          "it was: {:.3f} M".format(sample_id, lane_nbr, sample_total_reads),
-                                         ordering=int(lane_nbr))
+                                         ordering=lane_nbr,
+                                         data={"lane": lane_nbr, "number_of_samples": nbr_of_samples,
+                                               "sample_id": sample_id, "sample_reads": sample_total_reads,
+                                               "threshold": self.warning()})
                 else:
                     continue

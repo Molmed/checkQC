@@ -28,7 +28,8 @@ class QCEngine(object):
             self._initiate_parsers()
             self._subscribe_handlers_to_parsers()
             self._run_parsers()
-            self._compile_reports()
+            reports = self._compile_reports()
+            return reports
         except ConfigurationError:
             self.exit_status = 1
 
@@ -61,7 +62,11 @@ class QCEngine(object):
             parser.run()
 
     def _compile_reports(self):
+        reports = {}
         for handler in self._handlers:
-            handler.report()
+            handler_report = handler.report()
+            if handler_report:
+                reports[type(handler).__name__] = list(map(lambda x: x.as_dict(), handler_report))
             if handler.exit_status() != 0:
                 self.exit_status = 1
+        return reports
