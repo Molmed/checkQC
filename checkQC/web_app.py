@@ -17,6 +17,7 @@ from checkQC.config import ConfigFactory
 
 log = logging.getLogger(__name__)
 
+from checkQC import __version__ as checkqc_version
 
 class CheckQCHandler(tornado.web.RequestHandler):
 
@@ -36,6 +37,7 @@ class CheckQCHandler(tornado.web.RequestHandler):
         path_to_runfolder = os.path.join(monitor_path, runfolder)
         checkqc_app = App(config_file=qc_config_file, runfolder=path_to_runfolder)
         reports = checkqc_app.configure_and_run()
+        reports["version"] = checkqc_version
         return reports
 
     @coroutine
@@ -56,7 +58,7 @@ class WebApp(object):
 
     @staticmethod
     def _make_app(debug=False, **kwargs):
-        return tornado.web.Application(WebApp._routes(kwargs), debug=debug)
+        return tornado.web.Application(WebApp._routes(**kwargs), debug=debug)
 
     @staticmethod
     def _create_server(port, app):
@@ -82,8 +84,8 @@ class WebApp(object):
 @click.command("checkqc-ws")
 @click.argument('monitor_path', type=click.Path())
 @click.option("--port", help="Port which checkqc-ws will listen to (default: 9999).", type=click.INT, default=9999)
-@click.option("--config", help="Path to the checkQC configuration file", type=click.Path())
-@click.option("--log_config", help="Path to the checkQC logging configuration file", type=click.Path())
+@click.option("--config", help="Path to the checkQC configuration file (optional)", type=click.Path())
+@click.option("--log_config", help="Path to the checkQC logging configuration file (optional)", type=click.Path())
 @click.option('--debug', is_flag=True, default=False, help="Enable debug mode.")
 def start(monitor_path, port=9999, config=None, log_config=None, debug=False):
     webapp = WebApp()
