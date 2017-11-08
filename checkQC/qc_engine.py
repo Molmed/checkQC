@@ -5,7 +5,7 @@ import logging
 from checkQC.handlers.qc_handler_factory import QCHandlerFactory
 from checkQC.config import ConfigurationError
 
-log = logging.getLogger("")
+log = logging.getLogger(__name__)
 
 
 class QCEngine(object):
@@ -62,11 +62,12 @@ class QCEngine(object):
             parser.run()
 
     def _compile_reports(self):
-        reports = {}
+        reports = {"exit_status": 0}
         for handler in self._handlers:
             handler_report = handler.report()
             if handler_report:
                 reports[type(handler).__name__] = list(map(lambda x: x.as_dict(), handler_report))
             if handler.exit_status() != 0:
                 self.exit_status = 1
+                reports["exit_status"] = 1
         return reports

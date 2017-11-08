@@ -15,12 +15,14 @@ setup(
         "click",
         "PyYAML>=3.12",
         "interop",
-        "xmltodict"],
+        "xmltodict",
+        "tornado"],
     packages=find_packages(),
     package_data={'checkQC': ['default_config/config.yaml']},
     include_package_data=True,
     license='GPLv3',
     entry_points={
-        'console_scripts': ['checkqc = checkQC.app:start']
+        'console_scripts': ['checkqc = checkQC.app:start',
+                            'checkqc-ws = checkQC.web_app:start']
     },
 )
