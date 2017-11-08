@@ -28,7 +28,7 @@ pip install -f https://github.com/Illumina/interop/releases/tag/v1.1.1 interop
 pip install checkqc
 ```
 
-Running checkQC
+Running CheckQC
 ---------------
 
 After installing CheckQC you can run it by specifying the path to the runfolder you want to
@@ -48,6 +48,95 @@ checkqc --config_file <path to your config> <RUNFOLDER>
 When CheckQC starts and no path to the config file is specified it will give you
 the path to where the default file is located on your system, if you want a template
 that you can customize according to your own needs.
+
+Running CheckQC as a webservice
+-------------------------------
+
+In addition to running like a commandline application, CheckQC can be run as a simple webservice.
+
+To run it you simply need to provide the path to a directory where runfolders that you want to
+be able check are located. This is given as `MONITOR_PATH` below. There are a also a number
+of optional arguments that can be passed to the service.
+
+```
+$ checkqc-ws --help
+Usage: checkqc-ws [OPTIONS] MONITOR_PATH
+
+Options:
+  --port INTEGER     Port which checkqc-ws will listen to (default: 9999).
+  --config PATH      Path to the checkQC configuration file (optional)
+  --log_config PATH  Path to the checkQC logging configuration file (optional)
+  --debug            Enable debug mode.
+  --help             Show this message and exit.
+
+```
+
+Once the webserver is running you can query the `/qc/` endpoint and get any errors and
+warnings back as json.
+
+```
+$ curl -s -w'\n' localhost:9999/qc/170726_D00118_0303_BCB1TVANXX |
+python -m json.tool
+{
+    "ClusterPFHandler": [
+        {
+            "data": {
+                "lane": 1,
+                "lane_pf": 117929896,
+                "threshold": 180
+            },
+            "message": "Cluster PF was to low on lane 1, it was: 117.93 M",
+            "type": "warning"
+        },
+        {
+            "data": {
+                "lane": 7,
+                "lane_pf": 122263375,
+                "threshold": 180
+            },
+            "message": "Cluster PF was to low on lane 7, it was: 122.26 M",
+            "type": "warning"
+        },
+        {
+            "data": {
+                "lane": 8,
+                "lane_pf": 177018999,
+                "threshold": 180
+            },
+            "message": "Cluster PF was to low on lane 8, it was: 177.02 M",
+            "type": "warning"
+        }
+    ],
+    "ReadsPerSampleHandler": [
+        {
+            "data": {
+                "lane": 7,
+                "number_of_samples": 12,
+                "sample_id": "Sample_pq-27",
+                "sample_reads": 6.893002,
+                "threshold": 90
+            },
+            "message": "Number of reads for sample Sample_pq-27 was too low on lane 7, it was: 6.893 M",
+            "type": "warning"
+        },
+        {
+            "data": {
+                "lane": 7,
+                "number_of_samples": 12,
+                "sample_id": "Sample_pq-28",
+                "sample_reads": 7.10447,
+                "threshold": 90
+            },
+            "message": "Number of reads for sample Sample_pq-28 was too low on lane 7, it was: 7.104 M",
+            "type": "warning"
+        }
+    ],
+    "exit_status": 0,
+    "version": "1.1.0"
+}
+```
+
+
 
 
 Running in a Singularity container
