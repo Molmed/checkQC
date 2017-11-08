@@ -55,7 +55,7 @@ Running CheckQC as a webservice
 In addition to running like a commandline application, CheckQC can be run as a simple webservice.
 
 To run it you simply need to provide the path to a directory where runfolders that you want to
-be able check are located. This is given as `MONITOR_PATH` below. There are a also a number
+be able to check are located. This is given as `MONITOR_PATH` below. There are also a number
 of optional arguments that can be passed to the service.
 
 ```
@@ -71,12 +71,11 @@ Options:
 
 ```
 
-Once the webserver is running you can query the `/qc/` endpoint and get any errors and
-warnings back as json.
+Once the webserver is running you can query the `/qc/` endpoint and get any errors and warnings back as json.
+Here is an example how to query the endpoint, and what type of results it will return:
 
 ```
-$ curl -s -w'\n' localhost:9999/qc/170726_D00118_0303_BCB1TVANXX |
-python -m json.tool
+$ curl -s -w'\n' localhost:9999/qc/170726_D00118_0303_BCB1TVANXX | python -m json.tool
 {
     "ClusterPFHandler": [
         {
@@ -86,7 +85,8 @@ python -m json.tool
                 "threshold": 180
             },
             "message": "Cluster PF was to low on lane 1, it was: 117.93 M",
-            "type": "warning"
+           "type": "warning
+           Here is an example comman and its outputd:
         },
         {
             "data": {
