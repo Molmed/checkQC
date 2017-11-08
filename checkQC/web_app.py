@@ -65,7 +65,7 @@ class WebApp(object):
         return server
 
     def start_web_app(self, monitoring_path, port, config_file, log_config, debug):
-        logging_config_path = ConfigFactory.get_logging_config_file(log_config)
+        logging_config_path = ConfigFactory.get_logging_config_dict(log_config)
         logging.config.dictConfig(logging_config_path)
 
         log.info("Starting checkqc-ws at port: {}".format(port))
