@@ -39,6 +39,7 @@ class TestConfig(unittest.TestCase):
         handlers = self.config.get_handler_config('miseq_v3', "300")
         self.assertListEqual(handlers, [self.first_handler, self.default_handler])
 
+
 class TestConfigFactory(unittest.TestCase):
 
     def test_get_logging_config_file_default(self):
