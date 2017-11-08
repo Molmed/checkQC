@@ -85,8 +85,7 @@ $ curl -s -w'\n' localhost:9999/qc/170726_D00118_0303_BCB1TVANXX | python -m jso
                 "threshold": 180
             },
             "message": "Cluster PF was to low on lane 1, it was: 117.93 M",
-           "type": "warning
-           Here is an example comman and its outputd:
+            "type": "warning"
         },
         {
             "data": {
