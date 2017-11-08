@@ -1,14 +1,15 @@
 
 import sys
 import json
+import logging
 
 import click
 
 from checkQC.qc_engine import QCEngine
 from checkQC.config import ConfigFactory
 from checkQC.run_type_recognizer import RunTypeRecognizer
+from checkQC import __version__ as checkqc_version
 
-import logging
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(levelname)-8s %(message)s')
@@ -20,8 +21,9 @@ log = logging.getLogger("")
 @click.command("checkqc")
 @click.option("--config", help="Path to the checkQC configuration file", type=click.Path())
 @click.option('--json', is_flag=True, default=False, help="Print the results of the run as json to stdout")
+@click.option('--version', is_flag=True, default=False, help="Print the version of checkQC to stdout")
 @click.argument('runfolder', type=click.Path())
-def start(config, json, runfolder):
+def start(config, json, version, runfolder):
     """
     checkQC is a command line utility designed to quickly gather and assess quality control metrics from an
     Illumina sequencing run. It is highly customizable and which quality controls modules should be run
@@ -31,9 +33,12 @@ def start(config, json, runfolder):
     # This is the application entry point
     # -----------------------------------
 
-    app = App(runfolder, config, json)
-    app.run()
-    sys.exit(app.exit_status)
+    if version:
+        print(checkqc_version)
+    else:
+        app = App(runfolder, config, json)
+        app.run()
+        sys.exit(app.exit_status)
 
 
 class App(object):
@@ -58,9 +63,9 @@ class App(object):
         return reports
 
     def run(self):
-        log.info("----------------")
-        log.info("Starting checkQC")
-        log.info("----------------")
+        log.info("------------------------")
+        log.info("Starting checkQC ({})".format(checkqc_version))
+        log.info("------------------------")
         log.info("Runfolder is: {}".format(self._runfolder))
         reports = self.configure_and_run()
         if self.exit_status == 0:
