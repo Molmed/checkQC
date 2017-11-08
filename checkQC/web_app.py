@@ -2,11 +2,13 @@
 import logging
 import logging.config
 import os
+from concurrent.futures import ProcessPoolExecutor
 
 import click
 
 import tornado.ioloop
 import tornado.web
+import tornado.httpserver
 from tornado.gen import coroutine
 from tornado.web import url
 
@@ -18,14 +20,27 @@ log = logging.getLogger(__name__)
 
 class CheckQCHandler(tornado.web.RequestHandler):
 
+    # To make the ProcessPoolExecutor and Tornado play well together, this needs to be
+    # set after the server has been started. This is kind of hacky, but it appears to work
+    # well enough for now. An explanation of the problem is available here:
+    # https://stackoverflow.com/questions/26370139/tornado-concurrency-errors-running-multiple-processes-together-with-a-process-po/26370643#26370643
+    # / JD 2017-11-08
+    process_pool = None
+
     def initialize(self, **kwargs):
         self.monitor_path = kwargs["monitoring_path"]
         self.qc_config_file = kwargs["qc_config_file"]
 
-    def get(self, runfolder):
-        path_to_runfolder = os.path.join(self.monitor_path, runfolder)
-        checkqc_app = App(config_file=self.qc_config_file, runfolder=path_to_runfolder)
+    @staticmethod
+    def _run_check_qc(monitor_path, qc_config_file, runfolder):
+        path_to_runfolder = os.path.join(monitor_path, runfolder)
+        checkqc_app = App(config_file=qc_config_file, runfolder=path_to_runfolder)
         reports = checkqc_app.configure_and_run()
+        return reports
+
+    @coroutine
+    def get(self, runfolder):
+        reports = yield self.process_pool.submit(self._run_check_qc, self.monitor_path, self.qc_config_file, runfolder)
         self.set_header("Content-Type", "application/json")
         self.write(reports)
 
@@ -35,10 +50,19 @@ class WebApp(object):
     def __init__(self):
         pass
 
-    def _make_app(self, debug=False, **kwargs):
-        routes = [url(r"/([^/]+)", CheckQCHandler, name="checkqc", kwargs=kwargs)]
+    @staticmethod
+    def _routes(**kwargs):
+        return [url(r"/qc/([^/]+)", CheckQCHandler, name="checkqc", kwargs=kwargs)]
 
-        return tornado.web.Application(routes, debug=debug)
+    @staticmethod
+    def _make_app(debug=False, **kwargs):
+        return tornado.web.Application(WebApp._routes(kwargs), debug=debug)
+
+    @staticmethod
+    def _create_server(port, app):
+        server = tornado.httpserver.HTTPServer(app)
+        server.bind(port)
+        return server
 
     def start_web_app(self, monitoring_path, port, config_file, log_config, debug):
         logging_config_path = ConfigFactory.get_logging_config_file(log_config)
@@ -46,9 +70,13 @@ class WebApp(object):
 
         log.info("Starting checkqc-ws at port: {}".format(port))
 
+        # See the comment above in the CheckQCHandler as to why this somewhat backward way
+        # is used to setup the server and ProcessPoolExecutor. /JD 2017-11-08
         web_app = self._make_app(monitoring_path=monitoring_path, qc_config_file=config_file, debug=debug)
-        web_app.listen(port)
-        tornado.ioloop.IOLoop.current().start()
+        server = self._create_server(port=port, app=web_app)
+        server.start()
+        CheckQCHandler.process_pool = ProcessPoolExecutor()
+        tornado.ioloop.IOLoop.instance().start()
 
 
 @click.command("checkqc-ws")
