@@ -2,6 +2,7 @@
 import importlib
 import pkgutil
 
+import checkQC.handlers
 from checkQC.handlers.qc_handler import QCHandler
 
 
@@ -20,10 +21,12 @@ class QCHandlerFactory(object):
         :param class_config: dictionary with configuration for the class
         :return: A instance of the class represented by class_name
         """
-        pkgs = list(pkgutil.walk_packages('checkQC.handlers'))
-        for importer, modname, ispkg in pkgs:
-            if "checkQC.handlers" in modname:
-                importlib.import_module(modname)
+        package = checkQC.handlers
+        prefix = package.__name__ + "."
+
+        modules = list(pkgutil.iter_modules(package.__path__, prefix))
+        for importer, modname, ispkg in modules:
+            importlib.import_module(modname)
         qc_handler_subclasses = list(QCHandler.__subclasses__())
         try:
             i = list(map(lambda clazz: clazz.__name__, qc_handler_subclasses)).index(class_name)
