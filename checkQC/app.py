@@ -21,9 +21,9 @@ log = logging.getLogger("")
 @click.command("checkqc")
 @click.option("--config", help="Path to the checkQC configuration file", type=click.Path())
 @click.option('--json', is_flag=True, default=False, help="Print the results of the run as json to stdout")
-@click.option('--version', is_flag=True, default=False, help="Print the version of checkQC to stdout")
+@click.version_option(checkqc_version)
 @click.argument('runfolder', type=click.Path())
-def start(config, json, version, runfolder):
+def start(config, json, runfolder):
     """
     checkQC is a command line utility designed to quickly gather and assess quality control metrics from an
     Illumina sequencing run. It is highly customizable and which quality controls modules should be run
@@ -32,13 +32,9 @@ def start(config, json, version, runfolder):
     # -----------------------------------
     # This is the application entry point
     # -----------------------------------
-
-    if version:
-        print(checkqc_version)
-    else:
-        app = App(runfolder, config, json)
-        app.run()
-        sys.exit(app.exit_status)
+    app = App(runfolder, config, json)
+    app.run()
+    sys.exit(app.exit_status)
 
 
 class App(object):
