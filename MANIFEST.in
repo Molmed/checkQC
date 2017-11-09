@@ -1,4 +1,5 @@
 include checkQC/default_config/config.yaml
+include checkQC/default_config/logger.yaml
 include README.md
 include LICENSE
 recursive-exclude tests *

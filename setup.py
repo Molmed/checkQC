@@ -17,8 +17,9 @@ setup(
         "interop",
         "xmltodict",
         "tornado"],
-    packages=find_packages(),
-    package_data={'checkQC': ['default_config/config.yaml']},
+    packages=find_packages(exclude=["tests*"]),
+    test_suite="tests",
+    package_data={'checkQC': ['default_config/config.yaml', 'default_config/logger.yaml']},
     include_package_data=True,
     license='GPLv3',
     entry_points={
