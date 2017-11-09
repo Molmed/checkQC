@@ -72,6 +72,10 @@ class WebApp(object):
 
         log.info("Starting checkqc-ws at port: {}".format(port))
 
+        if not os.path.isdir(monitoring_path):
+            log.error("{} is not a directory".format(monitoring_path))
+            raise AssertionError("{} is not a directory".format(monitoring_path))
+
         # See the comment above in the CheckQCHandler as to why this somewhat backward way
         # is used to setup the server and ProcessPoolExecutor. /JD 2017-11-08
         web_app = self._make_app(monitoring_path=monitoring_path, qc_config_file=config_file, debug=debug)
