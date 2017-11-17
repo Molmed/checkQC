@@ -77,13 +77,13 @@ INFO     Finished with fatal qc errors and will exit with non-zero exit status.
 ```
 
 The program will summarize the type of run it has identified and output any warnings and/or errors in finds.
-If no errors were found the CheckQC will output a non-zero exit status. This means it can easily be used to
+If any qc errors were found the CheckQC will output a non-zero exit status. This means it can easily be used to
 decide if a further steps should run or not, e.g. in a workflow.
 
 In addition to the normal output CheckQC has a json mode, enabled by adding `--json` to the commandline.
-This output the results normally shown in the log as json on `stdout`, so that this can either be written to
-a file, or redirected to other programs which can parse the data further. In this example we use the python
-json tool to pretty print the json output:
+This outputs the results normally shown in the log as json on `stdout` (while the log itself is written to `stderr`),
+so that this can either be written to a file, or redirected to other programs which can parse the data further.
+In this example we use the python json tool to pretty print the json output:
 
 ```
 checkqc --json tests/resources/170726_D00118_0303_BCB1TVANXX/  | python -m json.tool
