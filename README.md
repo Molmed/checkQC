@@ -20,8 +20,8 @@ Instrument types supported in checkQC are the following:
 
 Install instructions
 --------------------
-Right now the Illumina Interop library needs to be installed separately before moving on to
-installing checkqc.
+CheckQC **requires Python 3.5** (or higher to run). Furthermore, right now the Illumina Interop
+library needs to be installed separately before moving on to installing checkqc.
 
 ```
 pip install -f https://github.com/Illumina/interop/releases/tag/v1.1.1 interop
