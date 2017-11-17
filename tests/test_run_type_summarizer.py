@@ -17,7 +17,8 @@ class TestRunTypeSummarizer(TestCase):
                                                  read_lengths=read_lengths,
                                                  handler_config=handler_config)
 
-            expected_log = ['INFO:checkQC.run_type_summarizer:Run summary:',
+            expected_log = ['INFO:checkQC.run_type_summarizer:Run summary',
+                            'INFO:checkQC.run_type_summarizer:-----------',
                             'INFO:checkQC.run_type_summarizer:Instrument and reagent version: '
                             'my_fav_illumina_instrument',
                             'INFO:checkQC.run_type_summarizer:Read length: 42-42',
