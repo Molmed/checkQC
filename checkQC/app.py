@@ -8,6 +8,7 @@ import click
 from checkQC.qc_engine import QCEngine
 from checkQC.config import ConfigFactory
 from checkQC.run_type_recognizer import RunTypeRecognizer
+from checkQC.run_type_summarizer import RunTypeSummarizer
 from checkQC import __version__ as checkqc_version
 
 
@@ -51,10 +52,15 @@ class App(object):
         instrument_and_reagent_version = run_type_recognizer.instrument_and_reagent_version()
 
         # TODO For now assume symmetric read lengths
-        read_length = int(run_type_recognizer.read_length().split("-")[0])
+        both_read_lengths = run_type_recognizer.read_length()
+        read_length = int(both_read_lengths.split("-")[0])
         handler_config = config.get_handler_config(instrument_and_reagent_version, read_length)
+
+        run_type_summary = RunTypeSummarizer.summarize(instrument_and_reagent_version, both_read_lengths, handler_config)
+
         qc_engine = QCEngine(runfolder=self._runfolder, handler_config=handler_config)
         reports = qc_engine.run()
+        reports["run_summary"] = run_type_summary
         self.exit_status = qc_engine.exit_status
         return reports
 
