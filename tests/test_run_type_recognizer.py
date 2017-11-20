@@ -2,9 +2,8 @@ from unittest import TestCase
 
 import os
 
-from checkQC.run_type_recognizer import RunTypeRecognizer, HiSeq2500, MiSeq, NovaSeq, \
-    RunModeUnknown, ReagentVersionUnknown
-
+from checkQC.exceptions import RunModeUnknown, ReagentVersionUnknown
+from checkQC.run_type_recognizer import RunTypeRecognizer, HiSeq2500, MiSeq, NovaSeq
 class TestRunTypeRecognizer(TestCase):
 
     CONFIG = {"instrument_type_mappings":{"M": "miseq","D": "hiseq2500"}}

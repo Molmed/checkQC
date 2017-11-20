@@ -4,6 +4,7 @@ import os
 import unittest
 
 from checkQC.parsers.stats_json_parser import StatsJsonParser
+from checkQC.exceptions import StatsJsonNotFound
 
 
 class TestStatsJsonParser(unittest.TestCase):
@@ -33,3 +34,11 @@ class TestStatsJsonParser(unittest.TestCase):
     def test_read_flowcell_name(self):
         self.assertListEqual(self.subscriber.values, ["CB1TVANXX"])
 
+    def test_init_stats_json_parser_without_stats_json(self):
+        with self.assertLogs() as cm:
+            with self.assertRaises(StatsJsonNotFound):
+                StatsJsonParser("")
+        expected_log = 'ERROR:checkQC.parsers.stats_json_parser:Could not identify a Stats.json file at: ' \
+                       'Unaligned/Stats/Stats.json. This file is created by bcl2fastq, please ensure that you ' \
+                       'have run bcl2fastq on this runfolder before running checkqc.'
+        self.assertIn(expected_log, cm.output)
