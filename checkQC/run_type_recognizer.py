@@ -1,19 +1,11 @@
 
 import os
-
+import logging
 import xmltodict
 
+from checkQC.exceptions import *
 
-class InstrumentTypeUnknown(Exception):
-    pass
-
-
-class RunModeUnknown(Exception):
-    pass
-
-
-class ReagentVersionUnknown(Exception):
-    pass
+log = logging.getLogger(__name__)
 
 
 class IlluminaInstrument(object):
@@ -113,11 +105,20 @@ class RunTypeRecognizer(object):
         """
         self._config = config
         self._runfolder = runfolder
-        with open(os.path.join(self._runfolder, "RunInfo.xml")) as f:
-            self.run_info = xmltodict.parse(f.read())
+        try:
+            run_info_path = os.path.join(self._runfolder, "RunInfo.xml")
+            if not os.path.exists(run_info_path):
+                log.error("Could not find a RunInfo.xml in {}. Are you sure this is a runfolder?".format(run_info_path))
+            with open(run_info_path) as f:
+                self.run_info = xmltodict.parse(f.read())
+        except FileNotFoundError:
+            raise RunInfoXMLNotFound("Could not find RunInfo.xml at {}".format(run_info_path))
 
-        with open(self._find_run_parameters_xml()) as f:
-            self.run_parameters = xmltodict.parse(f.read())
+        try:
+            with open(self._find_run_parameters_xml()) as f:
+                self.run_parameters = xmltodict.parse(f.read())
+        except FileNotFoundError:
+            raise RunParametersNotFound("Could not find [R|r]unParameters.xml for runfolder {}".format(self._runfolder))
 
     def _find_run_parameters_xml(self):
         first_option = os.path.join(self._runfolder, "RunParameters.xml")
@@ -127,6 +128,8 @@ class RunTypeRecognizer(object):
         elif os.path.isfile(second_option):
             return second_option
         else:
+            log.error("Could not find [R|r]unParameters.xml in directory {}. "
+                      "Are you sure this is a runfolder?".format(self._runfolder))
             raise FileNotFoundError("Could not find [R|r]unParameters.xml for runfolder {}".format(self._runfolder))
 
     def instrument_type(self):
