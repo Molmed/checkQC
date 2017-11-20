@@ -109,6 +109,7 @@ class RunTypeRecognizer(object):
             run_info_path = os.path.join(self._runfolder, "RunInfo.xml")
             if not os.path.exists(run_info_path):
                 log.error("Could not find a RunInfo.xml in {}. Are you sure this is a runfolder?".format(run_info_path))
+                raise FileNotFoundError("Could not find {}".format(run_info_path))
             with open(run_info_path) as f:
                 self.run_info = xmltodict.parse(f.read())
         except FileNotFoundError:
