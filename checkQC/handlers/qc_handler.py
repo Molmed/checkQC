@@ -1,6 +1,5 @@
 
 import logging
-import json
 
 from checkQC.config import ConfigurationError
 
@@ -8,7 +7,6 @@ log = logging.getLogger()
 
 
 class Subscriber(object):
-
     def __init__(self):
         self.subscriber = self.subscribe()
         next(self.subscriber)
@@ -25,36 +23,42 @@ class Subscriber(object):
         self.subscriber.send(value)
 
 
-class QCErrorFatal(object):
-    def __init__(self, msg, ordering=1, data=None) :
-        self.message = msg
-        self.ordering = ordering
-        self.data = data
-
-    def __str__(self):
-        return "Fatal QC error: {}".format(self.message)
-
-    def __repr__(self):
-        return self.__str__()
-
-    def as_dict(self):
-        return {'type': 'error', 'message': self.message, 'data': self.data}
-
-
-class QCErrorWarning(object):
+class QCHandlerReport(object):
     def __init__(self, msg, ordering=1, data=None):
         self.message = msg
         self.ordering = ordering
         self.data = data
 
-    def __str__(self):
-        return "QC warning: {}".format(self.message)
+    def type(self):
+        raise NotImplementedError("Subclass must implement this method")
 
     def __repr__(self):
         return self.__str__()
 
     def as_dict(self):
-        return {'type': 'warning', 'message': self.message, 'data': self.data}
+        return {'type': self.type(), 'message': self.message, 'data': self.data}
+
+
+class QCErrorFatal(QCHandlerReport):
+    def __init__(self, msg, ordering=1, data=None):
+        super().__init__(msg, ordering, data)
+
+    def __str__(self):
+        return "Fatal QC error: {}".format(self.message)
+
+    def type(self):
+        return "error"
+
+
+class QCErrorWarning(QCHandlerReport):
+    def __init__(self, msg, ordering=1, data=None):
+        super().__init__(msg, ordering, data)
+
+    def __str__(self):
+        return "QC warning: {}".format(self.message)
+
+    def type(self):
+        return "warning"
 
 
 class QCHandler(Subscriber):
