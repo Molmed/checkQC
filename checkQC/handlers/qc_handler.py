@@ -47,6 +47,11 @@ class QCHandlerReport(object):
 
 
 class QCErrorFatal(QCHandlerReport):
+    """
+    Class representing a fatal QC error from a handler, i.e. a value which should in the end
+    yield a non-zero exit status from the program.
+    """
+
     def __init__(self, msg, ordering=1, data=None):
         super().__init__(msg, ordering, data)
 
@@ -58,6 +63,10 @@ class QCErrorFatal(QCHandlerReport):
 
 
 class QCErrorWarning(QCHandlerReport):
+    """
+    Class representing a QC warning from a handler, i.e. a value is interesting to note,
+    but which should still yield a zero exit status from the program.
+    """
     def __init__(self, msg, ordering=1, data=None):
         super().__init__(msg, ordering, data)
 
@@ -117,13 +126,23 @@ class Subscriber(object):
 
 
 class QCHandler(Subscriber):
+    """
+    The QCHandler is one of the fundamental classes of CheckQC. It is the base class for the the concrete
+    implementations of QCHandlers which actually check the the quality criteria of a runfolder.
+    For examples of how to implement a QCHandler it is easiest to look at the implementations available in
+    the `checkQC.handlers` module
+    """
 
     UNKNOWN = 'unknown'
     ERROR = 'error'
     WARNING = 'warning'
 
-    def __init__(self, qc_config, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, qc_config):
+        """
+        Create a QCHandler instance
+        :param qc_config: dict containing the configuration for the QCHandler. Should have keys 'error' and 'warning'
+        """
+        super().__init__()
         self._exit_status = 0
         self.qc_config = qc_config
 
@@ -131,10 +150,17 @@ class QCHandler(Subscriber):
         """
         Override this method in subclass to provide additional configuration behaviour.
         Raise a `ConfigurationError` if there is a problem with the provided config.
+        :raises: ConfigurationError if there is a problem with the configuration
         """
         pass
 
     def validate_configuration(self):
+        """
+        This method will validate the configuration which has been passed to the QCHandler. This should be called
+        by the class making us of this class. It will not be called automatically e.g. at object creation.
+        :return: None
+        :raises: ConfigurationError if there is a problem with the configuration
+        """
         try:
             self.qc_config[self.ERROR]
             self.qc_config[self.WARNING]
@@ -143,21 +169,54 @@ class QCHandler(Subscriber):
         self.custom_configuration_validation()
 
     def error(self):
+        """
+        The value associated with a QC error
+        :return: The configuration value for an error
+        """
         return self.qc_config[self.ERROR]
 
     def warning(self):
+        """
+        The value associated with a QC warning
+        :return: The configuration value for an warning
+        """
         return self.qc_config[self.WARNING]
 
     def exit_status(self):
+        """
+        The exit status of the handler.
+        :return: 0 if the qc criteria have not encountered a fatal qc error, else 1.
+        """
         return self._exit_status
 
     def parser(self):
+        """
+        The class of the Parser which this QCHandler will get its data from.
+        E.g.
+        ```
+        def parser(self):
+            return InteropParser
+        ```
+        Note that there should be no parenthesis after the class.
+        :return: The Parser implementation needed by this QCHandler
+        """
         raise NotImplementedError("A handler needs to return the class of the parser it needs!")
 
     def check_qc(self):
-        raise NotImplementedError
+        """
+        The check_qc method provides the core behaviour of the QCHandler. It should check the values provided
+        to it and yield instances of QCHandlerReport (or continue, if there was nothing to report)
+        :return: An instance of QCHandlerReport
+        """
+        raise NotImplementedError("A handler must provide its own QC checking behaviour by implementing "
+                                  "the `check_qc` method.")
 
     def report(self):
+        """
+        Check the quality criteria as specified in `check_qc` and gather all reports. Will set the objects
+        `exit_status` in accordance with what types of reports are found.
+        :return: A sorted list of errors and warnings found when evaluating the qc criteria.
+        """
         errors_and_warnings = self.check_qc()
         sorted_errors_and_warnings = sorted(errors_and_warnings, key=lambda x: x.ordering)
 
