@@ -40,6 +40,9 @@ def start(config, json, runfolder):
 
 
 class App(object):
+    """
+    This is the main application object for CheckQC.
+    """
 
     def __init__(self, runfolder, config_file=None, json_mode=False):
         self._runfolder = runfolder
@@ -48,6 +51,11 @@ class App(object):
         self.exit_status = 0
 
     def configure_and_run(self):
+        """
+        Configures and runs the application. It will set the exit status of the object in accordance with if any
+        fatal qc errors were found or not.
+        :return: The reports of the application as a dict
+        """
         try:
             config = ConfigFactory.from_config_path(self._config_file)
             run_type_recognizer = RunTypeRecognizer(config=config, runfolder=self._runfolder)
@@ -69,6 +77,11 @@ class App(object):
             self.exit_status = 1
 
     def run(self):
+        """
+        This method will run CheckQC as it is intended to run as a commandline application, it will log to the
+        stderr and write data to stdout.
+        :return: the exit status of the run (0 for success, else not 0)
+        """
         log.info("------------------------")
         log.info("Starting checkQC ({})".format(checkqc_version))
         log.info("------------------------")
@@ -81,6 +94,8 @@ class App(object):
 
         if self._json_mode:
             print(json.dumps(reports))
+
+        return self.exit_status
 
 if __name__ == '__main__':
     start()
