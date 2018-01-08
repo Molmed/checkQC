@@ -11,11 +11,13 @@ class TestApp(unittest.TestCase):
 
     def test_run(self):
         app = App(runfolder=self.RUNFOLDER)
-        app.run()
+        # The test data contains fatal qc errors
+        self.assertEqual(app.run(), 1)
 
     def test_run_json_mode(self):
         app = App(runfolder=self.RUNFOLDER, json_mode=True)
-        app.run()
+        # The test data contains fatal qc errors
+        self.assertEqual(app.run(), 1)
 
 
 if __name__ == '__main__':
