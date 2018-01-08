@@ -27,7 +27,7 @@ class QCHandlerReport(object):
     def type(self):
         """
         Should be implemented by the subclass.
-        :return: String with the type of the report, e.g. "error" or "waring"
+        :return: String with the type of the report, e.g. "error" or "warning"
         """
         raise NotImplementedError("Subclass must implement this method")
 
@@ -79,7 +79,7 @@ class QCErrorWarning(QCHandlerReport):
 
 class Subscriber(object):
     """
-    Subscriber defined the behaviour necessary to subscribe to data from a Parser. The implementing subclass
+    Subscriber defines the behaviour necessary to subscribe to data from a Parser. The implementing subclass
     has to implement the `collect` method. This method can decide which objects sent to the Subscriber that
     are of interest to that particular Subscriber, and what should be done with those values.
     """
@@ -149,7 +149,6 @@ class QCHandler(Subscriber):
     def custom_configuration_validation(self):
         """
         Override this method in subclass to provide additional configuration behaviour.
-        Raise a `ConfigurationError` if there is a problem with the provided config.
         :raises: ConfigurationError if there is a problem with the configuration
         """
         pass
@@ -157,7 +156,7 @@ class QCHandler(Subscriber):
     def validate_configuration(self):
         """
         This method will validate the configuration which has been passed to the QCHandler. This should be called
-        by the class making us of this class. It will not be called automatically e.g. at object creation.
+        by the class making use of this instance. It will not be called automatically e.g. at object creation.
         :return: None
         :raises: ConfigurationError if there is a problem with the configuration
         """
