@@ -4,12 +4,21 @@ from math import pow
 
 
 class ReadsPerSampleHandler(QCHandler):
+    """
+    This handler will check that the number of reads assigned to a sample is high enough. The value specified in the
+    configuration is interpreted as the number of reads demanded for a single sample, i.e. the number of reads per
+    sample on a lane which has multiple samples is the threshold divided by the total number of samples on the lane.
+    """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.conversion_results = None
 
     def parser(self):
+        """
+        The ReadsPerSampleHandler fetches its information from the Stats.json file
+        :return: A StatsJsonParser callable
+        """
         return StatsJsonParser
 
     def collect(self, signal):

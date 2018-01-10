@@ -8,6 +8,11 @@ from checkQC.exceptions import QCHandlerNotFound
 
 
 class QCHandlerFactory(object):
+    """
+    This class provides way of finding and instantiating a concrete QCHandler implementation.
+    This allows QCHandlers to be instantiated dynamically at runtime e.g. based on what is
+    specified in a config file.
+    """
 
     @staticmethod
     def create_subclass_instance(class_name, class_config):
