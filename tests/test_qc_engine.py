@@ -3,7 +3,7 @@ from mock import create_autospec, MagicMock
 
 from checkQC.qc_engine import QCEngine
 from checkQC.handlers.qc_handler_factory import QCHandlerFactory
-from checkQC.handlers.yield_handler import YieldHandler
+from checkQC.handlers.q30_handler import Q30Handler
 from checkQC.handlers.undetermined_percentage_handler import UndeterminedPercentageHandler
 from checkQC.parsers.parser import Parser
 from checkQC.config import ConfigurationError
@@ -31,16 +31,16 @@ class TestQCEngine(TestCase):
 
     def setUp(self):
         runfolder = "foo"
-        handler_config = [{'name': 'YieldHandler', 'warning': 30, 'error': 20},
+        handler_config = [{'name': 'Q30Handler', 'warning': 30, 'error': 20},
                           {'name': 'UndeterminedPercentageHandler', 'warning': 0.01, 'error': 0.02}]
 
-        self.mock_yield_handler = create_autospec(YieldHandler)
-        self.mock_yield_handler.parser.return_value = self.FakeParser
+        self.mock_q30_handler = create_autospec(Q30Handler)
+        self.mock_q30_handler.parser.return_value = self.FakeParser
 
         self.mock_undetermined_perc_handler = create_autospec(UndeterminedPercentageHandler)
         self.mock_undetermined_perc_handler.parser.return_value = self.FakeParser
 
-        self.handlers = [self.mock_yield_handler, self.mock_undetermined_perc_handler]
+        self.handlers = [self.mock_q30_handler, self.mock_undetermined_perc_handler]
         self.parsers_and_handlers = {self.FakeParser(runfolder): self.handlers}
 
         qc_handler_factory_mock = create_autospec(QCHandlerFactory)
@@ -72,7 +72,7 @@ class TestQCEngine(TestCase):
     def test__validate_configurations_has_problem(self):
         self.qc_engine._handlers = self.handlers
         self.qc_engine._parsers_and_handlers = self.parsers_and_handlers
-        self.mock_yield_handler.validate_configuration.side_effect = ConfigurationError
+        self.mock_q30_handler.validate_configuration.side_effect = ConfigurationError
         with self.assertRaises(ConfigurationError):
             self.qc_engine._validate_configurations()
 
@@ -101,24 +101,24 @@ class TestQCEngine(TestCase):
 
         self.qc_engine._handlers = self.handlers
 
-        self.mock_yield_handler.exit_status.return_value = 0
+        self.mock_q30_handler.exit_status.return_value = 0
         self.mock_undetermined_perc_handler.exit_status.return_value = 0
         self.qc_engine._compile_reports()
         self.assertEqual(self.qc_engine.exit_status, 0)
 
-        self.mock_yield_handler.exit_status.return_value = 0
+        self.mock_q30_handler.exit_status.return_value = 0
         self.mock_undetermined_perc_handler.exit_status.return_value = 1
         self.qc_engine._compile_reports()
         self.assertEqual(self.qc_engine.exit_status, 1)
 
-        self.mock_yield_handler.exit_status.return_value = 1
+        self.mock_q30_handler.exit_status.return_value = 1
         self.mock_undetermined_perc_handler.exit_status.return_value = 0
         self.qc_engine._compile_reports()
         self.assertEqual(self.qc_engine.exit_status, 1)
 
     def test_run_exit_status_0(self):
 
-        self.mock_yield_handler.exit_status.return_value = 0
+        self.mock_q30_handler.exit_status.return_value = 0
         self.mock_undetermined_perc_handler.exit_status.return_value = 0
         self.qc_engine.run()
         for parser in self.qc_engine._parsers_and_handlers.keys():
@@ -127,7 +127,7 @@ class TestQCEngine(TestCase):
         self.assertEqual(self.qc_engine.exit_status, 0)
 
     def test_run_exit_status_1(self):
-        self.mock_yield_handler.exit_status.return_value = 1
+        self.mock_q30_handler.exit_status.return_value = 1
         self.mock_undetermined_perc_handler.exit_status.return_value = 0
         self.qc_engine.run()
         for parser in self.qc_engine._parsers_and_handlers.keys():
@@ -136,6 +136,6 @@ class TestQCEngine(TestCase):
         self.assertEqual(self.qc_engine.exit_status, 1)
 
     def test_run_with_config_error(self):
-        self.mock_yield_handler.validate_configuration.side_effect = ConfigurationError
+        self.mock_q30_handler.validate_configuration.side_effect = ConfigurationError
         self.qc_engine.run()
         self.assertEqual(self.qc_engine.exit_status, 1)
