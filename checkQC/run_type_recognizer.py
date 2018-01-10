@@ -9,20 +9,55 @@ log = logging.getLogger(__name__)
 
 
 class IlluminaInstrument(object):
+    """
+    Base class representing an Illumina instrument. The `name` and `reagent_version` needs to be implemented
+    by the specific subclasses.
+    """
 
     @staticmethod
     def get_subclasses():
+        """
+        Get all subclasses which extends this class (which should be all supported Illumina instruments)
+        :return: a list of IlluminaInstrument subclasses
+        """
         return IlluminaInstrument.__subclasses__()
 
     @staticmethod
     def create_instrument_instance(instrument_name):
+        """
+        Get the instrument instance corresponding to the given instrument name
+        :param instrument_name: name of instrument to get the implementing class for
+        :return: a instance of the corresponding IlluminaInstrument
+        """
         subclasses = IlluminaInstrument.get_subclasses()
         for subclass in subclasses:
             if instrument_name == subclass.name():
                 return subclass()
+        raise InstrumentTypeUnknown
+
+    @staticmethod
+    def name():
+        """
+        Name of the instrument, e.g. 'nova_seq'
+        :return: name of instrument as string
+        """
+        raise NotImplementedError
+
+    @staticmethod
+    def reagent_version(runtype_recognizer):
+        """
+        Reagent version, e.g. `v1`
+        Can used the provided runtype_recognizer to determined the exact reagent version
+        :param runtype_recognizer: A instance of RuntypeRecognizer
+        :return: reagent version as a string
+        """
+        raise NotImplementedError
 
 
 class NovaSeq(IlluminaInstrument):
+    """
+    Class representing
+    """
 
     @staticmethod
     def name():
@@ -53,7 +88,8 @@ class MiSeq(IlluminaInstrument):
     @staticmethod
     def reagent_version(runtype_recognizer):
         """
-        Find the reagent version used for this run
+        Find the reagent version used for this run, as MiSeqs can have multiple
+        different reagent kit versions.
         :return: reagent version of format v[number] e.g. v3
         """
         try:
@@ -74,7 +110,7 @@ class HiSeq2500(IlluminaInstrument):
         """
         Find run mode (rapid or not) and reagent version used for this run
         :return run mode (as specified in RunInfo.xml) and reagent version
-        joint as one string e.g. rapidhighoutput_v4 or rapidrun_v2
+                joint as one string e.g. rapidhighoutput_v4 or rapidrun_v2
         """
         try:
             run_mode = runtype_recognizer.run_parameters["RunParameters"]["Setup"]["RunMode"].lower()
@@ -95,11 +131,13 @@ class RunTypeRecognizer(object):
     """
     RunTypeRecognizer will read files in the runfolder to determine information about the run,
     such as the instrument type, the read length, etc.
+
+    The runfolder needs to have a 'RunInfo.xml' and a '[R|r]unParameters.xml' file.
     """
 
     def __init__(self, config, runfolder):
         """
-
+        Create a RunTypeRecognizer instance
         :param config: dictionary containing the app configuration
         :param runfolder: to gather data about
         """
@@ -153,13 +191,17 @@ class RunTypeRecognizer(object):
         raise InstrumentTypeUnknown("Did not recognize instrument type of: {}".format(instrument_name))
 
     def instrument_and_reagent_version(self):
+        """
+        Get the instrument and reagent version associated with this runfolder.
+        :return: the joined instrument and reagent version, e.g. 'hiseq2500_rapidrun_v2'
+        """
         instrument_type = self.instrument_type()
         return "_".join([instrument_type.name(), instrument_type.reagent_version(self)])
 
     def read_length(self):
         """
-        Gathers information on the read length of the run.
-        :return: The read length. If multiple reads delimited by "-"
+        Gather information on the read length of the run.
+        :return: The read length. If multiple reads delimited by "-", e.g. 150-150.
         """
         reads = self.run_info["RunInfo"]["Run"]["Reads"]["Read"]
 
