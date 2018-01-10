@@ -1,7 +1,7 @@
 
 import logging
 
-from checkQC.config import ConfigurationError
+from checkQC.exceptions import ConfigurationError
 
 log = logging.getLogger()
 

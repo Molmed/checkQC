@@ -2,7 +2,7 @@
 import unittest
 
 from checkQC.handlers.qc_handler import QCHandler, QCErrorWarning, QCErrorFatal
-from checkQC.config import ConfigurationError
+from checkQC.exceptions import ConfigurationError
 
 
 class TestQCHandler(unittest.TestCase):

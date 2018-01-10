@@ -1,7 +1,7 @@
 
 from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
 from checkQC.parsers.interop_parser import InteropParser
-from checkQC.config import ConfigurationError
+from checkQC.exceptions import ConfigurationError
 
 
 class ErrorRateHandler(QCHandler):

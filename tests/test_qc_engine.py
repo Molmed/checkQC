@@ -6,7 +6,7 @@ from checkQC.handlers.qc_handler_factory import QCHandlerFactory
 from checkQC.handlers.q30_handler import Q30Handler
 from checkQC.handlers.undetermined_percentage_handler import UndeterminedPercentageHandler
 from checkQC.parsers.parser import Parser
-from checkQC.config import ConfigurationError
+from checkQC.exceptions import ConfigurationError
 
 class TestQCEngine(TestCase):
 

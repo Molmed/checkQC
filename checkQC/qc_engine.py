@@ -3,7 +3,7 @@ from collections import defaultdict
 import logging
 
 from checkQC.handlers.qc_handler_factory import QCHandlerFactory
-from checkQC.config import ConfigurationError
+from checkQC.exceptions import ConfigurationError
 
 log = logging.getLogger(__name__)
 

@@ -4,11 +4,8 @@ import logging
 
 import yaml
 
+
 log = logging.getLogger(__name__)
-
-
-class ConfigurationError(Exception):
-    pass
 
 
 class ConfigFactory(object):
