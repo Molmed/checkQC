@@ -9,8 +9,29 @@ log = logging.getLogger(__name__)
 
 
 class QCEngine(object):
+    """
+    The QCEngine will provide a method to apply all specified handler on the specified runfolder.
+
+    Internally it will run a number of methods which will do the following:
+     - create all handlers specified in the handler config
+     - validate all the configs provided, so that all necessary values are preset
+     - initiate the parsers based on which parsers are found in the handlers
+     - connect the handlers and parsers so that each parser gets the correct
+       subscribers
+     - run the parsers, i.e. pick up data and pass it to the handlers
+     - compile all reports from the handlers
+
+    The QCEngine has a `exit_status` field which can be checked after calling the `run` method,
+    to determine if all handlers were successful or not (zero indicates success, 1 indicates failure)
+    """
 
     def __init__(self, runfolder, handler_config, qc_handler_factory=None):
+        """
+        Create a instance of QCEngine
+        :param runfolder: the path to the runfolder which should be analyzed
+        :param handler_config: a dict which configurations for the handler
+        :param qc_handler_factory: A QCHandlerFactor, if None default QCHandlerFactory will be used
+        """
         self.runfolder = runfolder
         self.handlers_config = handler_config
         self._handlers = []
@@ -22,6 +43,11 @@ class QCEngine(object):
             self._qc_handler_factory = QCHandlerFactory()
 
     def run(self):
+        """
+        Run the specified parsers and handlers and compile their reports. Will set the `exit_status` depending
+         on if there were any errors or not.
+        :return: a dict representing the reports gathers.
+        """
         try:
             self._create_handlers()
             self._validate_configurations()
