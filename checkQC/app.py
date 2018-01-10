@@ -64,7 +64,7 @@ class App(object):
             # TODO For now assume symmetric read lengths
             both_read_lengths = run_type_recognizer.read_length()
             read_length = int(both_read_lengths.split("-")[0])
-            handler_config = config.get_handler_config(instrument_and_reagent_version, read_length)
+            handler_config = config.get_handler_configs(instrument_and_reagent_version, read_length)
 
             run_type_summary = RunTypeSummarizer.summarize(instrument_and_reagent_version, both_read_lengths, handler_config)
 

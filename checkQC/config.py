@@ -9,14 +9,28 @@ log = logging.getLogger(__name__)
 
 
 class ConfigFactory(object):
+    """
+    The ConfigFactory provides methods for creating a Config instance.
+    """
 
     @staticmethod
     def from_config_path(config_path):
+        """
+        Creates a Config instance from the provided config_path
+        :param config_path: path to the configuration, or None. If no config_path is provided the default
+        config file will be used
+        :return: Config instance based on the specified file path
+        """
         config_file_content = ConfigFactory._get_config_file(config_path)
         return Config(config_file_content)
 
     @staticmethod
     def _get_config_file(config_path):
+        """
+        Load the content of the config file. If no config_path is specified, get the default of config file.
+        :param config_path: path to the config file or None
+        :return: the content of the config file
+        """
         try:
             if not config_path:
                 config_path = resource_filename(Requirement.parse('checkQC'), 'checkQC/default_config/config.yaml')
@@ -30,6 +44,12 @@ class ConfigFactory(object):
 
     @staticmethod
     def get_logging_config_dict(config_path):
+        """
+        Loads the specified logger config. This is useful when CheckQC is used more like a library, so that the
+        default logging configuration can be overridden.
+        :param config_path: Path to the logging config.
+        :return: The content of the logging config file.
+        """
         try:
             if not config_path:
                 config_path = resource_filename(Requirement.parse('checkQC'), 'checkQC/default_config/logger.yaml')
@@ -42,11 +62,25 @@ class ConfigFactory(object):
 
 
 class Config(object):
+    """
+    A Config object wraps the configuration for all handlers, so that the correct config can be passed to a handler
+    depending on e.g. which read length and run type has been used for a sequencing run.
+    """
 
     def __init__(self, config):
+        """
+        Create a Config instance.
+        :param config: content of the config file
+        """
         self._config = config
 
     def _get_matching_handler(self, instrument_and_reagent_type, read_length):
+        """
+        Get the handler matching the provided parameters.
+        :param instrument_and_reagent_type: the instrument and run type, e.g. 'hiseq2500_rapidhighoutput_v4'
+        :param read_length: either as a range, e.g. '50-70' or a single value, e.g. '50'
+        :return: A dict corresponding to the handler config
+        """
         config_read_lengths = list(map(str, self._config[instrument_and_reagent_type].keys()))
         for config_read_length in config_read_lengths:
             if "-" in config_read_length:
@@ -61,6 +95,11 @@ class Config(object):
         raise KeyError
 
     def _add_default_config(self, current_handler_config):
+        """
+        Add the default handlers specified in the config.
+        :param current_handler_config: a list of handlers. This will be mutated.
+        :return: The provided list with the default configs added to it.
+        """
 
         current_handler_names = set(map(lambda x: x["name"], current_handler_config))
         default_handlers = self._config["default_handlers"]
@@ -69,8 +108,9 @@ class Config(object):
                 current_handler_config.append(default_handler)
         return current_handler_config
 
-    def get_handler_config(self, instrument_and_reagent_type, read_length):
+    def get_handler_configs(self, instrument_and_reagent_type, read_length):
         """
+        Get the handler configurations for the specified parameters.
         :param instrument_and_reagent_type: type of instrument and reagents to match from config
         :param read_length: give the read length either as str or int
         :return: the corresponding handler configuration(s)
