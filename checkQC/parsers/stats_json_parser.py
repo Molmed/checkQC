@@ -38,7 +38,6 @@ class StatsJsonParser(Parser):
         with open(self.file_path, "r") as f:
             data = json.load(f)
             for key_value in data.items():
-                log.info(key_value)
                 self._send_to_subscribers(key_value)
 
     def __eq__(self, other):
