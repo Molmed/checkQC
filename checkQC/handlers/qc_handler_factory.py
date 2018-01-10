@@ -4,10 +4,7 @@ import pkgutil
 
 import checkQC.handlers
 from checkQC.handlers.qc_handler import QCHandler
-
-
-class QCHandlerNotFoundException(Exception):
-    pass
+from checkQC.exceptions import QCHandlerNotFound
 
 
 class QCHandlerFactory(object):
@@ -32,5 +29,5 @@ class QCHandlerFactory(object):
             i = list(map(lambda clazz: clazz.__name__, qc_handler_subclasses)).index(class_name)
             return qc_handler_subclasses[i](qc_config=class_config)
         except ValueError:
-            raise QCHandlerNotFoundException("Could not identify a QCHandler with name: {}".format(class_name))
+            raise QCHandlerNotFound("Could not identify a QCHandler with name: {}".format(class_name))
 
