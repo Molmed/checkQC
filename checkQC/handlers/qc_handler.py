@@ -27,21 +27,21 @@ class QCHandlerReport(object):
     def type(self):
         """
         Should be implemented by the subclass.
-        :return: String with the type of the report, e.g. "error" or "warning"
+        :returns: String with the type of the report, e.g. "error" or "warning"
         """
         raise NotImplementedError("Subclass must implement this method")
 
     def __repr__(self):
         """
         Providing string representation of this class
-        :return: Class string representation
+        :returns: Class string representation
         """
         return self.__str__()
 
     def as_dict(self):
         """
         Dump the class as a dictionary
-        :return: A dict of representing this QCHandlerReport
+        :returns: A dict of representing this QCHandlerReport
         """
         return {'type': self.type(), 'message': self.message, 'data': self.data}
 
@@ -91,7 +91,7 @@ class Subscriber(object):
     def subscribe(self):
         """
         This method picks up data from the parser to which the Subscriber is listening.
-        :return:
+        :returns:
         """
         while True:
             value = yield
@@ -112,7 +112,7 @@ class Subscriber(object):
                 if key == "my_key":
                     self.results.append(value)
         ```
-        :return: None
+        :returns: None
         """
         raise NotImplementedError("Implementing class must provide this method.")
 
@@ -120,7 +120,7 @@ class Subscriber(object):
         """
         Will send the specified value to the subscriber
         :param value: Value to send to subscriber
-        :return: None
+        :returns: None
         """
         self.subscriber.send(value)
 
@@ -157,7 +157,7 @@ class QCHandler(Subscriber):
         """
         This method will validate the configuration which has been passed to the QCHandler. This should be called
         by the class making use of this instance. It will not be called automatically e.g. at object creation.
-        :return: None
+        :returns: None
         :raises: ConfigurationError if there is a problem with the configuration
         """
         try:
@@ -170,21 +170,21 @@ class QCHandler(Subscriber):
     def error(self):
         """
         The value associated with a QC error
-        :return: The configuration value for an error
+        :returns: The configuration value for an error
         """
         return self.qc_config[self.ERROR]
 
     def warning(self):
         """
         The value associated with a QC warning
-        :return: The configuration value for an warning
+        :returns: The configuration value for an warning
         """
         return self.qc_config[self.WARNING]
 
     def exit_status(self):
         """
         The exit status of the handler.
-        :return: 0 if the qc criteria have not encountered a fatal qc error, else 1.
+        :returns: 0 if the qc criteria have not encountered a fatal qc error, else 1.
         """
         return self._exit_status
 
@@ -197,7 +197,7 @@ class QCHandler(Subscriber):
             return InteropParser
         ```
         Note that there should be no parenthesis after the class.
-        :return: The Parser implementation needed by this QCHandler
+        :returns: The Parser implementation needed by this QCHandler
         """
         raise NotImplementedError("A handler needs to return the class of the parser it needs!")
 
@@ -205,7 +205,7 @@ class QCHandler(Subscriber):
         """
         The check_qc method provides the core behaviour of the QCHandler. It should check the values provided
         to it and yield instances of QCHandlerReport (or continue, if there was nothing to report)
-        :return: An instance of QCHandlerReport
+        :returns: An instance of QCHandlerReport
         """
         raise NotImplementedError("A handler must provide its own QC checking behaviour by implementing "
                                   "the `check_qc` method.")
@@ -214,7 +214,7 @@ class QCHandler(Subscriber):
         """
         Check the quality criteria as specified in `check_qc` and gather all reports. Will set the objects
         `exit_status` in accordance with what types of reports are found.
-        :return: A sorted list of errors and warnings found when evaluating the qc criteria.
+        :returns: A sorted list of errors and warnings found when evaluating the qc criteria.
         """
         errors_and_warnings = self.check_qc()
         sorted_errors_and_warnings = sorted(errors_and_warnings, key=lambda x: x.ordering)

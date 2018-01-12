@@ -17,7 +17,7 @@ class ReadsPerSampleHandler(QCHandler):
     def parser(self):
         """
         The ReadsPerSampleHandler fetches its information from the Stats.json file
-        :return: A StatsJsonParser callable
+        :returns: A StatsJsonParser callable
         """
         return StatsJsonParser
 

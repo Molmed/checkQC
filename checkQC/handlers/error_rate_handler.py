@@ -21,7 +21,7 @@ class ErrorRateHandler(QCHandler):
     def parser(self):
         """
         The ErrorRateHandler fetches its data from the Interop files.
-        :return: an InteropParser callable
+        :returns: an InteropParser callable
         """
         return InteropParser
 

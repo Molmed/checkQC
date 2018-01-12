@@ -21,7 +21,7 @@ class QCHandlerFactory(object):
         If it can find a class with a matching name it will return a instance of that class.
         :param class_name: the name of the class to instantiate
         :param class_config: dictionary with configuration for the class
-        :return: A instance of the class represented by class_name
+        :returns: A instance of the class represented by class_name
         """
         package = checkQC.handlers
         prefix = package.__name__ + "."

@@ -25,7 +25,7 @@ class Parser(object):
         """
         Add the following subscriber(s) to this parser.
         :param new_subscribers: a instance of a Subscriber or a list of Subscriber instances
-        :return: None
+        :returns: None
         """
         if isinstance(new_subscribers, list):
             self.subscribers = self.subscribers + new_subscribers
@@ -36,7 +36,7 @@ class Parser(object):
         """
         Calling this method will send `value` to all subscribers
         :param value: The value to send to the subscribers
-        :return: None
+        :returns: None
         """
         for subscriber in self.subscribers:
             subscriber.send(value)
@@ -47,7 +47,7 @@ class Parser(object):
         particular context, and send this data to its subscribers.
 
         The run method should send data to the parsers subscribers using the `_send_to_subscribers` method.
-        :return: None
+        :returns: None
         """
         raise NotImplementedError
 

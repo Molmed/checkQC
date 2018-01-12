@@ -18,7 +18,7 @@ class IlluminaInstrument(object):
     def get_subclasses():
         """
         Get all subclasses which extends this class (which should be all supported Illumina instruments)
-        :return: a list of IlluminaInstrument subclasses
+        :returns: a list of IlluminaInstrument subclasses
         """
         return IlluminaInstrument.__subclasses__()
 
@@ -27,7 +27,7 @@ class IlluminaInstrument(object):
         """
         Get the instrument instance corresponding to the given instrument name
         :param instrument_name: name of instrument to get the implementing class for
-        :return: a instance of the corresponding IlluminaInstrument
+        :returns: a instance of the corresponding IlluminaInstrument
         """
         subclasses = IlluminaInstrument.get_subclasses()
         for subclass in subclasses:
@@ -39,7 +39,7 @@ class IlluminaInstrument(object):
     def name():
         """
         Name of the instrument, e.g. 'nova_seq'
-        :return: name of instrument as string
+        :returns: name of instrument as string
         """
         raise NotImplementedError
 
@@ -49,7 +49,7 @@ class IlluminaInstrument(object):
         Reagent version, e.g. `v1`
         Can used the provided runtype_recognizer to determined the exact reagent version
         :param runtype_recognizer: A instance of RuntypeRecognizer
-        :return: reagent version as a string
+        :returns: reagent version as a string
         """
         raise NotImplementedError
 
@@ -90,7 +90,7 @@ class MiSeq(IlluminaInstrument):
         """
         Find the reagent version used for this run, as MiSeqs can have multiple
         different reagent kit versions.
-        :return: reagent version of format v[number] e.g. v3
+        :returns: reagent version of format v[number] e.g. v3
         """
         try:
             reagent_version = runtype_recognizer.run_parameters["RunParameters"]["ReagentKitVersion"]
@@ -176,7 +176,7 @@ class RunTypeRecognizer(object):
         This will look in the RunInfo.xml and determine the run type, based on the
         mappings from instrument names to instrument types
         :raises: InstrumentTypeUnknown
-        :return: the instrument type of the runfolder
+        :returns: the instrument type of the runfolder
         """
         instrument_name = self.run_info["RunInfo"]["Run"]["Instrument"]
         machine_type_mappings = {"M": "miseq",
@@ -193,7 +193,7 @@ class RunTypeRecognizer(object):
     def instrument_and_reagent_version(self):
         """
         Get the instrument and reagent version associated with this runfolder.
-        :return: the joined instrument and reagent version, e.g. 'hiseq2500_rapidrun_v2'
+        :returns: the joined instrument and reagent version, e.g. 'hiseq2500_rapidrun_v2'
         """
         instrument_type = self.instrument_type()
         return "_".join([instrument_type.name(), instrument_type.reagent_version(self)])
@@ -201,7 +201,7 @@ class RunTypeRecognizer(object):
     def read_length(self):
         """
         Gather information on the read length of the run.
-        :return: The read length. If multiple reads delimited by "-", e.g. 150-150.
+        :returns: The read length. If multiple reads delimited by "-", e.g. 150-150.
         """
         reads = self.run_info["RunInfo"]["Run"]["Reads"]["Read"]
 

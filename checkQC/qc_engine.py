@@ -46,7 +46,7 @@ class QCEngine(object):
         """
         Run the specified parsers and handlers and compile their reports. Will set the `exit_status` depending
          on if there were any errors or not.
-        :return: a dict representing the reports gathers.
+        :returns: a dict representing the reports gathers.
         """
         try:
             self._create_handlers()

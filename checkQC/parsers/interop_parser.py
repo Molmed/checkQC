@@ -29,7 +29,7 @@ class InteropParser(Parser):
         """
         Pick-out the reads which are not index reads
         :param summary: a Interop read summary object to parse the read numbers from
-        :return: all reads which are not index reads
+        :returns: all reads which are not index reads
         """
         non_index_reads = []
         for read_nbr in range(summary.size()):

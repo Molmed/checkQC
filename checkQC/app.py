@@ -54,7 +54,7 @@ class App(object):
         """
         Configures and runs the application. It will set the exit status of the object in accordance with if any
         fatal qc errors were found or not.
-        :return: The reports of the application as a dict
+        :returns: The reports of the application as a dict
         """
         try:
             config = ConfigFactory.from_config_path(self._config_file)
@@ -80,7 +80,7 @@ class App(object):
         """
         This method will run CheckQC as it is intended to run as a commandline application, it will log to the
         stderr and write data to stdout.
-        :return: the exit status of the run (0 for success, else not 0)
+        :returns: the exit status of the run (0 for success, else not 0)
         """
         log.info("------------------------")
         log.info("Starting checkQC ({})".format(checkqc_version))
