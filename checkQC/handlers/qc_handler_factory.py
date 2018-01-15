@@ -4,13 +4,15 @@ import pkgutil
 
 import checkQC.handlers
 from checkQC.handlers.qc_handler import QCHandler
-
-
-class QCHandlerNotFoundException(Exception):
-    pass
+from checkQC.exceptions import QCHandlerNotFound
 
 
 class QCHandlerFactory(object):
+    """
+    This class provides way of finding and instantiating a concrete QCHandler implementation.
+    This allows QCHandlers to be instantiated dynamically at runtime e.g. based on what is
+    specified in a config file.
+    """
 
     @staticmethod
     def create_subclass_instance(class_name, class_config):
@@ -19,7 +21,7 @@ class QCHandlerFactory(object):
         If it can find a class with a matching name it will return a instance of that class.
         :param class_name: the name of the class to instantiate
         :param class_config: dictionary with configuration for the class
-        :return: A instance of the class represented by class_name
+        :returns: A instance of the class represented by class_name
         """
         package = checkQC.handlers
         prefix = package.__name__ + "."
@@ -32,5 +34,5 @@ class QCHandlerFactory(object):
             i = list(map(lambda clazz: clazz.__name__, qc_handler_subclasses)).index(class_name)
             return qc_handler_subclasses[i](qc_config=class_config)
         except ValueError:
-            raise QCHandlerNotFoundException("Could not identify a QCHandler with name: {}".format(class_name))
+            raise QCHandlerNotFound("Could not identify a QCHandler with name: {}".format(class_name))
 

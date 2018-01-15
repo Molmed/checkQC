@@ -5,12 +5,19 @@ from checkQC.parsers.stats_json_parser import StatsJsonParser
 
 
 class ClusterPFHandler(QCHandler):
+    """
+    This handler will check that the number of clusters passing filter on a lane passes the set criteria.
+    """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.conversion_results = None
 
     def parser(self):
+        """
+        The ClusterPFHandler will gather its data from the Stats.json file
+        :returns: a StatsJsonParser callable
+        """
         return StatsJsonParser
 
     def collect(self, signal):
@@ -19,7 +26,6 @@ class ClusterPFHandler(QCHandler):
             self.conversion_results = value
 
     def check_qc(self):
-
         for lane_dict in self.conversion_results:
             lane_nbr = int(lane_dict["LaneNumber"])
             lane_pf = lane_dict["TotalClustersPF"]

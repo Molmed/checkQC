@@ -31,3 +31,11 @@ class RunParametersNotFound(CheckQCException):
 
 class StatsJsonNotFound(CheckQCException):
     pass
+
+
+class QCHandlerNotFound(CheckQCException):
+    pass
+
+
+class ConfigurationError(CheckQCException):
+    pass

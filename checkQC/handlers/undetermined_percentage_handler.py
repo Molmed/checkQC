@@ -4,12 +4,20 @@ from checkQC.parsers.stats_json_parser import StatsJsonParser
 
 
 class UndeterminedPercentageHandler(QCHandler):
+    """
+    This handler will check that the percentage of undetermined reads on a lane is below the specified threshold.
+    If there are no indexes specified for the lane, this will be skipped.
+    """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.conversion_results = None
 
     def parser(self):
+        """
+        The UndeterminedPercentageHandler fetches its data from the Stats.json file
+        :returns: A StatsJsonParser callable
+        """
         return StatsJsonParser
 
     def collect(self, signal):
@@ -20,7 +28,7 @@ class UndeterminedPercentageHandler(QCHandler):
     def check_qc(self):
 
         for lane_dict in self.conversion_results:
-            # If no index was specified for a lane, there will be no undetermined
+            # If no index was specified for a lane, there will be no
             # Undetermined key for that lane in the Stats.json file. /JD 2017-10-02
             if lane_dict.get("Undetermined"):
                 lane_nbr = int(lane_dict["LaneNumber"])

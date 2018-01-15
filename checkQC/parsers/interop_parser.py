@@ -5,14 +5,32 @@ from interop import py_interop_run_metrics, py_interop_run, py_interop_summary
 
 
 class InteropParser(Parser):
+    """
+    This Parser will get data from the Illumina Interop binary files, and send it to its subscribers as a
+    tuple with the first element being the name of the element and the second one being a the actual data.
+
+    At this point the following data which is fetched from the Interop files and is sent in the following format:
+
+        - ("error_rate", {"lane": <lane nbr>, "read": <read nbr>, "error_rate": <error rate>}))
+        - ("percent_q30", {"lane": <lane nbr>, "read": <read nbr>, "percent_q30": <percent q30>}))
+
+    """
 
     def __init__(self, runfolder, *args, **kwargs):
+        """
+        Create a InteropParser instance for the specified runfolder
+        :param runfolder: to create InteropParser instance for
+        """
         super().__init__(*args, **kwargs)
         self.runfolder = runfolder
 
     @staticmethod
     def get_non_index_reads(summary):
-        # First pick-out the reads which are not index reads
+        """
+        Pick-out the reads which are not index reads
+        :param summary: a Interop read summary object to parse the read numbers from
+        :returns: all reads which are not index reads
+        """
         non_index_reads = []
         for read_nbr in range(summary.size()):
             if not summary.at(read_nbr).read().is_index():
@@ -20,7 +38,6 @@ class InteropParser(Parser):
         return non_index_reads
 
     def run(self):
-
         run_metrics = py_interop_run_metrics.run_metrics()
         run_metrics.run_info()
 

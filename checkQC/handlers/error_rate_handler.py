@@ -1,10 +1,16 @@
 
 from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
 from checkQC.parsers.interop_parser import InteropParser
-from checkQC.config import ConfigurationError
+from checkQC.exceptions import ConfigurationError
 
 
 class ErrorRateHandler(QCHandler):
+    """
+    This handler will check that the error rate per lane and read are below the specified threshold.
+    Sometimes an error rate estimate is not available, e.g. when no PhiX has been included on
+    the lane which is being analyzed. If you want to allow this to pass anyway, ensure that the
+    ErrorRateHandler has 'allow_missing_error_rate' set to 'True'.
+    """
 
     ALLOW_MISSING_ERROR_RATE = "allow_missing_error_rate"
 
@@ -13,6 +19,10 @@ class ErrorRateHandler(QCHandler):
         self.error_results = []
 
     def parser(self):
+        """
+        The ErrorRateHandler fetches its data from the Interop files.
+        :returns: an InteropParser callable
+        """
         return InteropParser
 
     def collect(self, signal):

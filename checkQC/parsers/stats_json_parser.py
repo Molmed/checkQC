@@ -10,8 +10,22 @@ log = logging.getLogger(__name__)
 
 
 class StatsJsonParser(Parser):
+    """
+    The StatsJsonParser reads the values from the Illumina Stats.json file (which is created by bcl2fastq) and sends
+    each key value pair as a tuple to the subscribers, e.g.:
+
+        ('Flowcell', 'CB1TVANXX')
+        ('RunNumber', 303)
+        ('RunId', '170726_D00118_0303_BCB1TVANXX')
+
+    The subscribers decide which of these values they are iterested in.
+    """
 
     def __init__(self, runfolder, *args, **kwargs):
+        """
+        Create a StatsJsonParser instance for the specified runfolder
+        :param runfolder: path to the runfolder to parse
+        """
         super().__init__(*args, **kwargs)
         self.file_path = os.path.join(runfolder, "Unaligned", "Stats", "Stats.json")
         if not os.path.exists(self.file_path):

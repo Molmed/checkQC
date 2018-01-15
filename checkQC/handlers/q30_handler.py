@@ -4,12 +4,20 @@ from checkQC.parsers.interop_parser import InteropParser
 
 
 class Q30Handler(QCHandler):
+    """
+    This handler checks that the percent of bases on a lane and reads with Q30 or high was
+    above the specified threshold.
+    """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.error_results = []
 
     def parser(self):
+        """
+        The Q30Handler fetches its data from the Interop files
+        :returns: A InteropParser callable
+        """
         return InteropParser
 
     def collect(self, signal):

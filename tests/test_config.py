@@ -24,19 +24,19 @@ class TestConfig(unittest.TestCase):
         self.config = Config(config_dict)
 
     def test_exact_match(self):
-        handlers = self.config.get_handler_config('miseq_v3', 300)
+        handlers = self.config.get_handler_configs('miseq_v3', 300)
         self.assertListEqual(handlers, [self.first_handler, self.default_handler])
 
     def test_interval_match(self):
-        handlers = self.config.get_handler_config('miseq_v3', 175)
+        handlers = self.config.get_handler_configs('miseq_v3', 175)
         self.assertListEqual(handlers, [self.second_handler, self.default_handler, self.first_handler])
 
     def test_no_match(self):
         with self.assertRaises(KeyError):
-            self.config.get_handler_config('miseq_v3', 999)
+            self.config.get_handler_configs('miseq_v3', 999)
 
     def test_call_with_str(self):
-        handlers = self.config.get_handler_config('miseq_v3', "300")
+        handlers = self.config.get_handler_configs('miseq_v3', "300")
         self.assertListEqual(handlers, [self.first_handler, self.default_handler])
 
 
