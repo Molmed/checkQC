@@ -18,7 +18,7 @@ class ConfigFactory(object):
         """
         Creates a Config instance from the provided config_path
 
-        :param config_path: path to the configuration, or None. If no config_path is provided the default config file will be used
+        :param config_path: path to the configuration, or None. If no config_path is provided the default config file will be used \
         :returns: Config instance based on the specified file path
         """
         config_file_content = ConfigFactory._get_config_file(config_path)
@@ -30,7 +30,6 @@ class ConfigFactory(object):
         Load the content of the config file. If no config_path is specified, get the default of config file.
 
         :param config_path: path to the config file or None
-
         :returns: the content of the config file
         """
         try:
@@ -51,7 +50,6 @@ class ConfigFactory(object):
         default logging configuration can be overridden.
 
         :param config_path: Path to the logging config.
-
         :returns: The content of the logging config file.
         """
         try:

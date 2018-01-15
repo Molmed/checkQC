@@ -13,9 +13,9 @@ class Parser(object):
     Classes inheriting the Parser class must implement their `run` method. For details on what is required
     by the method implementation see the `run` method documentation.
 
-    Furthermore in order for Parsers it is necessary to implement a custom version of `__eq__` and `__hash__`, which
-    provides a custom definition of equivalence, this can e.g. be based on which runfolder the parser is setup
-    to get its data from.
+    Furthermore in order for Parsers to be identifiable it is necessary to implement a custom version
+    of `__eq__` and `__hash__`, which provides a custom definition of equivalence, this can e.g. be based on
+    which runfolder the parser is setup to get its data from.
     """
 
     def __init__(self):

@@ -55,9 +55,6 @@ class IlluminaInstrument(object):
 
 
 class NovaSeq(IlluminaInstrument):
-    """
-    Class representing
-    """
 
     @staticmethod
     def name():

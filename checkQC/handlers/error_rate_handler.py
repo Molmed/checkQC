@@ -6,7 +6,7 @@ from checkQC.exceptions import ConfigurationError
 
 class ErrorRateHandler(QCHandler):
     """
-    This handler will check that the error rate on a lane are below the specified threshold.
+    This handler will check that the error rate per lane and read are below the specified threshold.
     Sometimes an error rate estimate is not available, e.g. when no PhiX has been included on
     the lane which is being analyzed. If you want to allow this to pass anyway, ensure that the
     ErrorRateHandler has 'allow_missing_error_rate' set to 'True'.

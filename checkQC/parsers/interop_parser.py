@@ -6,13 +6,13 @@ from interop import py_interop_run_metrics, py_interop_run, py_interop_summary
 
 class InteropParser(Parser):
     """
-    This Parser will get data from the Illumina Interop binary files, and send it to the its subscribers as a
+    This Parser will get data from the Illumina Interop binary files, and send it to its subscribers as a
     tuple with the first element being the name of the element and the second one being a the actual data.
 
-    At this point the only data which is fetched from the Interop files is the error rate, and that tupple has
-    the following format:
-        ("error_rate", {"lane": <lane nbr>, "read": <read nbr>, "error_rate": <error rate>}))
+    At this point the following data which is fetched from the Interop files and is sent in the following format:
 
+        - ("error_rate", {"lane": <lane nbr>, "read": <read nbr>, "error_rate": <error rate>}))
+        - ("percent_q30", {"lane": <lane nbr>, "read": <read nbr>, "percent_q30": <percent q30>}))
 
     """
 

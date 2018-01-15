@@ -30,7 +30,7 @@ class QCEngine(object):
         Create a instance of QCEngine
         :param runfolder: the path to the runfolder which should be analyzed
         :param handler_config: a dict which configurations for the handler
-        :param qc_handler_factory: A QCHandlerFactor, if None default QCHandlerFactory will be used
+        :param qc_handler_factory: A QCHandlerFactory, if None default QCHandlerFactory will be used
         """
         self.runfolder = runfolder
         self.handlers_config = handler_config
@@ -46,7 +46,7 @@ class QCEngine(object):
         """
         Run the specified parsers and handlers and compile their reports. Will set the `exit_status` depending
          on if there were any errors or not.
-        :returns: a dict representing the reports gathers.
+        :return: a dict representing the reports gathers.
         """
         try:
             self._create_handlers()
