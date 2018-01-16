@@ -25,6 +25,7 @@ CheckQC **requires Python 3.5** (or higher to run). Furthermore, right now the I
 library needs to be installed separately before moving on to installing checkqc.
 
 .. code-block :: console
+
   pip install -f https://github.com/Illumina/interop/releases/tag/v1.1.1 interop
   pip install checkqc
 
