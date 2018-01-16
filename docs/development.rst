@@ -120,22 +120,45 @@ An example of what a full `QCHandler` class might look like can be found below, 
 
 Upload to PyPi
 --------------
-TODO: This has only been tested for pypitest so far, but everything appears to be working so far. Rewrite this
-once a real version has been deployed to PyPi.
+TO upload a new release to PyPi, you need to carry out the following steps:
 
-First create a `~/.pypirc` file with your PyPi credentials, and then run:
+- make sure you have a `~/.pyirc` file which has the following content (substitute your own credentials here)
+
+.. code-block:: console
+
+    [distutils]
+    index-servers =
+      pypi
+      pypitest
+
+    [pypi]
+    username:<your user name>
+    password:<your password>
+
+    [pypitest]
+    repository: https://test.pypi.org/legacy/
+    username:<your user name>
+    password:<your password>
+
+- Make sure that you have updated the version in `checkQC/__init__.py` so that it matches the tag you are releasing
+- Then to create the distributable files and upload them to the correct index (you might want to start by trying to upload them to pypitest before uploading them to the real pypi):
 
 .. code-block :: console
 
     python setup.py sdist bdist_wheel
-    twine upload -r pypitest dist/*
+    twine upload -r <pypitest or pypi> dist/*
+
+Once these steps are finished, the current checkQC release should be up on PyPI.
 
 
 Creating docs
 =============
 
-TODO
+The easiest way to generate the documentation and view it locally is to do the following:
 
 .. code-block :: console
 
-    sphinx-apidoc -f -o apidocs ../checkQC && make html
+    cd docs
+    sphinx-autobuild . _build/html
+
+This will build the documentation and serve them locally on `http://localhost:8000/`. When you make changes the docs should auto-update.
