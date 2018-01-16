@@ -16,6 +16,7 @@ class Q30Handler(QCHandler):
     def parser(self):
         """
         The Q30Handler fetches its data from the Interop files
+
         :returns: A InteropParser callable
         """
         return InteropParser

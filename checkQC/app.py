@@ -54,6 +54,7 @@ class App(object):
         """
         Configures and runs the application. It will set the exit status of the object in accordance with if any
         fatal qc errors were found or not.
+
         :returns: The reports of the application as a dict
         """
         try:
@@ -80,6 +81,7 @@ class App(object):
         """
         This method will run CheckQC as it is intended to run as a commandline application, it will log to the
         stderr and write data to stdout.
+
         :returns: the exit status of the run (0 for success, else not 0)
         """
         log.info("------------------------")

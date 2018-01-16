@@ -16,6 +16,7 @@ class UndeterminedPercentageHandler(QCHandler):
     def parser(self):
         """
         The UndeterminedPercentageHandler fetches its data from the Stats.json file
+
         :returns: A StatsJsonParser callable
         """
         return StatsJsonParser

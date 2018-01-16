@@ -16,6 +16,7 @@ class ClusterPFHandler(QCHandler):
     def parser(self):
         """
         The ClusterPFHandler will gather its data from the Stats.json file
+
         :returns: a StatsJsonParser callable
         """
         return StatsJsonParser

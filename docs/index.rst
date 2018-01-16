@@ -298,7 +298,9 @@ API Documentation
 -----------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    checkQC
+   checkQC.handlers
+   checkQC.parsers
 

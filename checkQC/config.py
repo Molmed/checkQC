@@ -72,6 +72,7 @@ class Config(object):
     def __init__(self, config):
         """
         Create a Config instance.
+
         :param config: content of the config file
         """
         self._config = config
@@ -79,6 +80,7 @@ class Config(object):
     def _get_matching_handler(self, instrument_and_reagent_type, read_length):
         """
         Get the handler matching the provided parameters.
+
         :param instrument_and_reagent_type: the instrument and run type, e.g. 'hiseq2500_rapidhighoutput_v4'
         :param read_length: either as a range, e.g. '50-70' or a single value, e.g. '50'
         :returns: A dict corresponding to the handler config
@@ -99,6 +101,7 @@ class Config(object):
     def _add_default_config(self, current_handler_config):
         """
         Add the default handlers specified in the config.
+
         :param current_handler_config: a list of handlers. This will be mutated.
         :returns: The provided list with the default configs added to it.
         """
@@ -113,6 +116,7 @@ class Config(object):
     def get_handler_configs(self, instrument_and_reagent_type, read_length):
         """
         Get the handler configurations for the specified parameters.
+
         :param instrument_and_reagent_type: type of instrument and reagents to match from config
         :param read_length: give the read length either as str or int
         :returns: the corresponding handler configuration(s)

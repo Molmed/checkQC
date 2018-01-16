@@ -24,6 +24,7 @@ class StatsJsonParser(Parser):
     def __init__(self, runfolder, *args, **kwargs):
         """
         Create a StatsJsonParser instance for the specified runfolder
+
         :param runfolder: path to the runfolder to parse
         """
         super().__init__(*args, **kwargs)

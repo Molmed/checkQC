@@ -16,6 +16,7 @@ class RunTypeSummarizer(object):
         Utility method to parse log and summarize the information about a particular run.
         This is used to tell the user what information CheckQC has gathered about a run, and
         what configuration was used.
+
         :param instrument_and_reagent_version: str with instrument and reagent version
         :param read_lengths: str with read length
         :param handler_config: dict with handler configuration

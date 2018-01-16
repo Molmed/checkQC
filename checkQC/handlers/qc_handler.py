@@ -14,6 +14,7 @@ class QCHandlerReport(object):
     def __init__(self, msg, ordering=1, data=None):
         """
         Instantiate a new QCHandlerReport
+
         :param msg: Message to send
         :param ordering: A number indicating the ordering of this object in relation to other objects of the same type
                         can be used e.g. to order reports by lane
@@ -27,6 +28,7 @@ class QCHandlerReport(object):
     def type(self):
         """
         Should be implemented by the subclass.
+
         :returns: String with the type of the report, e.g. "error" or "warning"
         """
         raise NotImplementedError("Subclass must implement this method")
@@ -34,6 +36,7 @@ class QCHandlerReport(object):
     def __repr__(self):
         """
         Providing string representation of this class
+
         :returns: Class string representation
         """
         return self.__str__()
@@ -41,6 +44,7 @@ class QCHandlerReport(object):
     def as_dict(self):
         """
         Dump the class as a dictionary
+
         :returns: A dict of representing this QCHandlerReport
         """
         return {'type': self.type(), 'message': self.message, 'data': self.data}
@@ -91,7 +95,8 @@ class Subscriber(object):
     def subscribe(self):
         """
         This method picks up data from the parser to which the Subscriber is listening.
-        :returns:
+
+        :returns: None
         """
         while True:
             value = yield
@@ -101,17 +106,20 @@ class Subscriber(object):
         """
         The implementing subclass should provide this method. It is up to instance receiving the data to decide
         how to handle it. Below is an example of how to handle a tuple with a key-value pair.
-        ```
-        class MySubscriber(Subscriber):
 
-            def __init__(self):
-                self.results = []
+        .. code-block :: python
 
-            def collect(self, signal):
-                key, value = signal
-                if key == "my_key":
-                    self.results.append(value)
-        ```
+            class MySubscriber(Subscriber):
+
+                def __init__(self):
+                    self.results = []
+
+                def collect(self, signal):
+                    key, value = signal
+                    if key == "my_key":
+                        self.results.append(value)
+
+
         :returns: None
         """
         raise NotImplementedError("Implementing class must provide this method.")
@@ -119,6 +127,7 @@ class Subscriber(object):
     def send(self, value):
         """
         Will send the specified value to the subscriber
+
         :param value: Value to send to subscriber
         :returns: None
         """
@@ -140,6 +149,7 @@ class QCHandler(Subscriber):
     def __init__(self, qc_config):
         """
         Create a QCHandler instance
+
         :param qc_config: dict containing the configuration for the QCHandler. Should have keys 'error' and 'warning'
         """
         super().__init__()
@@ -149,6 +159,7 @@ class QCHandler(Subscriber):
     def custom_configuration_validation(self):
         """
         Override this method in subclass to provide additional configuration behaviour.
+
         :raises: ConfigurationError if there is a problem with the configuration
         """
         pass
@@ -157,6 +168,7 @@ class QCHandler(Subscriber):
         """
         This method will validate the configuration which has been passed to the QCHandler. This should be called
         by the class making use of this instance. It will not be called automatically e.g. at object creation.
+
         :returns: None
         :raises: ConfigurationError if there is a problem with the configuration
         """
@@ -170,6 +182,7 @@ class QCHandler(Subscriber):
     def error(self):
         """
         The value associated with a QC error
+
         :returns: The configuration value for an error
         """
         return self.qc_config[self.ERROR]
@@ -177,6 +190,7 @@ class QCHandler(Subscriber):
     def warning(self):
         """
         The value associated with a QC warning
+
         :returns: The configuration value for an warning
         """
         return self.qc_config[self.WARNING]
@@ -184,6 +198,7 @@ class QCHandler(Subscriber):
     def exit_status(self):
         """
         The exit status of the handler.
+
         :returns: 0 if the qc criteria have not encountered a fatal qc error, else 1.
         """
         return self._exit_status
@@ -192,11 +207,14 @@ class QCHandler(Subscriber):
         """
         The class of the Parser which this QCHandler will get its data from.
         E.g.
-        ```
-        def parser(self):
-            return InteropParser
-        ```
+
+        .. code-block :: python
+
+            def parser(self):
+                return InteropParser
+
         Note that there should be no parenthesis after the class.
+
         :returns: The Parser implementation needed by this QCHandler
         """
         raise NotImplementedError("A handler needs to return the class of the parser it needs!")
@@ -205,6 +223,7 @@ class QCHandler(Subscriber):
         """
         The check_qc method provides the core behaviour of the QCHandler. It should check the values provided
         to it and yield instances of QCHandlerReport (or continue, if there was nothing to report)
+
         :returns: An instance of QCHandlerReport
         """
         raise NotImplementedError("A handler must provide its own QC checking behaviour by implementing "
@@ -214,6 +233,7 @@ class QCHandler(Subscriber):
         """
         Check the quality criteria as specified in `check_qc` and gather all reports. Will set the objects
         `exit_status` in accordance with what types of reports are found.
+
         :returns: A sorted list of errors and warnings found when evaluating the qc criteria.
         """
         errors_and_warnings = self.check_qc()

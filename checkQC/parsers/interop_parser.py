@@ -19,6 +19,7 @@ class InteropParser(Parser):
     def __init__(self, runfolder, *args, **kwargs):
         """
         Create a InteropParser instance for the specified runfolder
+
         :param runfolder: to create InteropParser instance for
         """
         super().__init__(*args, **kwargs)
@@ -28,6 +29,7 @@ class InteropParser(Parser):
     def get_non_index_reads(summary):
         """
         Pick-out the reads which are not index reads
+
         :param summary: a Interop read summary object to parse the read numbers from
         :returns: all reads which are not index reads
         """

@@ -19,6 +19,7 @@ class QCHandlerFactory(object):
         """
         This method will look for a class with the given `class_name` in the `checkQC.handlers` module.
         If it can find a class with a matching name it will return a instance of that class.
+
         :param class_name: the name of the class to instantiate
         :param class_config: dictionary with configuration for the class
         :returns: A instance of the class represented by class_name
