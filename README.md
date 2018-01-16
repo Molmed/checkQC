@@ -5,6 +5,8 @@ checkQC
 [![PyPI](https://img.shields.io/pypi/v/checkqc.svg)](https://pypi.python.org/pypi/checkQC)
 [![Documentation Status](https://readthedocs.org/projects/checkqc/badge/?version=latest)](http://checkqc.readthedocs.io/en/latest/?badge=latest)
 
+More documentation is available at [http://checkqc.readthedocs.io/](http://checkqc.readthedocs.io/en/latest/)
+
 CheckQC is a program designed to check a set of quality criteria against an Illumina runfolder.
 
 This is useful as part of a pipeline, where one needs to evaluate a set of quality criteria after demultiplexing. CheckQC is fast, and
