@@ -299,5 +299,5 @@ API Documentation
 .. toctree::
    :maxdepth: 2
 
-   checkQC
+   apidocs/checkQC
 
