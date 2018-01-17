@@ -293,6 +293,7 @@ Developing CheckQC
    :maxdepth: 2
 
    development
+   CONTRIBUTING
 
 API Documentation
 -----------------
