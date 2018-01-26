@@ -1,0 +1,15 @@
+{
+  "@context": "https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld",
+  "@type": "Code",
+  "author": [ "Matilda Åslin", "Monika Brandt", "Johan Dahlberg" ],
+  "identifier": "",
+  "codeRepository": "https://github.com/Molmed/checkQC",
+  "datePublished": "2018-01-19",
+  "dateModified": "2018-01-19",
+  "dateCreated": "2018-01-19",
+  "description": "CheckQC checks that an Illumina sequencing run confirm to a specified set of quality criteria.",
+  "keywords": "illumina, ngs, quality control, mps, sequencing",
+  "license": "GPLv3",
+  "title": "CheckQC",
+  "version": "v1.2.0"
+}
