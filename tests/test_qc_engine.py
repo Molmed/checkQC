@@ -12,7 +12,7 @@ class TestQCEngine(TestCase):
 
     class FakeParser(Parser):
 
-        def __init__(self, runfolder, *args, **kwargs):
+        def __init__(self, runfolder, parser_configurations, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.has_been_run = False
 
@@ -34,6 +34,8 @@ class TestQCEngine(TestCase):
         handler_config = [{'name': 'Q30Handler', 'warning': 30, 'error': 20},
                           {'name': 'UndeterminedPercentageHandler', 'warning': 0.01, 'error': 0.02}]
 
+        parser_configurations = {"StatsJsonParser": {"bcl2fastq_output_path": "foo/"}}
+
         self.mock_q30_handler = create_autospec(Q30Handler)
         self.mock_q30_handler.parser.return_value = self.FakeParser
 
@@ -41,13 +43,14 @@ class TestQCEngine(TestCase):
         self.mock_undetermined_perc_handler.parser.return_value = self.FakeParser
 
         self.handlers = [self.mock_q30_handler, self.mock_undetermined_perc_handler]
-        self.parsers_and_handlers = {self.FakeParser(runfolder): self.handlers}
+        self.parsers_and_handlers = {self.FakeParser(runfolder, parser_configurations): self.handlers}
 
         qc_handler_factory_mock = create_autospec(QCHandlerFactory)
         qc_handler_factory_mock.create_subclass_instance.side_effect = self.handlers
 
         self.qc_engine = QCEngine(runfolder=runfolder,
                                   handler_config=handler_config,
+                                  parser_configurations=parser_configurations,
                                   qc_handler_factory=qc_handler_factory_mock)
 
     def test__create_handlers(self):

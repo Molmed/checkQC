@@ -29,7 +29,7 @@ class TestInteropParser(unittest.TestCase):
 
     runfolder = os.path.join(os.path.dirname(__file__), "..", "resources",
                              "MiSeqDemo")
-    interop_parser = InteropParser(runfolder=runfolder)
+    interop_parser = InteropParser(runfolder=runfolder, parser_configurations=None)
     subscriber = Receiver()
     interop_parser.add_subscribers(subscriber)
     interop_parser.run()
