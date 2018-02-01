@@ -17,6 +17,12 @@
 #    it is possible to specify handlers per instrument and read length interval.
 #
 
+# Use this section to provide configuration options to the parsers
+parser_configurations:
+  StatsJsonParser:
+    # Path to where the bcl2fastq output (i.e. fastq files, etc) is located relative to
+    # the runfolder
+    bcl2fastq_output_path: Data/Intensities/BaseCalls
 
 default_handlers:
     - name: UndeterminedPercentageHandler

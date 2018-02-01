@@ -25,15 +25,17 @@ class QCEngine(object):
     to determine if all handlers were successful or not (zero indicates success, 1 indicates failure)
     """
 
-    def __init__(self, runfolder, handler_config, qc_handler_factory=None):
+    def __init__(self, runfolder, parser_configurations, handler_config, qc_handler_factory=None):
         """
         Create a instance of QCEngine
 
         :param runfolder: the path to the runfolder which should be analyzed
-        :param handler_config: a dict which configurations for the handler
+        :param parser_configurations: dict containing configurations for the parsers
+        :param handler_config: a dict which configurations for the handlers
         :param qc_handler_factory: A QCHandlerFactory, if None default QCHandlerFactory will be used
         """
         self.runfolder = runfolder
+        self.parser_configurations = parser_configurations
         self.handlers_config = handler_config
         self._handlers = []
         self._parsers_and_handlers = defaultdict(list)
@@ -78,7 +80,8 @@ class QCEngine(object):
     def _initiate_parsers(self):
         for handler in self._handlers:
             parser_factory = handler.parser()
-            parser_instance = parser_factory(self.runfolder)
+            parser_instance = parser_factory(runfolder=self.runfolder,
+                                             parser_configurations=self.parser_configurations)
             self._parsers_and_handlers[parser_instance].append(handler)
 
     def _subscribe_handlers_to_parsers(self):

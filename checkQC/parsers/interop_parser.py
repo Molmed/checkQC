@@ -16,11 +16,13 @@ class InteropParser(Parser):
 
     """
 
-    def __init__(self, runfolder, *args, **kwargs):
+    def __init__(self, runfolder, parser_configurations, *args, **kwargs):
         """
         Create a InteropParser instance for the specified runfolder
 
         :param runfolder: to create InteropParser instance for
+        :param parser_configurations: dict containing any extra configuration required by
+        the parser under class name key
         """
         super().__init__(*args, **kwargs)
         self.runfolder = runfolder

@@ -59,6 +59,7 @@ class App(object):
         """
         try:
             config = ConfigFactory.from_config_path(self._config_file)
+            parser_configurations = config.get("parser_configurations", None)
             run_type_recognizer = RunTypeRecognizer(config=config, runfolder=self._runfolder)
             instrument_and_reagent_version = run_type_recognizer.instrument_and_reagent_version()
 
@@ -69,7 +70,9 @@ class App(object):
 
             run_type_summary = RunTypeSummarizer.summarize(instrument_and_reagent_version, both_read_lengths, handler_config)
 
-            qc_engine = QCEngine(runfolder=self._runfolder, handler_config=handler_config)
+            qc_engine = QCEngine(runfolder=self._runfolder,
+                                 parser_configurations=parser_configurations,
+                                 handler_config=handler_config)
             reports = qc_engine.run()
             reports["run_summary"] = run_type_summary
             self.exit_status = qc_engine.exit_status

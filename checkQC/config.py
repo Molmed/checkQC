@@ -132,5 +132,11 @@ class Config(object):
                                      read_length))
             raise e
 
-    def __getitem__(self, item):
-        return self._config[item]
+    def __getitem__(self, key):
+        return self._config[key]
+
+    def get(self, key, default=None):
+        try:
+            return self.__getitem__(key)
+        except KeyError:
+            return default
