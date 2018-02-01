@@ -4,7 +4,7 @@ import os
 import unittest
 
 from checkQC.parsers.stats_json_parser import StatsJsonParser
-from checkQC.exceptions import StatsJsonNotFound
+from checkQC.exceptions import StatsJsonNotFound, ConfigurationError
 
 
 class TestStatsJsonParser(unittest.TestCase):
@@ -34,6 +34,13 @@ class TestStatsJsonParser(unittest.TestCase):
 
     def test_read_flowcell_name(self):
         self.assertListEqual(self.subscriber.values, ["CB1TVANXX"])
+
+    def test_init_stats_json_parser_without_valid_parser_config(self):
+        with self.assertRaises(ConfigurationError):
+            StatsJsonParser("", parser_configurations={"StatsJsonParser": ""})
+
+        with self.assertRaises(ConfigurationError):
+            StatsJsonParser("", parser_configurations={"StatsJsonParser": {"invalid_key": "foo"}})
 
     def test_init_stats_json_parser_without_stats_json(self):
         with self.assertLogs() as cm:

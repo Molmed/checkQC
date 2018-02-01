@@ -20,7 +20,8 @@ class TestConfig(unittest.TestCase):
                        "default_handlers": [
                            self.default_handler,
                            self.first_handler
-                       ]}
+                       ],
+                       "extra_key": "extra_value"}
         self.config = Config(config_dict)
 
     def test_exact_match(self):
@@ -38,6 +39,11 @@ class TestConfig(unittest.TestCase):
     def test_call_with_str(self):
         handlers = self.config.get_handler_configs('miseq_v3', "300")
         self.assertListEqual(handlers, [self.first_handler, self.default_handler])
+
+    def test_get(self):
+        self.assertEqual(self.config.get("extra_key"), "extra_value")
+        self.assertEqual(self.config.get("this_key_does_not_exist", "default"), "default")
+        self.assertEqual(self.config.get("this_key_does_not_exist"), None)
 
 
 class TestConfigFactory(unittest.TestCase):
