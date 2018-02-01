@@ -30,7 +30,14 @@ class StatsJsonParser(Parser):
         """
         super().__init__(*args, **kwargs)
 
-        self.parser_conf = parser_configurations[self.__class__.__name__]
+        self.parser_conf = parser_configurations.get(self.__class__.__name__)
+        if not self.parser_conf:
+            raise ConfigurationError("The configuration must contain parser_configurations "
+                                     "key with subkey StatsJsonParser. E.g: \n"
+                                     "parser_configurations:\n"
+                                     "\tStatsJsonParser:\n"
+                                     "\t\tbcl2fastq_output_path: Data/Intensities/BaseCalls")
+
         bcl2fastq_output_path = self.parser_conf.get("bcl2fastq_output_path")
         if not bcl2fastq_output_path:
             raise ConfigurationError("The configuration must contain the key bcl2fastq_output_path, specifying "
