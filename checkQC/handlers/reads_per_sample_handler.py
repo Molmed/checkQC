@@ -45,7 +45,7 @@ class ReadsPerSampleHandler(QCHandler):
                                        ordering=lane_nbr,
                                        data={"lane": lane_nbr, "number_of_samples": nbr_of_samples,
                                              "sample_id": sample_id, "sample_reads": sample_total_reads,
-                                             "threshold": self.error()})
+                                             "threshold": float(self.error()) / float(nbr_of_samples)})
                 elif self.warning() != self.UNKNOWN and \
                                 sample_total_reads < (float(self.warning()) / float(nbr_of_samples)):
                     yield QCErrorWarning("Number of reads for sample {} was too low on lane {}, "
@@ -53,6 +53,6 @@ class ReadsPerSampleHandler(QCHandler):
                                          ordering=lane_nbr,
                                          data={"lane": lane_nbr, "number_of_samples": nbr_of_samples,
                                                "sample_id": sample_id, "sample_reads": sample_total_reads,
-                                               "threshold": self.warning()})
+                                               "threshold": float(self.warning()) / float(nbr_of_samples)})
                 else:
                     continue
