@@ -54,6 +54,12 @@ contains a feature of setting thresholds for different QC criteria based on inst
 type and evaluates these criteria automatically, which to the best of our knowledge, is not supported
 by existing software.
 
+Another software library which focuses on working with Illumina data from a sequencing run perspective
+is basecallQC [@basecallQC]. This is a library for the R [@R] programming language, which allows the user
+to perform utility actions related to a sequencing run, as well as create summary reports.
+It does not, however, provide built in functionality to access quality control thresholds, nor does it
+provide a commandline interface to the user.
+
 # Features
 
  - Support for the following Illumina instrument types: HiSeq2500, HiSeqX, MiSeq and NovaSeq.
