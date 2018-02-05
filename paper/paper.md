@@ -56,9 +56,9 @@ by existing software.
 
 Another software library which focuses on working with Illumina data from a sequencing run perspective
 is basecallQC [@basecallQC]. This is a library for the R [@R] programming language, which allows the user
-to perform utility actions related to a sequencing run, as well as create summary reports.
-It does not, however, provide built in functionality to access quality control thresholds, nor does it
-provide a commandline interface to the user.
+to perform utility actions related to a sequencing run, as well as create summary reports. It does not, 
+however, provide built in functionality to assess whether quality control thresholds are fulfilled or not, 
+nor does it provide a commandline interface to the user.
 
 # Features
 
