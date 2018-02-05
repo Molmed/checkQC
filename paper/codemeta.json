@@ -11,5 +11,5 @@
   "keywords": "illumina, ngs, quality control, mps, sequencing",
   "license": "GPLv3",
   "title": "CheckQC",
-  "version": "v1.2.0"
+  "version": "v1.3.0"
 }
