@@ -4,6 +4,7 @@ checkQC
 [![codecov](https://codecov.io/gh/Molmed/checkQC/branch/master/graph/badge.svg)](https://codecov.io/gh/Molmed/checkQC)
 [![PyPI](https://img.shields.io/pypi/v/checkqc.svg)](https://pypi.python.org/pypi/checkQC)
 [![Documentation Status](https://readthedocs.org/projects/checkqc/badge/?version=latest)](http://checkqc.readthedocs.io/en/latest/?badge=latest)
+[![DOI](http://joss.theoj.org/papers/10.21105/joss.00556/status.svg)](https://doi.org/10.21105/joss.00556)
 
 More documentation is available at [http://checkqc.readthedocs.io/](http://checkqc.readthedocs.io/en/latest/)
 
