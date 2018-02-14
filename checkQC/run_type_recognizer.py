@@ -215,10 +215,7 @@ class RunTypeRecognizer(object):
         read_lengths = []
         for read in reads:
             if not read['@IsIndexedRead'] == 'Y':
-                # The -1 is necessary for the number of cycles to correspond to the
-                # way it is specified in the docs. I.e. read length 300 in the docs
-                # means 301 cycles were run...
-                read_lengths.append(int(read['@NumCycles']) - 1)
+                read_lengths.append(int(read['@NumCycles']))
 
         if len(read_lengths) < 1:
             raise RunModeUnknown("Found no NumCycles in RunInfo.xml, could not determine read length")

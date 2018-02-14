@@ -19,7 +19,7 @@ class TestRunTypeRecognizer(TestCase):
         self.assertEqual(expected, actual.name())
 
     def test_read_length(self):
-        expected = "50"
+        expected = "51"
         actual = self.runtype_recognizer.read_length()
         self.assertEqual(expected, actual)
 
