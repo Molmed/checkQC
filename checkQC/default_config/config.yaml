@@ -1,21 +1,6 @@
 
 
-# Usage instruction for config
-# -----------------------------
-#  - Please note that intervals for read lengths are specified as: min < x <= max (i.e. upper inclusive, lower exclusive)
-#  - All other intervals are exclusive.
-#  - Values that are specified under each handler, e.g.
-#
-#      - name: ClusterPFHandler
-#        warning: 180 # Millons of clusters
-#        error: unknown
-#
-#    are specific to that partiular handler, but in general any value can be substituted with "unknown", in which case
-#    this will not be evaluated.
-#
-#  - Handlers specified under "default_handlers" will be run regardless of instrument type. For all other cases
-#    it is possible to specify handlers per instrument and read length interval.
-#
+# For information about config usage, see http://checkqc.readthedocs.io/
 
 # Use this section to provide configuration options to the parsers
 parser_configurations:
