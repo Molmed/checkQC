@@ -3,6 +3,8 @@ import unittest
 
 from checkQC.config import Config, ConfigFactory
 
+from checkQC.exceptions import ConfigEntryMissing
+
 
 class TestConfig(unittest.TestCase):
 
@@ -33,7 +35,7 @@ class TestConfig(unittest.TestCase):
         self.assertListEqual(handlers, [self.second_handler, self.default_handler, self.first_handler])
 
     def test_no_match(self):
-        with self.assertRaises(KeyError):
+        with self.assertRaises(ConfigEntryMissing):
             self.config.get_handler_configs('miseq_v3', 999)
 
     def test_call_with_str(self):
