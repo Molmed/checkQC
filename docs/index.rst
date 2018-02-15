@@ -204,7 +204,7 @@ Configuration file
 
  - Read length is defined as the number of cycles run for a read.
 
- - All intervals for read lengths are specified as: min < x <= max (i.e. upper inclusive, lower exclusive).
+ - All intervals for read lengths are specified as: min <= x <= max (i.e. upper inclusive, lower inclusive).
 
  - All other intervals are exclusive.
 

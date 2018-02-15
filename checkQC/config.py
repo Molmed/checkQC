@@ -91,7 +91,7 @@ class Config(object):
                 split_read_length = config_read_length.split("-")
                 low_break = int(split_read_length[0])
                 high_break = int(split_read_length[1])
-                if low_break < int(read_length) <= high_break:
+                if low_break <= int(read_length) <= high_break:
                     return self._config[instrument_and_reagent_type][config_read_length]["handlers"]
             else:
                 if int(read_length) == int(config_read_length):
