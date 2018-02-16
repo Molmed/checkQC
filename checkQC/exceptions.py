@@ -40,5 +40,6 @@ class QCHandlerNotFound(CheckQCException):
 class ConfigurationError(CheckQCException):
     pass
 
+
 class ConfigEntryMissing(CheckQCException):
     pass
