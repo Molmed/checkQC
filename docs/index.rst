@@ -202,6 +202,9 @@ In this example we use the python json tool to pretty print the json output:
 Configuration file
 ------------------
 
+ - The location of the default config is printed when running CheckQC without the `--config` flag.
+   It can be used to as a template when making a customized config.
+
  - Read length is defined as the number of cycles run for a read.
 
  - All intervals for read lengths are specified as: min <= x <= max (i.e. upper inclusive, lower inclusive).
