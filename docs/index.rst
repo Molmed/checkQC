@@ -18,7 +18,7 @@ Instrument types supported in checkQC are the following:
  - HiSeq2500
  - MiSeq
  - NovaSeq
-     
+
 Install instructions
 --------------------
 CheckQC **requires Python 3.5** (or higher to run). Furthermore, right now the Illumina Interop
@@ -49,7 +49,7 @@ your own custom file, you can do so by adding a path to the config like this:
 
 When CheckQC starts and no path to the config file is specified it will give you
 the path to where the default file is located on your system, if you want a template
-that you can customize according to your own needs.
+that you can customize according to your own needs. See section `Configuration file`_ for more information.
 
 When you run CheckQC you can expect to see output similar to this:
 
@@ -198,6 +198,28 @@ In this example we use the python json tool to pretty print the json output:
           ]
       }
   }
+
+Configuration file
+------------------
+
+ - The location of the default config is printed when running CheckQC without the `--config` flag.
+   It can be used to as a template when making a customized config.
+
+ - Read length is defined as the number of cycles run for a read.
+
+ - All intervals for read lengths are specified as: min <= x <= max (i.e. upper inclusive, lower inclusive).
+
+ - All other intervals are exclusive.
+
+ - Values that are specified under each handler are specific to that particular handler, but in general any value
+   can be substituted with "unknown", in which case this will not be evaluated.
+
+ - Handlers specified under "default_handlers" will be run regardless of instrument type. For all other cases it
+   is possible to specify handlers per instrument and read length interval.
+
+ - Apart from QC thresholds, the config also contains parser configurations, where parser specific variables can be set.
+   The Stats.json parser has a bcl2fastq_output_path variable, that can be set to specify where bcl2fastq output is located
+   relative to the runfolder. Default value is "Data/Intensities/BaseCalls".
 
 Running CheckQC as a webservice
 -------------------------------

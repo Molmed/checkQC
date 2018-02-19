@@ -1,6 +1,7 @@
 
 from pkg_resources import Requirement, resource_filename
 import logging
+from checkQC.exceptions import ConfigEntryMissing
 
 import yaml
 
@@ -84,6 +85,7 @@ class Config(object):
         :param instrument_and_reagent_type: the instrument and run type, e.g. 'hiseq2500_rapidhighoutput_v4'
         :param read_length: either as a range, e.g. '50-70' or a single value, e.g. '50'
         :returns: A dict corresponding to the handler config
+        :raises: ConfigEntryMissing if instrument, reagent type and read length detected is missing from config
         """
         config_read_lengths = list(map(str, self._config[instrument_and_reagent_type].keys()))
         for config_read_length in config_read_lengths:
@@ -91,12 +93,15 @@ class Config(object):
                 split_read_length = config_read_length.split("-")
                 low_break = int(split_read_length[0])
                 high_break = int(split_read_length[1])
-                if low_break < int(read_length) <= high_break:
+                if low_break <= int(read_length) <= high_break:
                     return self._config[instrument_and_reagent_type][config_read_length]["handlers"]
             else:
                 if int(read_length) == int(config_read_length):
                     return self._config[instrument_and_reagent_type][int(config_read_length)]["handlers"]
-        raise KeyError
+        raise ConfigEntryMissing("Could not find a config entry for instrument '{}' "
+                  "with read length '{}'. Please check the provided config "
+                  "file ".format(instrument_and_reagent_type,
+                                 read_length))
 
     def _add_default_config(self, current_handler_config):
         """
@@ -121,16 +126,18 @@ class Config(object):
         :param read_length: give the read length either as str or int
         :returns: the corresponding handler configuration(s)
         """
+
         try:
             handler_config = self._get_matching_handler(instrument_and_reagent_type, read_length)
             handler_config_with_defaults = self._add_default_config(handler_config)
             return handler_config_with_defaults
-        except KeyError as e:
+        except ConfigEntryMissing as e:
             log.error("Could not find a config entry for instrument '{}' "
                       "with read length '{}'. Please check the provided config "
                       "file ".format(instrument_and_reagent_type,
                                      read_length))
             raise e
+
 
     def __getitem__(self, key):
         return self._config[key]
