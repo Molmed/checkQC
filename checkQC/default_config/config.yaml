@@ -1,6 +1,6 @@
 
 
-# For information about config usage, see http://checkqc.readthedocs.io/
+# For information about config usage, see http://checkqc.readthedocs.io/en/latest/#configuration-file
 
 # Use this section to provide configuration options to the parsers
 parser_configurations:

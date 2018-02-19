@@ -98,7 +98,10 @@ class Config(object):
             else:
                 if int(read_length) == int(config_read_length):
                     return self._config[instrument_and_reagent_type][int(config_read_length)]["handlers"]
-        raise ConfigEntryMissing
+        raise ConfigEntryMissing("Could not find a config entry for instrument '{}' "
+                  "with read length '{}'. Please check the provided config "
+                  "file ".format(instrument_and_reagent_type,
+                                 read_length))
 
     def _add_default_config(self, current_handler_config):
         """
