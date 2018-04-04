@@ -43,5 +43,16 @@ class TestUndeterminedPercentageHandler(HandlerTestBase):
         class_names = self.map_errors_and_warnings_to_class_names(errors_and_warnings)
         self.assertListEqual(class_names, ['QCErrorFatal', 'QCErrorFatal'])
 
+    def test_no_yield(self):
+        key = "ConversionResults"
+        value = get_stats_json()["ConversionResults"]
+        value[0]["Yield"] = 0
+        self.undetermined_handler.collect((key, value))
+
+        errors_and_warnings = list(self.undetermined_handler.check_qc())
+        class_names = self.map_errors_and_warnings_to_class_names(errors_and_warnings)
+        self.assertListEqual(class_names, ['QCErrorFatal'])
+
+
 if __name__ == '__main__':
     unittest.main()

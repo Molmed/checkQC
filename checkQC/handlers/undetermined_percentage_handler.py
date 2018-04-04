@@ -35,6 +35,12 @@ class UndeterminedPercentageHandler(QCHandler):
                 lane_nbr = int(lane_dict["LaneNumber"])
                 total_yield = lane_dict["Yield"]
 
+                if total_yield == 0:
+                    yield QCErrorFatal("Yield for lane: {} was 0. No undetermined percentage could be computed.",
+                                       ordering=lane_nbr,
+                                       data={"lane": lane_nbr, "percentage_undetermined": "N/A"})
+                    continue
+
                 undetermined_yield = lane_dict["Undetermined"]["Yield"]
 
                 percentage_undetermined = (undetermined_yield / total_yield)*100
