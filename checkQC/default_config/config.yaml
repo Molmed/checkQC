@@ -169,7 +169,7 @@ miseq_v2:
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 2
-        error: uknown
+        error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
         error: 5 # 50 % of threshold for clusters pass filter
