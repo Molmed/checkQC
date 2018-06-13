@@ -285,7 +285,3 @@ $ curl -s -w'\n' localhost:9999/qc/170726_D00118_0303_BCB1TVANXX | python -m jso
     "version": "1.1.0"
 }
 ```
-
-
-
-

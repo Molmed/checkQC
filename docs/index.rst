@@ -308,6 +308,38 @@ Here is an example how to query the endpoint, and what type of results it will r
   }
 
 
+Running CheckQC with Docker
+---------------------------
+
+For convenience, a Dockerfile is included. Containers started from the built image will have the service running on
+port 80 and will monitor the `tests/resources` folder by default. The monitored folder can be specified when starting
+the container.
+
+Example commands:
+
+Build the docker image:
+
+.. code-block :: console
+  docker build -t checkqc .
+
+Run the container using the default settings, mapping the host port 9999 to the container port 80:
+.. code-block :: console
+  docker run -p 9999:80 -d checkqc
+
+Run the container but specify the config file and mount a folder to monitor:
+
+.. code-block :: console
+  docker run -p 9999:80 -v /path/to/folder/on/host:/mnt/runfolders -d \
+       checkqc /mnt/runfolders --config=/path/to/config.yaml
+
+Note that for development and debugging, it is very convenient to mount a host folder containing the checkqc repo under the `/app` mount point in the container.
+The service will then run from that code and any changes you make to the code will take immediate effect on the
+running web service:
+
+.. code-block :: console
+  docker run -p 9999:80 -v /path/to/checkqc/repo/on/host:/app -d checkqc
+
+
 Developing CheckQC
 ------------------
 
