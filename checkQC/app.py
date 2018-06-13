@@ -77,7 +77,8 @@ class App(object):
             reports["run_summary"] = run_type_summary
             self.exit_status = qc_engine.exit_status
             return reports
-        except CheckQCException:
+        except CheckQCException as e:
+            log.error(e)
             self.exit_status = 1
 
     def run(self):
