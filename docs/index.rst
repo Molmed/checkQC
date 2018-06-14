@@ -320,15 +320,19 @@ Example commands:
 Build the docker image:
 
 .. code-block :: console
+
   docker build -t checkqc .
 
 Run the container using the default settings, mapping the host port 9999 to the container port 80:
+
 .. code-block :: console
+
   docker run -p 9999:80 -d checkqc
 
 Run the container but specify the config file and mount a folder to monitor:
 
 .. code-block :: console
+
   docker run -p 9999:80 -v /path/to/folder/on/host:/mnt/runfolders -d \
        checkqc /mnt/runfolders --config=/path/to/config.yaml
 
@@ -337,6 +341,7 @@ The service will then run from that code and any changes you make to the code wi
 running web service:
 
 .. code-block :: console
+
   docker run -p 9999:80 -v /path/to/checkqc/repo/on/host:/app -d checkqc
 
 
