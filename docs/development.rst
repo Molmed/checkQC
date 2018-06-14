@@ -118,9 +118,10 @@ An example of what a full `QCHandler` class might look like can be found below, 
                 else:
                     continue
 
-Upload to PyPi
+Upload to PyPI
 --------------
-TO upload a new release to PyPi, you need to carry out the following steps:
+Releases to PyPI should happen automatically when a release is created in GitHub. However, if for one reason or another, 
+you need to manually upload a new release to PyPi, you need to carry out the following steps:
 
 - make sure you have a `~/.pyirc` file which has the following content (substitute your own credentials here)
 
