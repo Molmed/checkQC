@@ -90,3 +90,9 @@ class TestIlluminaInstrument(TestCase):
 
         self.assertTrue(actual, expected)
 
+    def test_novaseq_reagent_version_raises(self):
+        runtype_dict = {"RunParameters": {"RfidsInfo": {"NoFlowCellMode": "S1"}}}
+        mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
+
+        with self.assertRaises(ReagentVersionUnknown):
+            self.novaseq.reagent_version(mock_runtype_recognizer)
