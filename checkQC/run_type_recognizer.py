@@ -66,7 +66,11 @@ class NovaSeq(IlluminaInstrument):
 
     @staticmethod
     def reagent_version(runtype_recognizer):
-        return "v1"
+        try:
+            reagent_version = runtype_recognizer.run_parameters["RunParameters"]["RfidsInfo"]["FlowCellMode"]
+            return reagent_version
+        except KeyError:
+            raise ReagentVersionUnknown("Could not identify flowcell mode for Novaseq")
 
 
 class HiSeqX(IlluminaInstrument):

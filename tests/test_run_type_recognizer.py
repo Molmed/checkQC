@@ -29,7 +29,7 @@ class TestRunTypeRecognizer(TestCase):
         self.assertEqual(expected, actual)
 
 
-class TestHiSeq2500(TestCase):
+class TestIlluminaInstrument(TestCase):
 
     class MockRunTypeRecognizer():
         def __init__(self, run_parameters):
@@ -81,12 +81,12 @@ class TestHiSeq2500(TestCase):
         with self.assertRaises(ReagentVersionUnknown):
             self.miseq.reagent_version(mock_runtype_recognizer)
 
-    def test_novaseq_reagent_version(self):
-        runtype_dict = {"RunParameters": {"ReagentKitVersion": "Version2"}}
+    def test_novaseq_reagent_version_S1(self):
+        runtype_dict = {"RunParameters": {"RfidsInfo": {"FlowCellMode": "S1"}}}
         mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
 
         actual = self.novaseq.reagent_version(mock_runtype_recognizer)
-
-        expected = "novaseq_v1"
+        expected = "novaseq_S1"
 
         self.assertTrue(actual, expected)
+
