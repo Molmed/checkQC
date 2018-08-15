@@ -187,7 +187,7 @@ novaseq_S2:
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 325 # 50 % of threshold for clusters pass filter
+        error: 800 # 50 % of threshold for clusters pass filter
   101:
     handlers:
       - name: ClusterPFHandler
@@ -202,7 +202,7 @@ novaseq_S2:
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 325 # 50 % of threshold for clusters pass filter
+        error: 800 # 50 % of threshold for clusters pass filter
   151:
     handlers:
       - name: ClusterPFHandler
@@ -217,7 +217,7 @@ novaseq_S2:
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 325 # 50 % of threshold for clusters pass filter
+        error: 800 # 50 % of threshold for clusters pass filter
 
 novaseq_S4:
   151:
