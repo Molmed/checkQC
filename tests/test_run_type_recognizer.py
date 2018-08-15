@@ -46,9 +46,9 @@ class TestIlluminaInstrument(TestCase):
 
         actual = self.hiseq2500.reagent_version(mock_runtype_recognizer)
 
-        expected = "hiseq2500_rapidhighoutput_v4"
+        expected = "rapidhighoutput_v4"
 
-        self.assertTrue(actual, expected)
+        self.assertEqual(actual, expected)
 
     def test_wrong_runmode(self):
         runtype_dict = {"RunParameters": {"Setup": {"Sbs": "HiSeq SBS Kit v4"}}}
@@ -70,9 +70,9 @@ class TestIlluminaInstrument(TestCase):
 
         actual = self.miseq.reagent_version(mock_runtype_recognizer)
 
-        expected = "miseq_v2"
+        expected = "v2"
 
-        self.assertTrue(actual, expected)
+        self.assertEqual(actual, expected)
 
     def test_miseq_unknown_reagent_version(self):
         runtype_dict = {"RunParameters": {"foo": "bar"}}
@@ -86,9 +86,9 @@ class TestIlluminaInstrument(TestCase):
         mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
 
         actual = self.novaseq.reagent_version(mock_runtype_recognizer)
-        expected = "novaseq_S1"
+        expected = "S1"
 
-        self.assertTrue(actual, expected)
+        self.assertEqual(actual, expected)
 
     def test_novaseq_reagent_version_raises(self):
         runtype_dict = {"RunParameters": {"RfidsInfo": {"NoFlowCellMode": "S1"}}}
