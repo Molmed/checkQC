@@ -63,7 +63,7 @@ class ErrorRateHandler(QCHandler):
             elif self.warning() != self.UNKNOWN and error_rate > self.warning():
                 yield QCErrorWarning("Error rate {} was to high on lane: {} for read: {}".format(error_rate,
                                                                                                  lane_nbr,
-                                                                                                 error_rate),
+                                                                                                 read),
                                      ordering=lane_nbr,
                                      data={"lane": lane_nbr, "read": read,
                                            "error_rate": error_rate, "threshold": self.warning()})
