@@ -60,7 +60,7 @@ class App(object):
         try:
             config = ConfigFactory.from_config_path(self._config_file)
             parser_configurations = config.get("parser_configurations", None)
-            run_type_recognizer = RunTypeRecognizer(config=config, runfolder=self._runfolder)
+            run_type_recognizer = RunTypeRecognizer(runfolder=self._runfolder)
             instrument_and_reagent_version = run_type_recognizer.instrument_and_reagent_version()
 
             # TODO For now assume symmetric read lengths
