@@ -1,9 +1,8 @@
 
-import os
 import logging
-import xmltodict
 
 from checkQC.exceptions import *
+from checkQC.runfolder_reader import RunfolderReader
 
 log = logging.getLogger(__name__)
 
@@ -57,6 +56,15 @@ class IlluminaInstrument(object):
         """
         raise NotImplementedError
 
+class ISeq(IlluminaInstrument):
+
+    @staticmethod
+    def name():
+        return "iseq"
+
+    @staticmethod
+    def reagent_version(runtype_recognizer):
+        return "v1"
 
 class NovaSeq(IlluminaInstrument):
 
@@ -142,42 +150,18 @@ class RunTypeRecognizer(object):
     The runfolder needs to have a 'RunInfo.xml' and a '[R|r]unParameters.xml' file.
     """
 
-    def __init__(self, config, runfolder):
+    def __init__(self, runfolder, runfolder_reader=RunfolderReader()):
         """
         Create a RunTypeRecognizer instance
 
-        :param config: dictionary containing the app configuration
         :param runfolder: to gather data about
+        :param runfolder_reader: reader class for for runfolders, defaults to RunfolderReader. Here to make testing
+        easier.
         """
-        self._config = config
         self._runfolder = runfolder
-        try:
-            run_info_path = os.path.join(self._runfolder, "RunInfo.xml")
-            if not os.path.exists(run_info_path):
-                log.error("Could not find a RunInfo.xml in {}. Are you sure this is a runfolder?".format(run_info_path))
-                raise FileNotFoundError("Could not find {}".format(run_info_path))
-            with open(run_info_path) as f:
-                self.run_info = xmltodict.parse(f.read())
-        except FileNotFoundError:
-            raise RunInfoXMLNotFound("Could not find RunInfo.xml at {}".format(run_info_path))
+        self.run_info = runfolder_reader.read_run_info_xml(runfolder)
+        self.run_parameters = runfolder_reader.read_run_parameters_xml(runfolder)
 
-        try:
-            with open(self._find_run_parameters_xml()) as f:
-                self.run_parameters = xmltodict.parse(f.read())
-        except FileNotFoundError:
-            raise RunParametersNotFound("Could not find [R|r]unParameters.xml for runfolder {}".format(self._runfolder))
-
-    def _find_run_parameters_xml(self):
-        first_option = os.path.join(self._runfolder, "RunParameters.xml")
-        second_option = os.path.join(self._runfolder, "runParameters.xml")
-        if os.path.isfile(first_option):
-            return first_option
-        elif os.path.isfile(second_option):
-            return second_option
-        else:
-            log.error("Could not find [R|r]unParameters.xml in directory {}. "
-                      "Are you sure this is a runfolder?".format(self._runfolder))
-            raise FileNotFoundError("Could not find [R|r]unParameters.xml for runfolder {}".format(self._runfolder))
 
     def instrument_type(self):
         """
@@ -191,7 +175,8 @@ class RunTypeRecognizer(object):
         machine_type_mappings = {"M": "miseq",
                                  "D": "hiseq2500",
                                  "ST": "hiseqx",
-                                 "A": "novaseq"}
+                                 "A": "novaseq",
+                                 "FFSP": "iseq"}
 
         for key, value in machine_type_mappings.items():
             if instrument_name.startswith(key):

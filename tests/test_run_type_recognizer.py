@@ -1,17 +1,18 @@
 from unittest import TestCase
+import mock
 
 import os
 
 from checkQC.exceptions import RunModeUnknown, ReagentVersionUnknown
-from checkQC.run_type_recognizer import RunTypeRecognizer, HiSeq2500, MiSeq, NovaSeq
-class TestRunTypeRecognizer(TestCase):
+from checkQC.run_type_recognizer import RunTypeRecognizer, HiSeq2500, MiSeq, NovaSeq, ISeq
+from checkQC.runfolder_reader import RunfolderReader
 
-    CONFIG = {"instrument_type_mappings":{"M": "miseq","D": "hiseq2500"}}
+
+class TestRunTypeRecognizerFromFolder(TestCase):
 
     def setUp(self):
         self.runtype_recognizer = RunTypeRecognizer(runfolder=os.path.join(os.path.dirname(__file__),
-                                                                           "resources", "Rapid"),
-                                                    config=self.CONFIG)
+                                                                           "resources", "Rapid"))
 
     def test_instrument_type(self):
         expected = "hiseq2500"
@@ -29,6 +30,25 @@ class TestRunTypeRecognizer(TestCase):
         self.assertEqual(expected, actual)
 
 
+class TestRunTypeRecognizerCorrectInstrumentsReturned(TestCase):
+
+    def _create_runtype_recognizer(self, instrument_name):
+        with mock.patch.object(RunfolderReader, 'read_run_info_xml',
+                               return_value={"RunInfo": {"Run": {"Instrument": instrument_name}}}), \
+             mock.patch.object(RunfolderReader, 'read_run_parameters_xml', return_value=None):
+            return RunTypeRecognizer(runfolder='foo')
+
+    def test_returns_hiseq2500(self):
+        runtyperecognizer = self._create_runtype_recognizer("D1000")
+        actual = runtyperecognizer.instrument_type()
+        self.assertTrue(isinstance(actual, HiSeq2500))
+
+    def test_returns_iseq(self):
+        runtyperecognizer = self._create_runtype_recognizer("FFSP100")
+        actual = runtyperecognizer.instrument_type()
+        self.assertTrue(isinstance(actual, ISeq))
+
+
 class TestIlluminaInstrument(TestCase):
 
     class MockRunTypeRecognizer():
@@ -39,6 +59,7 @@ class TestIlluminaInstrument(TestCase):
         self.hiseq2500 = HiSeq2500()
         self.miseq = MiSeq()
         self.novaseq = NovaSeq()
+        self.iseq = ISeq()
 
     def test_all_is_well(self):
         runtype_dict = {"RunParameters": {"Setup": {"RunMode": "RapidHighOutput", "Sbs": "HiSeq SBS Kit v4"}}}
