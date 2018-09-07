@@ -9,15 +9,19 @@ class CheckQCException(Exception):
     pass
 
 
-class InstrumentTypeUnknown(CheckQCException):
+class ConfigurationError(CheckQCException):
     pass
 
 
-class RunModeUnknown(CheckQCException):
+class InstrumentTypeUnknown(ConfigurationError):
     pass
 
 
-class ReagentVersionUnknown(CheckQCException):
+class RunModeUnknown(ConfigurationError):
+    pass
+
+
+class ReagentVersionUnknown(ConfigurationError):
     pass
 
 
@@ -41,5 +45,9 @@ class ConfigurationError(CheckQCException):
     pass
 
 
-class ConfigEntryMissing(CheckQCException):
+class ConfigEntryMissing(ConfigurationError):
+    pass
+
+
+class RunfolderNotFoundError(CheckQCException):
     pass
