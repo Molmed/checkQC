@@ -25,7 +25,7 @@ class TestWebAppWithNonUsefulConfig(AsyncHTTPTestCase):
 
     def get_app(self):
         routes = WebApp._routes(monitoring_path=os.path.join("tests", "resources"),
-                                qc_config_file=os.path.join("tests", "resources", "poor_config.yaml"))
+                                qc_config_file=os.path.join("tests", "resources", "incomplete_config.yaml"))
         return tornado.web.Application(routes)
 
     def test_qc_fail_fast_for_unknown_config(self):

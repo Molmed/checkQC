@@ -62,8 +62,8 @@ class App(object):
         parser_configurations = config.get("parser_configurations", None)
 
         if not Path(self._runfolder).is_dir():
-            raise RunfolderNotFoundError("Could not find runfolder: {} are you "
-                                         "sure the path is correct".format(self._runfolder))
+            raise RunfolderNotFoundError("Could not find runfolder: {}. Are you "
+                                         "sure the path is correct?".format(self._runfolder))
 
         run_type_recognizer = RunTypeRecognizer(runfolder=self._runfolder)
         instrument_and_reagent_version = run_type_recognizer.instrument_and_reagent_version()

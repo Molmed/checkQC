@@ -103,8 +103,7 @@ class Config(object):
                         return self._config[instrument_and_reagent_type][int(config_read_length)]["handlers"]
             raise ConfigEntryMissing("Could not find a config entry matching read length '{}' on "
                                      "instrument '{}'. Please check the provided "
-                                     "config.".format(instrument_and_reagent_type,
-                                                      read_length))
+                                     "config.".format(read_length, instrument_and_reagent_type))
         except KeyError:
             raise ConfigEntryMissing("Could not find a config entry for instrument '{}' "
                                      "with read length '{}'. Please check the provided config "

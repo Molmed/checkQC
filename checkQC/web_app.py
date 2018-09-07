@@ -43,7 +43,7 @@ class CheckQCHandler(tornado.web.RequestHandler):
             self.set_header("Content-Type", "application/json")
             self.write(reports)
         except RunfolderNotFoundError:
-            self._write_error(status_code=404, reason="could not find requested runfolder.")
+            self._write_error(status_code=404, reason="Could not find requested runfolder.")
         except ConfigurationError:
             self._write_error(status_code=500, reason="There is a problem with the qc config. Are you sure the "
                                                       "type of instrument/run configuration on the run you want to "

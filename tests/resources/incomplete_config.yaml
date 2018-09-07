@@ -1,6 +1,8 @@
 
-# NOTE THIS CONFIG IS HERE TO BE USED TO NOT HAVE THE REQUIRED KEYS IN THE TESTS!
-# NOT FOR USE OUTSIDE OF TESTING.
+# NOTE
+# ----
+# This config is a partial copy of checkQC/default_config/config.yaml,
+# with required keys removed in order to trigger errors. For testing only.
 
 # Use this section to provide configuration options to the parsers
 parser_configurations:
