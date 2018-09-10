@@ -2,6 +2,7 @@
 import sys
 import json
 import logging
+from pathlib import Path
 
 import click
 
@@ -9,7 +10,7 @@ from checkQC.qc_engine import QCEngine
 from checkQC.config import ConfigFactory
 from checkQC.run_type_recognizer import RunTypeRecognizer
 from checkQC.run_type_summarizer import RunTypeSummarizer
-from checkQC.exceptions import CheckQCException
+from checkQC.exceptions import CheckQCException, RunfolderNotFoundError
 from checkQC import __version__ as checkqc_version
 
 
@@ -57,29 +58,30 @@ class App(object):
 
         :returns: The reports of the application as a dict
         """
-        try:
-            config = ConfigFactory.from_config_path(self._config_file)
-            parser_configurations = config.get("parser_configurations", None)
-            run_type_recognizer = RunTypeRecognizer(runfolder=self._runfolder)
-            instrument_and_reagent_version = run_type_recognizer.instrument_and_reagent_version()
+        config = ConfigFactory.from_config_path(self._config_file)
+        parser_configurations = config.get("parser_configurations", None)
 
-            # TODO For now assume symmetric read lengths
-            both_read_lengths = run_type_recognizer.read_length()
-            read_length = int(both_read_lengths.split("-")[0])
-            handler_config = config.get_handler_configs(instrument_and_reagent_version, read_length)
+        if not Path(self._runfolder).is_dir():
+            raise RunfolderNotFoundError("Could not find runfolder: {}. Are you "
+                                         "sure the path is correct?".format(self._runfolder))
 
-            run_type_summary = RunTypeSummarizer.summarize(instrument_and_reagent_version, both_read_lengths, handler_config)
+        run_type_recognizer = RunTypeRecognizer(runfolder=self._runfolder)
+        instrument_and_reagent_version = run_type_recognizer.instrument_and_reagent_version()
 
-            qc_engine = QCEngine(runfolder=self._runfolder,
-                                 parser_configurations=parser_configurations,
-                                 handler_config=handler_config)
-            reports = qc_engine.run()
-            reports["run_summary"] = run_type_summary
-            self.exit_status = qc_engine.exit_status
-            return reports
-        except CheckQCException as e:
-            log.error(e)
-            self.exit_status = 1
+        # TODO For now assume symmetric read lengths
+        both_read_lengths = run_type_recognizer.read_length()
+        read_length = int(both_read_lengths.split("-")[0])
+        handler_config = config.get_handler_configs(instrument_and_reagent_version, read_length)
+
+        run_type_summary = RunTypeSummarizer.summarize(instrument_and_reagent_version, both_read_lengths, handler_config)
+
+        qc_engine = QCEngine(runfolder=self._runfolder,
+                             parser_configurations=parser_configurations,
+                             handler_config=handler_config)
+        reports = qc_engine.run()
+        reports["run_summary"] = run_type_summary
+        self.exit_status = qc_engine.exit_status
+        return reports
 
     def run(self):
         """
@@ -92,14 +94,19 @@ class App(object):
         log.info("Starting checkQC ({})".format(checkqc_version))
         log.info("------------------------")
         log.info("Runfolder is: {}".format(self._runfolder))
-        reports = self.configure_and_run()
-        if self.exit_status == 0:
-            log.info("Finished without finding any fatal qc errors.")
-        else:
-            log.error("Finished with fatal qc errors and will exit with non-zero exit status.")
+        try:
+            reports = self.configure_and_run()
+            if self.exit_status == 0:
+                log.info("Finished without finding any fatal qc errors.")
+            else:
+                log.error("Finished with fatal qc errors and will exit with non-zero exit status.")
 
-        if self._json_mode:
-            print(json.dumps(reports))
+            if self._json_mode:
+                print(json.dumps(reports))
+
+        except CheckQCException as e:
+            log.error(e)
+            self.exit_status
 
         return self.exit_status
 

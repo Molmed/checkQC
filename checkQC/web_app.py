@@ -7,17 +7,18 @@ import click
 
 import tornado.ioloop
 import tornado.web
-from tornado.web import url
+from tornado.web import url, HTTPError
 
 from checkQC.app import App
 from checkQC.config import ConfigFactory
+from checkQC.exceptions import *
 
 log = logging.getLogger(__name__)
 
 from checkQC import __version__ as checkqc_version
 
-class CheckQCHandler(tornado.web.RequestHandler):
 
+class CheckQCHandler(tornado.web.RequestHandler):
 
     def initialize(self, **kwargs):
         self.monitor_path = kwargs["monitoring_path"]
@@ -31,10 +32,22 @@ class CheckQCHandler(tornado.web.RequestHandler):
         reports["version"] = checkqc_version
         return reports
 
-    def get(self, runfolder):
-        reports = self._run_check_qc(self.monitor_path, self.qc_config_file, runfolder)
+    def _write_error(self, status_code, reason):
         self.set_header("Content-Type", "application/json")
-        self.write(reports)
+        self.set_status(status_code=status_code)
+        self.finish({"reason": reason})
+
+    def get(self, runfolder):
+        try:
+            reports = self._run_check_qc(self.monitor_path, self.qc_config_file, runfolder)
+            self.set_header("Content-Type", "application/json")
+            self.write(reports)
+        except RunfolderNotFoundError:
+            self._write_error(status_code=404, reason="Could not find requested runfolder.")
+        except ConfigurationError:
+            self._write_error(status_code=500, reason="There is a problem with the qc config. Are you sure the "
+                                                      "type of instrument/run configuration on the run you want to "
+                                                      "analyze is available in the qc config?")
 
 
 class WebApp(object):

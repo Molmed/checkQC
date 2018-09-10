@@ -1,0 +1,34 @@
+
+# NOTE
+# ----
+# This config is a partial copy of checkQC/default_config/config.yaml,
+# with required keys removed in order to trigger errors. For testing only.
+
+# Use this section to provide configuration options to the parsers
+parser_configurations:
+  StatsJsonParser:
+    # Path to where the bcl2fastq output (i.e. fastq files, etc) is located relative to
+    # the runfolder
+    bcl2fastq_output_path: Data/Intensities/BaseCalls
+
+default_handlers:
+    - name: UndeterminedPercentageHandler
+      warning: unknown
+      error: 10
+
+hiseq2500_rapidhighoutput_v4:
+  51-71:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 180 # Millons of clusters
+        error: unknown
+      - name: Q30Handler
+        warning: 85 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1.5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 90 # 50 % of threshold for clusters pass filter

@@ -87,21 +87,28 @@ class Config(object):
         :returns: A dict corresponding to the handler config
         :raises: ConfigEntryMissing if instrument, reagent type and read length detected is missing from config
         """
-        config_read_lengths = list(map(str, self._config[instrument_and_reagent_type].keys()))
-        for config_read_length in config_read_lengths:
-            if "-" in config_read_length:
-                split_read_length = config_read_length.split("-")
-                low_break = int(split_read_length[0])
-                high_break = int(split_read_length[1])
-                if low_break <= int(read_length) <= high_break:
-                    return self._config[instrument_and_reagent_type][config_read_length]["handlers"]
-            else:
-                if int(read_length) == int(config_read_length):
-                    return self._config[instrument_and_reagent_type][int(config_read_length)]["handlers"]
-        raise ConfigEntryMissing("Could not find a config entry for instrument '{}' "
-                  "with read length '{}'. Please check the provided config "
-                  "file ".format(instrument_and_reagent_type,
-                                 read_length))
+
+        try:
+            config_read_lengths = list(map(str, self._config[instrument_and_reagent_type].keys()))
+
+            for config_read_length in config_read_lengths:
+                if "-" in config_read_length:
+                    split_read_length = config_read_length.split("-")
+                    low_break = int(split_read_length[0])
+                    high_break = int(split_read_length[1])
+                    if low_break <= int(read_length) <= high_break:
+                        return self._config[instrument_and_reagent_type][config_read_length]["handlers"]
+                else:
+                    if int(read_length) == int(config_read_length):
+                        return self._config[instrument_and_reagent_type][int(config_read_length)]["handlers"]
+            raise ConfigEntryMissing("Could not find a config entry matching read length '{}' on "
+                                     "instrument '{}'. Please check the provided "
+                                     "config.".format(read_length, instrument_and_reagent_type))
+        except KeyError:
+            raise ConfigEntryMissing("Could not find a config entry for instrument '{}' "
+                                     "with read length '{}'. Please check the provided config "
+                                     "file ".format(instrument_and_reagent_type,
+                                                    read_length))
 
     def _add_default_config(self, current_handler_config):
         """
