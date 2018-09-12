@@ -186,7 +186,7 @@ class RunTypeRecognizer(object):
                                  "ST": "hiseqx",
                                  "A": "novaseq",
                                  "FFSP": "iseq",
-                                 "ns": "nextseq"}
+                                 "NS": "nextseq"}
 
         for key, value in machine_type_mappings.items():
             if instrument_name.startswith(key):
