@@ -22,10 +22,12 @@ Instrument types supported in checkQC are the following:
  - HiSeq2500
  - MiSeq
  - NovaSeq
+ - ISeq
+ - NextSeq
 
 Install instructions
 --------------------
-CheckQC **requires Python 3.5** (or higher to run). CheckQC can be installed with pip.
+CheckQC **requires Python 3.5 or Python3.6**. CheckQC can be installed with pip.
 
 ```
 pip install checkqc

@@ -56,6 +56,15 @@ class IlluminaInstrument(object):
         """
         raise NotImplementedError
 
+class NextSeq(IlluminaInstrument):
+    @staticmethod
+    def name():
+        return "nextseq"
+
+    @staticmethod
+    def reagent_version(runtype_recognizer):
+        return "v1"
+
 class ISeq(IlluminaInstrument):
 
     @staticmethod
@@ -176,7 +185,8 @@ class RunTypeRecognizer(object):
                                  "D": "hiseq2500",
                                  "ST": "hiseqx",
                                  "A": "novaseq",
-                                 "FFSP": "iseq"}
+                                 "FFSP": "iseq",
+                                 "ns": "nextseq"}
 
         for key, value in machine_type_mappings.items():
             if instrument_name.startswith(key):
