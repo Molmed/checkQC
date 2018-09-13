@@ -4,7 +4,7 @@ import mock
 import os
 
 from checkQC.exceptions import RunModeUnknown, ReagentVersionUnknown
-from checkQC.run_type_recognizer import RunTypeRecognizer, HiSeq2500, MiSeq, NovaSeq, ISeq
+from checkQC.run_type_recognizer import RunTypeRecognizer, HiSeq2500, MiSeq, NovaSeq, ISeq, NextSeq
 from checkQC.runfolder_reader import RunfolderReader
 
 
@@ -48,6 +48,11 @@ class TestRunTypeRecognizerCorrectInstrumentsReturned(TestCase):
         actual = runtyperecognizer.instrument_type()
         self.assertTrue(isinstance(actual, ISeq))
 
+    def test_returns_nextseq(self):
+        runtyperecognizer = self._create_runtype_recognizer("NS500559")
+        actual = runtyperecognizer.instrument_type()
+        self.assertTrue(isinstance(actual, NextSeq))
+
 
 class TestIlluminaInstrument(TestCase):
 
@@ -60,6 +65,7 @@ class TestIlluminaInstrument(TestCase):
         self.miseq = MiSeq()
         self.novaseq = NovaSeq()
         self.iseq = ISeq()
+        self.nextseq = NextSeq()
 
     def test_all_is_well(self):
         runtype_dict = {"RunParameters": {"Setup": {"RunMode": "RapidHighOutput", "Sbs": "HiSeq SBS Kit v4"}}}
@@ -117,3 +123,7 @@ class TestIlluminaInstrument(TestCase):
 
         with self.assertRaises(ReagentVersionUnknown):
             self.novaseq.reagent_version(mock_runtype_recognizer)
+
+    def test_nextseq(self):
+        self.assertEqual(self.nextseq.name(), "nextseq")
+        self.assertEqual(self.nextseq.reagent_version(self.MockRunTypeRecognizer(None)), "v1")
