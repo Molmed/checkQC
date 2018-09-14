@@ -20,7 +20,7 @@ class DemuxSummaryParser(Parser):
         """
         super().__init__(*args, **kwargs)
 
-        self._runfolder = runfolder
+        self.runfolder = runfolder
 
         # NOTE: This parser will use the same config entry a the StatsJsonParser in order
         #       to not break backward compatibility. And it feel unnecessary to add this
@@ -38,8 +38,8 @@ class DemuxSummaryParser(Parser):
             raise ConfigurationError("The configuration must contain the key bcl2fastq_output_path, specifying "
                                      "where the bcl2fastq output is, relative to the runfolder root.")
 
-        self._nbr_of_lanes = RunfolderReader.get_nbr_of_lanes(runfolder)
-        self._validate_demux_summary_files_exist(self._runfolder, self._bcl2fastq_output_path)
+        self._nbr_of_lanes = RunfolderReader.get_nbr_of_lanes(self.runfolder)
+        self._validate_demux_summary_files_exist(self.runfolder, self._bcl2fastq_output_path)
 
     def _validate_demux_summary_files_exist(self, runfolder, bcl2fastq_output_path):
         for i in range(1, self._nbr_of_lanes):
@@ -62,11 +62,11 @@ class DemuxSummaryParser(Parser):
 
     def run(self):
         for i in range(1, self._nbr_of_lanes+1):
-            path = Path(self._runfolder, self._bcl2fastq_output_path, 'Stats', 'DemuxSummaryF1L{}.txt'.format(i))
+            path = Path(self.runfolder, self._bcl2fastq_output_path, 'Stats', 'DemuxSummaryF1L{}.txt'.format(i))
             self._send_to_subscribers({"lane": i, "indices": list(self._read_most_popular_unknown_indexes(path))})
 
     def __eq__(self, other):
-        if isinstance(other, self.__class__) and self.file_path == other.runfolder:
+        if isinstance(other, self.__class__) and self.runfolder == other.runfolder:
             return True
         else:
             return False
