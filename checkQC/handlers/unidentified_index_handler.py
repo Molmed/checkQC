@@ -2,7 +2,7 @@
 
 from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
 from checkQC.parsers.demux_summary_parser import DemuxSummaryParser
-
+from checkQC.parsers.stats_json_parser import StatsJsonParser
 
 class UnidentifiedIndexHandler(QCHandler):
     """
@@ -12,23 +12,37 @@ class UnidentifiedIndexHandler(QCHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.lanes_and_indices = {}
+        self.conversion_results = None
 
     def validate_configuration(self):
         #TODO Needs custom validation since it does not use same keys as other handlers
         pass
 
     def parser(self):
-        return DemuxSummaryParser
+        return [DemuxSummaryParser.__call__, StatsJsonParser.__call__]
 
     def collect(self, signal):
-        self.lanes_and_indices[signal["lane"]] = signal["indices"]
+        if isinstance(signal, tuple):
+            key, value = signal
+            if key == "ConversionResults":
+                self.conversion_results = value
+        else:
+            self.lanes_and_indices[signal["lane"]] = signal["indices"]
 
     def check_qc(self):
-
+        number_of_reads_per_lane = self.number_of_reads_per_lane()
         for lane, indices in self.lanes_and_indices.items():
             print(indices)
-            #yield QCErrorWarning("Foo", ordering=1, data={})
-            continue
+            number_of_reads_on_lane = number_of_reads_per_lane[lane]
+            for index in indices:
+                if self.is_significantly_represented(index, number_of_reads_on_lane):
+                    # investigate rules
+                    print(index)
+                    yield
+                else:
+                    print("NOT SIGNIFICANT!")
+                    continue
+
 
         #TODO
         #for lane_dict in self.conversion_results:
@@ -47,3 +61,12 @@ class UnidentifiedIndexHandler(QCHandler):
         #                             data={'lane': lane_nbr, 'lane_pf': lane_pf, 'threshold': self.warning()})
         #    else:
         #        continue
+
+    def number_of_reads_per_lane(self):
+        nbr_of_reads_per_lane = {}
+        for lane_dict in self.conversion_results:
+            nbr_of_reads_per_lane[int(lane_dict["LaneNumber"])] = int(lane_dict["TotalClustersPF"])
+        return nbr_of_reads_per_lane
+
+    def is_significantly_represented(self, index, nbr_of_reads_on_lane):
+        return float(index['count']) / nbr_of_reads_on_lane > self.qc_config['significance_threshold']

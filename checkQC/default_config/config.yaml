@@ -60,8 +60,8 @@ hiseq2500_rapidhighoutput_v4:
       - name: ReadsPerSampleHandler
         warning: unknown
         error: 90 # 50 % of threshold for clusters pass filter
-#      - name: UnidentifiedIndexHandler
-#        significance_threshold: 1 # % of reads
+      - name: UnidentifiedIndexHandler
+        significance_threshold: 1 # % of reads
 
 hiseq2500_rapidrun_v2:
   51:
