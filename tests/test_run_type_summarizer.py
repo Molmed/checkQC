@@ -23,11 +23,12 @@ class TestRunTypeSummarizer(TestCase):
                             'my_fav_illumina_instrument',
                             'INFO:checkQC.run_type_summarizer:Read length: 42-42',
                             'INFO:checkQC.run_type_summarizer:Enabled handlers and their config values were: ',
-                            'INFO:checkQC.run_type_summarizer:\tCoolestHandler Error=1 Warning=2']
+                            'INFO:checkQC.run_type_summarizer:'
+                            '\t{\'name\': \'CoolestHandler\', \'error\': 1, \'warning\': 2}']
 
             self.assertEqual(cm.output, expected_log)
 
             expected = {'instrument_and_reagent_type': instrument_and_reagent_type,
                         'read_length': read_lengths,
-                        'handlers': [{'handler': 'CoolestHandler', 'error': 1, 'warning': 2}]}
+                        'handlers': [{'name': 'CoolestHandler', 'error': 1, 'warning': 2}]}
             self.assertEqual(result, expected)
