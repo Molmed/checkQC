@@ -14,6 +14,11 @@ class RunfolderReader(object):
     """
 
     @staticmethod
+    def get_nbr_of_lanes(runfolder):
+        runinfo_xml = RunfolderReader.read_run_info_xml(runfolder)
+        return int(runinfo_xml["RunInfo"]["Run"]["FlowcellLayout"]["@LaneCount"])
+
+    @staticmethod
     def read_run_parameters_xml(runfolder):
         """
         Read the run parameters of an Illumina instrument are recorded in a file called

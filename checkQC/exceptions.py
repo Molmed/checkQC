@@ -29,6 +29,10 @@ class RunInfoXMLNotFound(CheckQCException):
     pass
 
 
+class DemuxSummaryNotFound(CheckQCException):
+    pass
+
+
 class RunParametersNotFound(CheckQCException):
     pass
 
