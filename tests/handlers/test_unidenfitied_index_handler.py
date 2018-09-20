@@ -1,5 +1,7 @@
 import unittest
 
+from collections import Generator
+
 from checkQC.handlers.unidentified_index_handler import UnidentifiedIndexHandler
 
 from tests.test_utils import get_stats_json
@@ -23,6 +25,10 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
 
     def test_parser_is_list(self):
         self.assertIsInstance(self.unidentified_index_handler.parser(), list)
+
+    def test_check_qc_returns_generator(self):
+        self.assertIsInstance(self.unidentified_index_handler.check_qc(), Generator)
+
 
     def test_all_is_fine(self):
         # TODO

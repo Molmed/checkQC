@@ -1,8 +1,10 @@
 
+from collections import defaultdict
 
 from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
 from checkQC.parsers.demux_summary_parser import DemuxSummaryParser
 from checkQC.parsers.stats_json_parser import StatsJsonParser
+from checkQC.parsers.samplesheet_parser import SamplesheetParser
 
 class UnidentifiedIndexHandler(QCHandler):
     """
@@ -13,54 +15,84 @@ class UnidentifiedIndexHandler(QCHandler):
         super().__init__(*args, **kwargs)
         self.lanes_and_indices = {}
         self.conversion_results = None
+        self.samplesheet = None
 
     def validate_configuration(self):
         #TODO Needs custom validation since it does not use same keys as other handlers
         pass
 
     def parser(self):
-        return [DemuxSummaryParser.__call__, StatsJsonParser.__call__]
+        return [DemuxSummaryParser.__call__, StatsJsonParser.__call__, SamplesheetParser.__call__]
 
     def collect(self, signal):
         if isinstance(signal, tuple):
             key, value = signal
             if key == "ConversionResults":
                 self.conversion_results = value
+            if key == "samplesheet":
+                self.samplesheet = value
         else:
             self.lanes_and_indices[signal["lane"]] = signal["indices"]
 
     def check_qc(self):
+
+        samplesheet_dict = self.transform_samplesheet_to_dict(self.samplesheet)
+
         number_of_reads_per_lane = self.number_of_reads_per_lane()
         for lane, indices in self.lanes_and_indices.items():
-            print(indices)
             number_of_reads_on_lane = number_of_reads_per_lane[lane]
             for index in indices:
+                tag = index['index']
                 if self.is_significantly_represented(index, number_of_reads_on_lane):
                     # investigate rules
-                    print(index)
-                    yield
+
+                    # Unknown index means that the sample was run without an index.
+                    if tag == 'unknown':
+                        continue
+
+                    # TODO Check for swap if dual index
+
+                    # TODO Check reversed ATTTGT -> TGTTTA
+                    if self.exists_index_on_other_lanes(samplesheet_dict, tag[::-1]):
+                        yield QCErrorWarning("TODO", ordering=lane, data={})
+
+                    # TODO Reverse complement AAAA -> TTTT
+                    #                    if self.reverse_complement(index['index']):
+                    #                        self.reverse_complement(index['index'])
+                    if self.exists_index_on_other_lanes(samplesheet_dict, self.reverse_complement(tag)):
+                        yield QCErrorWarning("TODO", ordering=lane, data={})
+
+                    # TODO Check if index is present in other lane
+                    if self.exists_index_on_other_lanes(samplesheet_dict, tag):
+                        yield QCErrorWarning("TODO", ordering=lane, data={})
+
                 else:
-                    print("NOT SIGNIFICANT!")
                     continue
 
+    @staticmethod
+    def transform_samplesheet_to_dict(samplesheet):
+        samplesheet_dict = defaultdict(lambda: defaultdict(default_factory={}))
+        for s in samplesheet:
+            index = s['index']
+            if s['index2']:
+                index += '+{}'.format(s['index2'])
 
-        #TODO
-        #for lane_dict in self.conversion_results:
-        #    lane_nbr = int(lane_dict["LaneNumber"])
-        #    lane_pf = lane_dict["TotalClustersPF"]
+            lane = s['Lane']
+            samplesheet_dict[lane][index] = s['Sample_Name']
 
-        #    if self.error() != self.UNKNOWN and lane_pf < float(self.error())*pow(10, 6):
-        #        yield QCErrorFatal("Clusters PF was to low on lane {}, "
-        #                           "it was: {:.2f} M".format(lane_nbr, lane_pf/pow(10, 6)),
-        #                           ordering=lane_nbr,
-        #                           data={'lane': lane_nbr, 'lane_pf': lane_pf, 'threshold': self.error()})
-        #    elif self.warning() != self.UNKNOWN and lane_pf < float(self.warning())*pow(10, 6):
-        #        yield QCErrorWarning("Cluster PF was to low on lane {}, "
-        #                             "it was: {:.2f} M".format(lane_nbr, lane_pf/pow(10, 6)),
-        #                             ordering=lane_nbr,
-        #                             data={'lane': lane_nbr, 'lane_pf': lane_pf, 'threshold': self.warning()})
-        #    else:
-        #        continue
+        return samplesheet_dict
+
+    class SearchHit(object):
+        def __init__(self, search_index, found_sample, found_lane):
+            self.search_index = search_index
+            self.found_sample = found_sample
+            self.found_lane = found_lane
+
+    def exists_index_on_other_lanes(self, samplesheet_dict, index):
+        for lane, indicies in samplesheet_dict.items():
+            for i in indicies:
+                if index == i:
+                    return self.SearchHit(i, samplesheet_dict[lane][i], lane)
 
     def number_of_reads_per_lane(self):
         nbr_of_reads_per_lane = {}
@@ -69,4 +101,13 @@ class UnidentifiedIndexHandler(QCHandler):
         return nbr_of_reads_per_lane
 
     def is_significantly_represented(self, index, nbr_of_reads_on_lane):
+        #TODO Should perhaps be dynamic to number of samples on lane
         return float(index['count']) / nbr_of_reads_on_lane > self.qc_config['significance_threshold']
+
+    def reverse_complement(self, seq):
+        conv_table = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N', '+': '+'}
+        rev_seq = ''
+        for c in seq:
+            rev_seq += conv_table[c]
+        return rev_seq
+
