@@ -49,6 +49,10 @@ class ConfigurationError(CheckQCException):
     pass
 
 
+class SamplesheetNotFound(CheckQCException):
+    pass
+
+
 class ConfigEntryMissing(ConfigurationError):
     pass
 
