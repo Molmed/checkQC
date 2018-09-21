@@ -3,7 +3,7 @@ import logging
 
 from checkQC.exceptions import ConfigurationError
 
-log = logging.getLogger()
+log = logging.getLogger(__name__)
 
 
 class QCHandlerReport(object):
