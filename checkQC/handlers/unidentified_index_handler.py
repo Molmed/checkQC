@@ -6,6 +6,7 @@ from checkQC.parsers.demux_summary_parser import DemuxSummaryParser
 from checkQC.parsers.stats_json_parser import StatsJsonParser
 from checkQC.parsers.samplesheet_parser import SamplesheetParser
 
+
 class UnidentifiedIndexHandler(QCHandler):
     """
     TODO
@@ -43,31 +44,46 @@ class UnidentifiedIndexHandler(QCHandler):
             number_of_reads_on_lane = number_of_reads_per_lane[lane]
             for index in indices:
                 tag = index['index']
-                if self.is_significantly_represented(index, number_of_reads_on_lane):
-                    # investigate rules
-
-                    # Unknown index means that the sample was run without an index.
-                    if tag == 'unknown':
-                        continue
-
-                    # TODO Check for swap if dual index
-
-                    # TODO Check reversed ATTTGT -> TGTTTA
-                    if self.exists_index_on_other_lanes(samplesheet_dict, tag[::-1]):
-                        yield QCErrorWarning("TODO", ordering=lane, data={})
-
-                    # TODO Reverse complement AAAA -> TTTT
-                    #                    if self.reverse_complement(index['index']):
-                    #                        self.reverse_complement(index['index'])
-                    if self.exists_index_on_other_lanes(samplesheet_dict, self.reverse_complement(tag)):
-                        yield QCErrorWarning("TODO", ordering=lane, data={})
-
-                    # TODO Check if index is present in other lane
-                    if self.exists_index_on_other_lanes(samplesheet_dict, tag):
-                        yield QCErrorWarning("TODO", ordering=lane, data={})
-
+                # Unknown index means that the sample was run without an index.
+                if self.is_significantly_represented(index, number_of_reads_on_lane) and not tag == 'unknown':
+                    yield from self.evaluate_index_rules(tag, lane, samplesheet_dict)
                 else:
                     continue
+
+    def evaluate_index_rules(self, tag, lane, samplesheet_dict):
+        rules = [self.check_swapped_dual_index, self.check_reversed_index,
+                 self.check_reverse_complement_index, self.check_if_index_in_other_lane]
+        # Check for swap if dual index
+        for rule in rules:
+            yield from rule(tag, lane, samplesheet_dict)
+
+    def check_swapped_dual_index(self, tag, lane, samplesheet_dict):
+        if '+' in tag:
+            split_tag = tag.split('+')
+            swapped_tag = '{}+{}'.format(split_tag[1], split_tag[0])
+            hit = self.index_in_samplesheet(samplesheet_dict, swapped_tag)
+            if hit:
+                msg = 'It appears that maybe the dual index tag: {} was swapper. There was a hit for' \
+                      ' the swapped index: {} at: {}'.format(tag, swapped_tag, hit)
+                yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
+
+    def check_reversed_index(self, tag, lane, samplesheet_dict):
+        hit = self.index_in_samplesheet(samplesheet_dict, tag[::-1])
+        if hit:
+            msg = 'We found a possible match for the reverse of tag: {}, on: {}'.format(tag, hit)
+            yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
+
+    def check_reverse_complement_index(self, tag, lane, samplesheet_dict):
+        hit = self.index_in_samplesheet(samplesheet_dict, self.reverse_complement(tag))
+        if hit:
+            msg = 'We found a possible match for the reverse complement of tag: {}, on: {}'.format(tag, hit)
+            yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
+
+    def check_if_index_in_other_lane(self, tag, lane, samplesheet_dict):
+        hit = self.index_in_samplesheet(samplesheet_dict, tag)
+        if hit:
+            msg = 'We found a possible match for the tag: {}, on another lane: {}'.format(tag, hit)
+            yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
 
     @staticmethod
     def transform_samplesheet_to_dict(samplesheet):
@@ -76,7 +92,6 @@ class UnidentifiedIndexHandler(QCHandler):
             index = s['index']
             if s['index2']:
                 index += '+{}'.format(s['index2'])
-
             lane = s['Lane']
             samplesheet_dict[lane][index] = s['Sample_Name']
 
@@ -88,11 +103,12 @@ class UnidentifiedIndexHandler(QCHandler):
             self.found_sample = found_sample
             self.found_lane = found_lane
 
-    def exists_index_on_other_lanes(self, samplesheet_dict, index):
+    def index_in_samplesheet(self, samplesheet_dict, index):
         for lane, indicies in samplesheet_dict.items():
             for i in indicies:
                 if index == i:
                     return self.SearchHit(i, samplesheet_dict[lane][i], lane)
+        return None
 
     def number_of_reads_per_lane(self):
         nbr_of_reads_per_lane = {}
@@ -101,7 +117,9 @@ class UnidentifiedIndexHandler(QCHandler):
         return nbr_of_reads_per_lane
 
     def is_significantly_represented(self, index, nbr_of_reads_on_lane):
-        #TODO Should perhaps be dynamic to number of samples on lane
+        #TODO Should perhaps be dynamic to number of samples on lane.
+        #     Haven't really figured out how that would work just yet though.
+        #     /JD 2018-09-21
         return float(index['count']) / nbr_of_reads_on_lane > self.qc_config['significance_threshold']
 
     def reverse_complement(self, seq):
