@@ -145,7 +145,6 @@ class Config(object):
                                      read_length))
             raise e
 
-
     def __getitem__(self, key):
         return self._config[key]
 
