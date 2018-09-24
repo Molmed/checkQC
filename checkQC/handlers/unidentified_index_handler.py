@@ -52,8 +52,8 @@ class UnidentifiedIndexHandler(QCHandler):
 
     def evaluate_index_rules(self, tag, lane, samplesheet_dict):
         rules = [self.check_swapped_dual_index, self.check_reversed_index,
-                 self.check_reverse_complement_index, self.check_if_index_in_other_lane]
-        # Check for swap if dual index
+                 self.check_reverse_complement_index, self.check_if_index_in_other_lane,
+                 self.check_complement_index]
         for rule in rules:
             yield from rule(tag, lane, samplesheet_dict)
 
@@ -74,9 +74,15 @@ class UnidentifiedIndexHandler(QCHandler):
             yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
 
     def check_reverse_complement_index(self, tag, lane, samplesheet_dict):
-        hits = self.index_in_samplesheet(samplesheet_dict, self.reverse_complement(tag))
+        hits = self.index_in_samplesheet(samplesheet_dict, self.get_complementary_sequence(tag)[::-1])
         for hit in hits:
             msg = 'We found a possible match for the reverse complement of tag: {}, on: {}'.format(tag, hit)
+            yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
+
+    def check_complement_index(self, tag, lane, samplesheet_dict):
+        hits = self.index_in_samplesheet(samplesheet_dict, self.get_complementary_sequence(tag))
+        for hit in hits:
+            msg = 'We found a possible match for the complementary of tag: {}, on: {}'.format(tag, hit)
             yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
 
     def check_if_index_in_other_lane(self, tag, lane, samplesheet_dict):
@@ -121,7 +127,7 @@ class UnidentifiedIndexHandler(QCHandler):
         #     /JD 2018-09-21
         return float(index['count']) / nbr_of_reads_on_lane > self.qc_config['significance_threshold']
 
-    def reverse_complement(self, seq):
+    def get_complementary_sequence(self, seq):
         conv_table = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N', '+': '+'}
         rev_seq = ''
         for c in seq:
