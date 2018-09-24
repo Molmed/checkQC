@@ -15,6 +15,8 @@ default_handlers:
     - name: UndeterminedPercentageHandler
       warning: unknown
       error: 10
+    - name: UnidentifiedIndexHandler
+      significance_threshold: 0.001 # % of reads
 
 hiseq2500_rapidhighoutput_v4:
   51-71:
@@ -62,8 +64,6 @@ hiseq2500_rapidhighoutput_v4:
       - name: ReadsPerSampleHandler
         warning: unknown
         error: 90 # 50 % of threshold for clusters pass filter
-      - name: UnidentifiedIndexHandler
-        significance_threshold: 0.001 # % of reads
 
 hiseq2500_rapidrun_v2:
   51:
