@@ -61,27 +61,27 @@ class UnidentifiedIndexHandler(QCHandler):
         if '+' in tag:
             split_tag = tag.split('+')
             swapped_tag = '{}+{}'.format(split_tag[1], split_tag[0])
-            hit = self.index_in_samplesheet(samplesheet_dict, swapped_tag)
-            if hit:
+            hits = self.index_in_samplesheet(samplesheet_dict, swapped_tag)
+            for hit in hits:
                 msg = 'It appears that maybe the dual index tag: {} was swapper. There was a hit for' \
                       ' the swapped index: {} at: {}'.format(tag, swapped_tag, hit)
                 yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
 
     def check_reversed_index(self, tag, lane, samplesheet_dict):
-        hit = self.index_in_samplesheet(samplesheet_dict, tag[::-1])
-        if hit:
+        hits = self.index_in_samplesheet(samplesheet_dict, tag[::-1])
+        for hit in hits:
             msg = 'We found a possible match for the reverse of tag: {}, on: {}'.format(tag, hit)
             yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
 
     def check_reverse_complement_index(self, tag, lane, samplesheet_dict):
-        hit = self.index_in_samplesheet(samplesheet_dict, self.reverse_complement(tag))
-        if hit:
+        hits = self.index_in_samplesheet(samplesheet_dict, self.reverse_complement(tag))
+        for hit in hits:
             msg = 'We found a possible match for the reverse complement of tag: {}, on: {}'.format(tag, hit)
             yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
 
     def check_if_index_in_other_lane(self, tag, lane, samplesheet_dict):
-        hit = self.index_in_samplesheet(samplesheet_dict, tag)
-        if hit:
+        hits = self.index_in_samplesheet(samplesheet_dict, tag)
+        for hit in hits:
             msg = 'We found a possible match for the tag: {}, on another lane: {}'.format(tag, hit)
             yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
 
@@ -107,8 +107,7 @@ class UnidentifiedIndexHandler(QCHandler):
         for lane, indicies in samplesheet_dict.items():
             for i in indicies:
                 if index == i:
-                    return self.SearchHit(i, samplesheet_dict[lane][i], lane)
-        return None
+                    yield self.SearchHit(i, samplesheet_dict[lane][i], lane)
 
     def number_of_reads_per_lane(self):
         nbr_of_reads_per_lane = {}
