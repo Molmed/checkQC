@@ -16,7 +16,7 @@ default_handlers:
       warning: unknown
       error: 10
     - name: UnidentifiedIndexHandler
-      significance_threshold: 0.001 # % of reads
+      significance_threshold: 0.001 # fraction of reads
 
 hiseq2500_rapidhighoutput_v4:
   51-71:
