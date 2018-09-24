@@ -23,7 +23,7 @@ class UnidentifiedIndexHandler(QCHandler):
         pass
 
     def parser(self):
-        return [DemuxSummaryParser.__call__, StatsJsonParser.__call__, SamplesheetParser.__call__]
+        return [DemuxSummaryParser, StatsJsonParser, SamplesheetParser]
 
     def collect(self, signal):
         if isinstance(signal, tuple):
