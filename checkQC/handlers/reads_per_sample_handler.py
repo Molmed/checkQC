@@ -32,12 +32,19 @@ class ReadsPerSampleHandler(QCHandler):
         for lane_dict in self.conversion_results:
             lane_nbr = int(lane_dict["LaneNumber"])
             lane_demux = lane_dict["DemuxResults"]
-            nbr_of_samples = len(lane_demux)
+            total_reads = {}
 
             for sample_id_info in lane_demux:
+                sample_name = sample_id_info["SampleName"]
+                if sample_name in total_reads:
+                    total_reads[sample_name] += sample_id_info["NumberReads"] / pow(10, 6)
+                else:
+                    total_reads[sample_name] = sample_id_info["NumberReads"] / pow(10, 6)
 
-                sample_id = sample_id_info["SampleId"]
-                sample_total_reads = sample_id_info["NumberReads"] / pow(10, 6)
+            nbr_of_samples = len(total_reads.keys())
+            for sample in total_reads:
+
+                sample_total_reads = total_reads[sample]
 
                 if self.error() != self.UNKNOWN:
                     error_threshold = float(self.error()) / float(nbr_of_samples)
@@ -46,18 +53,18 @@ class ReadsPerSampleHandler(QCHandler):
 
                 if self.error() != self.UNKNOWN and sample_total_reads < error_threshold:
                     yield QCErrorFatal("Number of reads for sample {} was too low on lane {}, "
-                                       "it was: {:.3f} M".format(sample_id, lane_nbr, sample_total_reads),
+                                       "it was: {:.3f} M".format(sample, lane_nbr, sample_total_reads),
                                        ordering=lane_nbr,
                                        data={"lane": lane_nbr, "number_of_samples": nbr_of_samples,
-                                             "sample_id": sample_id, "sample_reads": sample_total_reads,
+                                             "sample_name": sample, "sample_reads": sample_total_reads,
                                              "threshold": error_threshold})
                 elif self.warning() != self.UNKNOWN and \
                                 sample_total_reads < warning_threshold:
                     yield QCErrorWarning("Number of reads for sample {} was too low on lane {}, "
-                                         "it was: {:.3f} M".format(sample_id, lane_nbr, sample_total_reads),
+                                         "it was: {:.3f} M".format(sample, lane_nbr, sample_total_reads),
                                          ordering=lane_nbr,
                                          data={"lane": lane_nbr, "number_of_samples": nbr_of_samples,
-                                               "sample_id": sample_id, "sample_reads": sample_total_reads,
+                                               "sample_name": sample, "sample_reads": sample_total_reads,
                                                "threshold": warning_threshold})
                 else:
                     continue
