@@ -55,6 +55,18 @@ class TestReadsPerSampleHandler(HandlerTestBase):
         self.assertListEqual(class_names, ['QCErrorWarning', 'QCErrorWarning',
                                            'QCErrorWarning', 'QCErrorWarning'])
 
+    def test_multiple_sampleIDs_per_sampleName(self):
+        key = "ConversionResults"
+        qc_config = {'name': 'ReadsPerSampleHandler', 'error': 'unknown', 'warning': '1000'}
+        value = get_stats_json("180925_A00001_0001_BABCDEFGXX")["ConversionResults"]
+        custom_reads_per_sample_handler = ReadsPerSampleHandler(qc_config)
+        custom_reads_per_sample_handler.collect((key, value))
+        errors_and_warnings = list(custom_reads_per_sample_handler.check_qc())
+        self.assertEqual(len(errors_and_warnings), 4)
+
+        class_names = self.map_errors_and_warnings_to_class_names(errors_and_warnings)
+        self.assertListEqual(class_names, ['QCErrorWarning', 'QCErrorWarning',
+                                           'QCErrorWarning', 'QCErrorWarning'])
 
 if __name__ == '__main__':
     unittest.main()
