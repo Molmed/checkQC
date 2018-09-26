@@ -1,6 +1,7 @@
 from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
 from checkQC.parsers.stats_json_parser import StatsJsonParser
 from math import pow
+from collections import defaultdict
 
 
 class ReadsPerSampleHandler(QCHandler):
@@ -32,19 +33,14 @@ class ReadsPerSampleHandler(QCHandler):
         for lane_dict in self.conversion_results:
             lane_nbr = int(lane_dict["LaneNumber"])
             lane_demux = lane_dict["DemuxResults"]
-            total_reads = {}
+            total_reads = defaultdict(float)
 
             for sample_id_info in lane_demux:
                 sample_name = sample_id_info["SampleName"]
-                if sample_name in total_reads:
-                    total_reads[sample_name] += sample_id_info["NumberReads"] / pow(10, 6)
-                else:
-                    total_reads[sample_name] = sample_id_info["NumberReads"] / pow(10, 6)
+                total_reads[sample_name] += sample_id_info["NumberReads"] / pow(10, 6)
 
             nbr_of_samples = len(total_reads.keys())
-            for sample in total_reads:
-
-                sample_total_reads = total_reads[sample]
+            for sample, sample_total_reads in total_reads.items():
 
                 if self.error() != self.UNKNOWN:
                     error_threshold = float(self.error()) / float(nbr_of_samples)
