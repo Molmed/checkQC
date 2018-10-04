@@ -2,7 +2,7 @@ language: python
 python:
   - '3.6'
 install:
-  - pip install -e . -r ./requirements/dev
+  - pip install --upgrade -e . -r ./requirements/dev
 script:
   - pytest --cov=checkQC tests/
 after_success:
