@@ -20,6 +20,7 @@ type and run length) is determined by a configuration file.
 Instrument types supported in checkQC are the following:
  - HiSeqX
  - HiSeq2500
+ - iSeq
  - MiSeq
  - NovaSeq
 

@@ -14,7 +14,7 @@ setup(
     install_requires=[
         "click",
         "PyYAML>=3.12",
-        "interop",
+        "interop>=1.1.5",
         "xmltodict",
         "tornado"],
     packages=find_packages(exclude=["tests*"]),
