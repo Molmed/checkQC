@@ -316,7 +316,7 @@ miseq_v3:
         error: 9 # 50 % of threshold for clusters pass filter
 
 iseq_v1:
-  300:
+  301:
     handlers:
       - name: ClusterPFHandler
         warning: 4 # Millons of clusters
@@ -331,3 +331,38 @@ iseq_v1:
       - name: ReadsPerSampleHandler
         warning: unknown
         error: 2 # 50 % of threshold for clusters pass filter
+
+# TODO The nextseq really has a high and a mid-output mode.
+#      This needs to be supported here later.
+#      /JD 2018-09-13
+nextseq_v1:
+  76:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 400 # Millons of clusters
+        error: unknown
+      - name: Q30Handler
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1.5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 200 # 50 % of threshold for clusters pass filter
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 400 # Millons of clusters
+        error: unknown
+      - name: Q30Handler
+        warning: 75 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1.5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 200 # 50 % of threshold for clusters pass filter
