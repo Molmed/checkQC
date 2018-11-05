@@ -15,8 +15,6 @@ default_handlers:
     - name: UndeterminedPercentageHandler
       warning: unknown
       error: 9 # <% Phix on lane> + < value as %>
-    - name: UnidentifiedIndexHandler
-      significance_threshold: 0.001 # fraction of reads
 
 hiseq2500_rapidhighoutput_v4:
   51-71:
