@@ -14,7 +14,7 @@ parser_configurations:
 default_handlers:
     - name: UndeterminedPercentageHandler
       warning: unknown
-      error: 10
+      error: 9 # <% Phix on lane> + < value as %>
     - name: UnidentifiedIndexHandler
       significance_threshold: 0.001 # fraction of reads
 
