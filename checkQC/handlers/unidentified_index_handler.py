@@ -5,6 +5,7 @@ from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
 from checkQC.parsers.demux_summary_parser import DemuxSummaryParser
 from checkQC.parsers.stats_json_parser import StatsJsonParser
 from checkQC.parsers.samplesheet_parser import SamplesheetParser
+from checkQC.exceptions import ConfigurationError
 
 
 class UnidentifiedIndexHandler(QCHandler):
@@ -19,8 +20,17 @@ class UnidentifiedIndexHandler(QCHandler):
         self.samplesheet = None
 
     def validate_configuration(self):
-        #TODO Needs custom validation since it does not use same keys as other handlers
-        pass
+        """
+        This overrides the normal configuration which looks for warning/error.
+        :return: None
+        :raises: ConfigurationError if the configuration for the handler was not valid.
+        """
+        try:
+            self.qc_config['significance_threshold']
+        except KeyError:
+            raise ConfigurationError("The {} handler expects 'significance_threshold' to be set. "
+                                     "Perhaps it is missing from the configuration "
+                                     "file?".format(self.__class__.__name__))
 
     def parser(self):
         return [DemuxSummaryParser, StatsJsonParser, SamplesheetParser]
@@ -51,11 +61,23 @@ class UnidentifiedIndexHandler(QCHandler):
                     continue
 
     def evaluate_index_rules(self, tag, lane, samplesheet_dict):
-        rules = [self.check_swapped_dual_index, self.check_reversed_index,
+        rules = [self.always_warn_rule, self.check_swapped_dual_index, self.check_reversed_index,
                  self.check_reverse_complement_index, self.check_if_index_in_other_lane,
                  self.check_complement_index]
         for rule in rules:
             yield from rule(tag, lane, samplesheet_dict)
+
+    def always_warn_rule(self, tag, lane, samplesheet_dict):
+        """
+        We always want to warn about an index that is significantly represented. This rule
+        will make sure that we do so, and all other rules will contribute extra information
+        if there is any.
+        :param tag:
+        :param lane:
+        :param samplesheet_dict:
+        :return:
+        """
+        yield QCErrorWarning("Index: {} was significantly overrepresented on lane: {}".format(tag, lane))
 
     def check_swapped_dual_index(self, tag, lane, samplesheet_dict):
         if '+' in tag:
@@ -96,9 +118,11 @@ class UnidentifiedIndexHandler(QCHandler):
         samplesheet_dict = defaultdict(lambda: defaultdict(default_factory={}))
         for s in samplesheet:
             index = s['index']
-            if s['index2']:
+            if s.get('index2'):
                 index += '+{}'.format(s['index2'])
-            lane = s['Lane']
+            # MiSeqs for example do not have lanes in their samplesheets, thus we will default to using lane 1
+            # if nothing has been specified in the samplesheet. /JD 20181101
+            lane = s.get('Lane', '1')
             samplesheet_dict[lane][index] = s['Sample_Name']
 
         return samplesheet_dict
@@ -108,6 +132,10 @@ class UnidentifiedIndexHandler(QCHandler):
             self.search_index = search_index
             self.found_sample = found_sample
             self.found_lane = found_lane
+
+        def __str__(self):
+            return "\{Search index: {}, Sample found: {} " \
+                   "on lane: {} \}".format(self.search_index, self.found_sample, self.found_lane)
 
     def index_in_samplesheet(self, samplesheet_dict, index):
         for lane, indicies in samplesheet_dict.items():
@@ -129,8 +157,8 @@ class UnidentifiedIndexHandler(QCHandler):
 
     def get_complementary_sequence(self, seq):
         conv_table = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N', '+': '+'}
-        rev_seq = ''
+        comp_seq = ''
         for c in seq:
-            rev_seq += conv_table[c]
-        return rev_seq
+            comp_seq += conv_table[c]
+        return comp_seq
 
