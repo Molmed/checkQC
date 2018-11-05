@@ -15,6 +15,8 @@ class UnidentifiedIndexHandler(QCHandler):
     """
 
     def __init__(self, *args, **kwargs):
+        raise NotImplementedError("UnidentifiedIndexHandler has not been implemented fully yet. Please remove it "
+                                  "from the config for now...")
         super().__init__(*args, **kwargs)
         self.lanes_and_indices = {}
         self.conversion_results = None
