@@ -1,7 +1,7 @@
 
 from collections import defaultdict
 
-from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
+from checkQC.handlers.qc_handler import QCHandler, QCErrorWarning
 from checkQC.parsers.demux_summary_parser import DemuxSummaryParser
 from checkQC.parsers.stats_json_parser import StatsJsonParser
 from checkQC.parsers.samplesheet_parser import SamplesheetParser
@@ -10,7 +10,8 @@ from checkQC.exceptions import ConfigurationError
 
 class UnidentifiedIndexHandler(QCHandler):
     """
-    TODO
+    The UnidentifiedIndexHandler will try to identify if an index is represented at to high a level in unidenfied
+    reads, and if that is the case try to pinpoint why that is.
     """
 
     def __init__(self, *args, **kwargs):
@@ -26,7 +27,7 @@ class UnidentifiedIndexHandler(QCHandler):
         :raises: ConfigurationError if the configuration for the handler was not valid.
         """
         try:
-            self.qc_config['significance_threshold']
+            float(self.qc_config['significance_threshold']) / 100
         except KeyError:
             raise ConfigurationError("The {} handler expects 'significance_threshold' to be set. "
                                      "Perhaps it is missing from the configuration "
@@ -55,7 +56,8 @@ class UnidentifiedIndexHandler(QCHandler):
             for index in indices:
                 tag = index['index']
                 # Unknown index means that the sample was run without an index.
-                if self.is_significantly_represented(index, number_of_reads_on_lane) and not tag == 'unknown':
+                if self.is_significantly_represented(index, number_of_reads_on_lane) and not tag == 'unknown' \
+                        and 'N' not in tag:
                     yield from self.evaluate_index_rules(tag, lane, samplesheet_dict)
                 else:
                     continue
@@ -67,6 +69,9 @@ class UnidentifiedIndexHandler(QCHandler):
         for rule in rules:
             yield from rule(tag, lane, samplesheet_dict)
 
+    def yield_qc_warning_with_message(self, msg, lane, tag):
+        yield QCErrorWarning(msg=msg, ordering="{}:{}".format(lane, tag), data={'lane': lane, 'msg': msg})
+
     def always_warn_rule(self, tag, lane, samplesheet_dict):
         """
         We always want to warn about an index that is significantly represented. This rule
@@ -77,7 +82,10 @@ class UnidentifiedIndexHandler(QCHandler):
         :param samplesheet_dict:
         :return:
         """
-        yield QCErrorWarning("Index: {} was significantly overrepresented on lane: {}".format(tag, lane))
+        yield from self.yield_qc_warning_with_message("Index: {} was significantly overrepresented "
+                                                      "on lane: {}".format(lane, tag),
+                                                      lane,
+                                                      tag)
 
     def check_swapped_dual_index(self, tag, lane, samplesheet_dict):
         if '+' in tag:
@@ -85,33 +93,33 @@ class UnidentifiedIndexHandler(QCHandler):
             swapped_tag = '{}+{}'.format(split_tag[1], split_tag[0])
             hits = self.index_in_samplesheet(samplesheet_dict, swapped_tag)
             for hit in hits:
-                msg = 'It appears that maybe the dual index tag: {} was swapper. There was a hit for' \
+                msg = '\tIt appears that maybe the dual index tag: {} was swapper. There was a hit for' \
                       ' the swapped index: {} at: {}'.format(tag, swapped_tag, hit)
-                yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
+                yield from self.yield_qc_warning_with_message(msg, lane, tag)
 
     def check_reversed_index(self, tag, lane, samplesheet_dict):
         hits = self.index_in_samplesheet(samplesheet_dict, tag[::-1])
         for hit in hits:
-            msg = 'We found a possible match for the reverse of tag: {}, on: {}'.format(tag, hit)
-            yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
+            msg = '\tWe found a possible match for the reverse of tag: {}, on: {}'.format(tag, hit)
+            yield from self.yield_qc_warning_with_message(msg, lane, tag)
 
     def check_reverse_complement_index(self, tag, lane, samplesheet_dict):
         hits = self.index_in_samplesheet(samplesheet_dict, self.get_complementary_sequence(tag)[::-1])
         for hit in hits:
-            msg = 'We found a possible match for the reverse complement of tag: {}, on: {}'.format(tag, hit)
-            yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
+            msg = '\tWe found a possible match for the reverse complement of tag: {}, on: {}'.format(tag, hit)
+            yield from self.yield_qc_warning_with_message(msg, lane, tag)
 
     def check_complement_index(self, tag, lane, samplesheet_dict):
         hits = self.index_in_samplesheet(samplesheet_dict, self.get_complementary_sequence(tag))
         for hit in hits:
-            msg = 'We found a possible match for the complementary of tag: {}, on: {}'.format(tag, hit)
-            yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
+            msg = '\tWe found a possible match for the complementary of tag: {}, on: {}'.format(tag, hit)
+            yield from self.yield_qc_warning_with_message(msg, lane, tag)
 
     def check_if_index_in_other_lane(self, tag, lane, samplesheet_dict):
         hits = self.index_in_samplesheet(samplesheet_dict, tag)
         for hit in hits:
-            msg = 'We found a possible match for the tag: {}, on another lane: {}'.format(tag, hit)
-            yield QCErrorWarning(msg, ordering=lane, data={'lane': lane, 'msg': msg})
+            msg = '\tWe found a possible match for the tag: {}, on another lane: {}'.format(tag, hit)
+            yield from self.yield_qc_warning_with_message(msg, lane, tag)
 
     @staticmethod
     def transform_samplesheet_to_dict(samplesheet):
@@ -134,8 +142,9 @@ class UnidentifiedIndexHandler(QCHandler):
             self.found_lane = found_lane
 
         def __str__(self):
-            return "\{Search index: {}, Sample found: {} " \
-                   "on lane: {} \}".format(self.search_index, self.found_sample, self.found_lane)
+            return "Lane: {}, for sample: {}. The tag we found was: {}".format(self.found_lane,
+                                                                               self.found_sample,
+                                                                               self.search_index)
 
     def index_in_samplesheet(self, samplesheet_dict, index):
         for lane, indicies in samplesheet_dict.items():
