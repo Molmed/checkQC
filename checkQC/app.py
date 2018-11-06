@@ -14,11 +14,11 @@ from checkQC.exceptions import CheckQCException, RunfolderNotFoundError
 from checkQC import __version__ as checkqc_version
 
 
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
                     format='%(levelname)-8s %(message)s')
 
 console_log_handler = logging.StreamHandler()
-log = logging.getLogger("")
+log = logging.getLogger(__name__)
 
 
 @click.command("checkqc")

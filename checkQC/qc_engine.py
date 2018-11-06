@@ -79,10 +79,15 @@ class QCEngine(object):
 
     def _initiate_parsers(self):
         for handler in self._handlers:
-            parser_factory = handler.parser()
-            parser_instance = parser_factory(runfolder=self.runfolder,
-                                             parser_configurations=self.parser_configurations)
-            self._parsers_and_handlers[parser_instance].append(handler)
+            if isinstance(handler.parser(), list):
+                parsers = handler.parser()
+            else:
+                parsers = [handler.parser()]
+
+            for parser_factory in parsers:
+                parser_instance = parser_factory(runfolder=self.runfolder,
+                                                 parser_configurations=self.parser_configurations)
+                self._parsers_and_handlers[parser_instance].append(handler)
 
     def _subscribe_handlers_to_parsers(self):
         for parser, handlers in self._parsers_and_handlers.items():

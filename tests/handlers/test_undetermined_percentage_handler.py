@@ -9,11 +9,22 @@ from tests.handlers.handler_test_base import HandlerTestBase
 class TestUndeterminedPercentageHandler(HandlerTestBase):
 
     def setUp(self):
-        key = "ConversionResults"
+        conversion_key = "ConversionResults"
         qc_config = {'name': 'UndeterminedPercentageHandler', 'error': 10, 'warning': 20}
-        value = get_stats_json()["ConversionResults"]
+        conversion_results_value = get_stats_json()["ConversionResults"]
         undetermined_handler = UndeterminedPercentageHandler(qc_config)
-        undetermined_handler.collect((key, value))
+        undetermined_handler.collect((conversion_key, conversion_results_value))
+
+        percentage_phix_key = "percent_phix"
+        percentage_phix_value_lane_1_read_1 = {"lane": 1, "read": 1, "percent_phix": 1}
+        percentage_phix_value_lane_1_read_2 = {"lane": 1, "read": 2, "percent_phix": 1}
+        percentage_phix_value_lane_2_read_1 = {"lane": 2, "read": 1, "percent_phix": 1}
+        percentage_phix_value_lane_2_read_2 = {"lane": 2, "read": 2, "percent_phix": 1}
+        undetermined_handler.collect((percentage_phix_key, percentage_phix_value_lane_1_read_1))
+        undetermined_handler.collect((percentage_phix_key, percentage_phix_value_lane_1_read_2))
+        undetermined_handler.collect((percentage_phix_key, percentage_phix_value_lane_2_read_1))
+        undetermined_handler.collect((percentage_phix_key, percentage_phix_value_lane_2_read_2))
+
         self.undetermined_handler = undetermined_handler
 
     def set_qc_config(self, qc_config):
@@ -26,7 +37,7 @@ class TestUndeterminedPercentageHandler(HandlerTestBase):
         self.assertEqual(errors_and_warnings, [])
 
     def test_warning(self):
-        qc_config = {'name': 'UndeterminedPercentageHandler', 'error': 4, 'warning': 2}
+        qc_config = {'name': 'UndeterminedPercentageHandler', 'error': 2, 'warning': 1}
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.undetermined_handler.check_qc())
         self.assertEqual(len(errors_and_warnings), 2)
@@ -35,7 +46,7 @@ class TestUndeterminedPercentageHandler(HandlerTestBase):
         self.assertListEqual(class_names, ['QCErrorWarning', 'QCErrorWarning'])
 
     def test_error(self):
-        qc_config = {'name': 'UndeterminedPercentageHandler', 'error': 2, 'warning': 4}
+        qc_config = {'name': 'UndeterminedPercentageHandler', 'error': 1, 'warning': 0}
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.undetermined_handler.check_qc())
         self.assertEqual(len(errors_and_warnings), 2)

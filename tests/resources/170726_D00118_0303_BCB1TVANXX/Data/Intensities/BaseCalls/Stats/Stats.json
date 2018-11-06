@@ -157,8 +157,8 @@
    "Yield" : 29718333792,
    "DemuxResults" : [
     {
-     "SampleId" : "Sample_oo-4",
-     "SampleName" : "oo-4",
+     "SampleId" : "Sample_4",
+     "SampleName" : "4",
      "IndexMetrics" : [
       {
        "IndexSequence" : "TCCGCGAA",
@@ -188,8 +188,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_oo-5",
-     "SampleName" : "oo-5",
+     "SampleId" : "Sample_5",
+     "SampleName" : "5",
      "IndexMetrics" : [
       {
        "IndexSequence" : "TCTCGCGC",
@@ -219,8 +219,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_oo-6",
-     "SampleName" : "oo-6",
+     "SampleId" : "Sample_6",
+     "SampleName" : "6",
      "IndexMetrics" : [
       {
        "IndexSequence" : "AGCGATAG",
@@ -250,8 +250,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_oo-1",
-     "SampleName" : "oo-1",
+     "SampleId" : "Sample_1",
+     "SampleName" : "1",
      "IndexMetrics" : [
       {
        "IndexSequence" : "CTGAAGCT",
@@ -281,8 +281,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_oo-2",
-     "SampleName" : "oo-2",
+     "SampleId" : "Sample_2",
+     "SampleName" : "2",
      "IndexMetrics" : [
       {
        "IndexSequence" : "TAATGCGC",
@@ -312,8 +312,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_oo-3",
-     "SampleName" : "oo-3",
+     "SampleId" : "Sample_3",
+     "SampleName" : "3",
      "IndexMetrics" : [
       {
        "IndexSequence" : "CGGCTATG",
@@ -371,8 +371,8 @@
    "Yield" : 47450053476,
    "DemuxResults" : [
     {
-     "SampleId" : "Sample_oo-10",
-     "SampleName" : "oo-10",
+     "SampleId" : "Sample_10",
+     "SampleName" : "10",
      "IndexMetrics" : [
       {
        "IndexSequence" : "CGCTCATT+ATAGAGGC",
@@ -402,8 +402,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_oo-11",
-     "SampleName" : "oo-11",
+     "SampleId" : "Sample_11",
+     "SampleName" : "11",
      "IndexMetrics" : [
       {
        "IndexSequence" : "TCTCGCGC+ATAGAGGC",
@@ -433,8 +433,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_oo-12",
-     "SampleName" : "oo-12",
+     "SampleId" : "Sample_12",
+     "SampleName" : "12",
      "IndexMetrics" : [
       {
        "IndexSequence" : "AGCGATAG+ATAGAGGC",
@@ -464,8 +464,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_oo-7",
-     "SampleName" : "oo-7",
+     "SampleId" : "Sample_7",
+     "SampleName" : "7",
      "IndexMetrics" : [
       {
        "IndexSequence" : "GAGATTCC+ATAGAGGC",
@@ -495,8 +495,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_oo-8",
-     "SampleName" : "oo-8",
+     "SampleId" : "Sample_8",
+     "SampleName" : "8",
      "IndexMetrics" : [
       {
        "IndexSequence" : "ATTCAGAA+ATAGAGGC",
@@ -526,8 +526,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_oo-9",
-     "SampleName" : "oo-9",
+     "SampleId" : "Sample_9",
+     "SampleName" : "9",
      "IndexMetrics" : [
       {
        "IndexSequence" : "GAATTCGT+ATAGAGGC",
@@ -585,8 +585,8 @@
    "Yield" : 79468511976,
    "DemuxResults" : [
     {
-     "SampleId" : "Sample_op-13",
-     "SampleName" : "op-13",
+     "SampleId" : "Sample_13",
+     "SampleName" : "13",
      "NumberReads" : 315351238,
      "Yield" : 79468511976,
      "ReadMetrics" : [
@@ -615,8 +615,8 @@
    "Yield" : 76032348084,
    "DemuxResults" : [
     {
-     "SampleId" : "Sample_op-14",
-     "SampleName" : "op-14",
+     "SampleId" : "Sample_14",
+     "SampleName" : "14",
      "NumberReads" : 301715667,
      "Yield" : 76032348084,
      "ReadMetrics" : [
@@ -645,8 +645,8 @@
    "Yield" : 80320027284,
    "DemuxResults" : [
     {
-     "SampleId" : "Sample_op-15",
-     "SampleName" : "op-15",
+     "SampleId" : "Sample_15",
+     "SampleName" : "15",
      "NumberReads" : 318730267,
      "Yield" : 80320027284,
      "ReadMetrics" : [
@@ -675,8 +675,8 @@
    "Yield" : 48488513976,
    "DemuxResults" : [
     {
-     "SampleId" : "Sample_QF-1479",
-     "SampleName" : "QF-1479",
+     "SampleId" : "Sample_16",
+     "SampleName" : "16",
      "NumberReads" : 192414738,
      "Yield" : 48488513976,
      "ReadMetrics" : [
@@ -705,8 +705,8 @@
    "Yield" : 30810370500,
    "DemuxResults" : [
     {
-     "SampleId" : "Sample_pq-26",
-     "SampleName" : "pq-26",
+     "SampleId" : "Sample_26",
+     "SampleName" : "26",
      "IndexMetrics" : [
       {
        "IndexSequence" : "CCGTCC",
@@ -736,8 +736,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-27",
-     "SampleName" : "pq-27",
+     "SampleId" : "Sample_27",
+     "SampleName" : "27",
      "IndexMetrics" : [
       {
        "IndexSequence" : "GTCCGC",
@@ -767,8 +767,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-28",
-     "SampleName" : "pq-28",
+     "SampleId" : "Sample_28",
+     "SampleName" : "28",
      "IndexMetrics" : [
       {
        "IndexSequence" : "GTGAAA",
@@ -798,8 +798,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-17",
-     "SampleName" : "pq-17",
+     "SampleId" : "Sample_17",
+     "SampleName" : "17",
      "IndexMetrics" : [
       {
        "IndexSequence" : "CGATGT",
@@ -829,8 +829,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-18",
-     "SampleName" : "pq-18",
+     "SampleId" : "Sample_18",
+     "SampleName" : "18",
      "IndexMetrics" : [
       {
        "IndexSequence" : "TGACCA",
@@ -860,8 +860,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-19",
-     "SampleName" : "pq-19",
+     "SampleId" : "Sample_19",
+     "SampleName" : "19",
      "IndexMetrics" : [
       {
        "IndexSequence" : "ACAGTG",
@@ -891,8 +891,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-20",
-     "SampleName" : "pq-20",
+     "SampleId" : "Sample_20",
+     "SampleName" : "20",
      "IndexMetrics" : [
       {
        "IndexSequence" : "GCCAAT",
@@ -922,8 +922,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-21",
-     "SampleName" : "pq-21",
+     "SampleId" : "Sample_21",
+     "SampleName" : "21",
      "IndexMetrics" : [
       {
        "IndexSequence" : "CAGATC",
@@ -953,8 +953,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-22",
-     "SampleName" : "pq-22",
+     "SampleId" : "Sample_22",
+     "SampleName" : "22",
      "IndexMetrics" : [
       {
        "IndexSequence" : "CTTGTA",
@@ -984,8 +984,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-23",
-     "SampleName" : "pq-23",
+     "SampleId" : "Sample_23",
+     "SampleName" : "23",
      "IndexMetrics" : [
       {
        "IndexSequence" : "AGTCAA",
@@ -1015,8 +1015,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-24",
-     "SampleName" : "pq-24",
+     "SampleId" : "Sample_24",
+     "SampleName" : "24",
      "IndexMetrics" : [
       {
        "IndexSequence" : "AGTTCC",
@@ -1046,8 +1046,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-25",
-     "SampleName" : "pq-25",
+     "SampleId" : "Sample_25",
+     "SampleName" : "25",
      "IndexMetrics" : [
       {
        "IndexSequence" : "ATGTCA",
@@ -1105,8 +1105,8 @@
    "Yield" : 44608787748,
    "DemuxResults" : [
     {
-     "SampleId" : "Sample_pq-29",
-     "SampleName" : "pq-29",
+     "SampleId" : "Sample_29",
+     "SampleName" : "29",
      "IndexMetrics" : [
       {
        "IndexSequence" : "AAGGGA",
@@ -1136,8 +1136,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-30",
-     "SampleName" : "pq-30",
+     "SampleId" : "Sample_30",
+     "SampleName" : "30",
      "IndexMetrics" : [
       {
        "IndexSequence" : "GGACCC",
@@ -1167,8 +1167,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-31",
-     "SampleName" : "pq-31",
+     "SampleId" : "Sample_31",
+     "SampleName" : "31",
      "IndexMetrics" : [
       {
        "IndexSequence" : "AAGACG",
@@ -1198,8 +1198,8 @@
      ]
     },
     {
-     "SampleId" : "Sample_pq-32",
-     "SampleName" : "pq-32",
+     "SampleId" : "Sample_32",
+     "SampleName" : "32",
      "IndexMetrics" : [
       {
        "IndexSequence" : "GGATGT",

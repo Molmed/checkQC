@@ -29,6 +29,10 @@ class RunInfoXMLNotFound(CheckQCException):
     pass
 
 
+class DemuxSummaryNotFound(CheckQCException):
+    pass
+
+
 class RunParametersNotFound(CheckQCException):
     pass
 
@@ -42,6 +46,10 @@ class QCHandlerNotFound(CheckQCException):
 
 
 class ConfigurationError(CheckQCException):
+    pass
+
+
+class SamplesheetNotFound(CheckQCException):
     pass
 
 

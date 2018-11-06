@@ -34,10 +34,7 @@ class RunTypeSummarizer(object):
         log.info("Enabled handlers and their config values were: ")
         summary["handlers"] = []
         for handler in handler_config:
-            name = handler["name"]
-            error = handler["error"]
-            warning = handler["warning"]
-            log.info("\t{} Error={} Warning={}".format(name, error, warning))
-            summary["handlers"].append({"handler": name, "error": error, "warning": warning})
+            log.info("\t{}".format(handler))
+            summary["handlers"].append(handler)
 
         return summary

@@ -8,11 +8,13 @@ parser_configurations:
     # Path to where the bcl2fastq output (i.e. fastq files, etc) is located relative to
     # the runfolder
     bcl2fastq_output_path: Data/Intensities/BaseCalls
+  SamplesheetParser:
+    samplesheet_name: SampleSheet.csv
 
 default_handlers:
     - name: UndeterminedPercentageHandler
       warning: unknown
-      error: 10
+      error: 9 # <% Phix on lane> + < value as %>
 
 hiseq2500_rapidhighoutput_v4:
   51-71:

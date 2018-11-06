@@ -57,14 +57,14 @@ class TestConfigFactory(unittest.TestCase):
                               {'simple': {'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'}},
                           'handlers':
                               {'console':
-                                   {'class': 'logging.StreamHandler', 'level': 'DEBUG', 'formatter': 'simple',
+                                   {'class': 'logging.StreamHandler', 'level': 'INFO', 'formatter': 'simple',
                                     'stream': 'ext://sys.stdout'},
-                               'file_handler': {'class': 'logging.handlers.RotatingFileHandler', 'level': 'DEBUG',
+                               'file_handler': {'class': 'logging.handlers.RotatingFileHandler', 'level': 'INFO',
                                                 'formatter': 'simple', 'filename': 'checkqc-ws.log',
                                                 'maxBytes': 10485760, 'backupCount': 20,
                                                 'encoding': 'utf8'}},
                           'root':
-                              {'level': 'DEBUG', 'handlers': ['console', 'file_handler']}}
+                              {'level': 'INFO', 'handlers': ['console', 'file_handler']}}
         self.assertEqual(result, default_config)
 
 

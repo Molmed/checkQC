@@ -3,7 +3,7 @@ import logging
 
 from checkQC.exceptions import ConfigurationError
 
-log = logging.getLogger()
+log = logging.getLogger(__name__)
 
 
 class QCHandlerReport(object):
@@ -205,7 +205,7 @@ class QCHandler(Subscriber):
 
     def parser(self):
         """
-        The class of the Parser which this QCHandler will get its data from.
+        The class of the Parser (or a list of parsers) which this QCHandler will get its data from.
         E.g.
 
         .. code-block :: python

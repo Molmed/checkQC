@@ -62,10 +62,13 @@ class InteropParser(Parser):
                 read = summary.at(original_read_nbr).at(lane)
                 error_rate = read.error_rate().mean()
                 percent_q30 = read.percent_gt_q30()
+                percent_phix_aligned = read.percent_aligned().mean()
                 self._send_to_subscribers(("error_rate",
                                            {"lane": lane+1, "read": new_read_nbr+1, "error_rate": error_rate}))
                 self._send_to_subscribers(("percent_q30",
                                            {"lane": lane+1, "read": new_read_nbr+1, "percent_q30": percent_q30}))
+                self._send_to_subscribers(("percent_phix",
+                                           {"lane": lane+1, "read": new_read_nbr+1, "percent_phix": percent_phix_aligned}))
 
     def __eq__(self, other):
         if isinstance(other, self.__class__) and self.runfolder == other.runfolder:

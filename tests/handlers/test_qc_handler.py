@@ -13,7 +13,6 @@ class TestQCHandler(unittest.TestCase):
     random_order_qc_errors_and_warning = [QCErrorWarning("2", 2), QCErrorFatal("1", 1),
                                           QCErrorFatal("4", 4), QCErrorWarning("3", 3)]
 
-
     class MockQCHandler(QCHandler):
         # This is a method to mock returning results from the handler
         def check_qc(self):
@@ -26,9 +25,9 @@ class TestQCHandler(unittest.TestCase):
     def test_report_logging_is_ordered(self):
         def fix_names(obj):
             if isinstance(obj, QCErrorFatal):
-                return "ERROR:root:{}".format(obj)
+                return "ERROR:checkQC.handlers.qc_handler:{}".format(obj)
             else:
-                return "WARNING:root:{}".format(obj)
+                return "WARNING:checkQC.handlers.qc_handler:{}".format(obj)
 
         expected_logs = list(map(fix_names, TestQCHandler.expected_qc_errors_and_warning))
 
