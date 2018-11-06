@@ -65,24 +65,25 @@ class UndeterminedPercentageHandler(QCHandler):
                 def compute_threshold(value):
                     return value + mean_phix_per_lane[lane_nbr]
 
+                def create_data_dict(value):
+                    return {"lane": lane_nbr,
+                            "percentage_undetermined": percentage_undetermined,
+                            "threshold": value,
+                            "computed_threshold": compute_threshold(value),
+                            "phix_on_lane": mean_phix_per_lane[lane_nbr]}
+
                 if self.error() != self.UNKNOWN and percentage_undetermined > compute_threshold(self.error()):
                     yield QCErrorFatal("The percentage of undetermined indexes was"
                                        " to high on lane {}, it was: {:.2f}%".format(lane_nbr,
                                                                                      percentage_undetermined),
                                        ordering=lane_nbr,
-                                       data={"lane": lane_nbr,
-                                             "percentage_undetermined": percentage_undetermined,
-                                             "threshold": self.error(),
-                                             "phix_on_lane": mean_phix_per_lane[lane_nbr]})
+                                       data=create_data_dict(self.error()))
                 elif self.warning() != self.UNKNOWN and percentage_undetermined > compute_threshold(self.warning()):
                     yield QCErrorWarning("The percentage of undetermined indexes was "
                                          "to high on lane {}, it was: {:.2f}%".format(lane_nbr,
                                                                                       percentage_undetermined),
                                          ordering=lane_nbr,
-                                         data={"lane": lane_nbr,
-                                               "percentage_undetermined": percentage_undetermined,
-                                               "threshold": self.warning(),
-                                               "phix_on_lane": mean_phix_per_lane[lane_nbr]})
+                                         data=create_data_dict(self.warning()))
                 else:
                     continue
 
