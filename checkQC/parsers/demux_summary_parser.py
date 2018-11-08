@@ -8,7 +8,11 @@ from checkQC.exceptions import ConfigurationError, DemuxSummaryNotFound
 
 class DemuxSummaryParser(Parser):
     """
-    TODO
+    The DemuxSummaryParser will read informatino from the DemuxSummaryF1L<Lane number>.txt files.
+    At the moment it fetches the information about 'Most Popular Unknown Index Sequences'.
+
+    It will send the information lane wise as a tuple on the format:
+     ("index_counts", {"lane": <lane nbr>, "indices": [<{"index": <index string>, "count": <nbr>}>]}
     """
 
     def __init__(self, runfolder, parser_configurations, *args, **kwargs):
@@ -63,7 +67,8 @@ class DemuxSummaryParser(Parser):
     def run(self):
         for i in range(1, self._nbr_of_lanes+1):
             path = Path(self.runfolder, self._bcl2fastq_output_path, 'Stats', 'DemuxSummaryF1L{}.txt'.format(i))
-            self._send_to_subscribers({"lane": i, "indices": list(self._read_most_popular_unknown_indexes(path))})
+            self._send_to_subscribers(("index_counts",
+                                       {"lane": i, "indices": list(self._read_most_popular_unknown_indexes(path))}))
 
     def __eq__(self, other):
         if isinstance(other, self.__class__) and self.runfolder == other.runfolder:

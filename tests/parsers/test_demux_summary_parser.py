@@ -50,5 +50,8 @@ class TestDemuxSummaryParser(unittest.TestCase):
     def test_run(self):
         self.demux_summary_parser.run()
         self.assertEqual(len(self.subscriber.values), 8)
-        self.assertEqual(self.subscriber.values[0]["lane"], 1)
-        self.assertEqual(len(self.subscriber.values[0]["indices"]), 1000)
+        (first_key, first_value) = self.subscriber.values[0]
+        self.assertEqual(first_key, "index_counts")
+        self.assertEqual(first_value["lane"], 1)
+        self.assertTrue(isinstance(first_value["indices"], list))
+        self.assertEqual(len(first_value["indices"]), 1000)
