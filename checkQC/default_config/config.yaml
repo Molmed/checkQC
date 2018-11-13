@@ -318,7 +318,7 @@ miseq_v3:
         error: 9 # 50 % of threshold for clusters pass filter
 
 iseq_v1:
-  300:
+  151:
     handlers:
       - name: ClusterPFHandler
         warning: 4 # Millons of clusters
