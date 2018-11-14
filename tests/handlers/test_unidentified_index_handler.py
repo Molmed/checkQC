@@ -89,7 +89,7 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
             UnidentifiedIndexHandler({'name': 'UnidentifiedIndexHandler', 'foo': 'bar'}).validate_configuration()
 
     def test_always_warn_rules(self):
-        res = next(self.unidentifiedIndexHandler.always_warn_rule("", 1, {}))
+        res = next(self.unidentifiedIndexHandler.always_warn_rule(tag="", lane=1, percent_on_lane=1))
         self.assertTrue(isinstance(res, QCErrorWarning))
 
     def test_check_swapped_dual_index_yes(self):

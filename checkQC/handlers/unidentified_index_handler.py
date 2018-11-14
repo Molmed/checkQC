@@ -75,7 +75,7 @@ class UnidentifiedIndexHandler(QCHandler):
                 tag = index['index']
                 count = index['count']
                 if self.should_be_evaluated(tag, count, number_of_reads_on_lane):
-                    percent_on_lane = float(count) / number_of_reads_on_lane
+                    percent_on_lane = (float(count) / number_of_reads_on_lane) * 100
                     yield from self.evaluate_index_rules(tag, lane, samplesheet_dict, percent_on_lane)
                 else:
                     continue
