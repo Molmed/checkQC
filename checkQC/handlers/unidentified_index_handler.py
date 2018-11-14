@@ -74,13 +74,15 @@ class UnidentifiedIndexHandler(QCHandler):
             for index in indices:
                 tag = index['index']
                 count = index['count']
-                # Unknown index means that the sample was run without an index. We
                 if self.should_be_evaluated(tag, count, number_of_reads_on_lane):
-                    yield from self.evaluate_index_rules(tag, lane, samplesheet_dict)
+                    percent_on_lane = float(count) / number_of_reads_on_lane
+                    yield from self.evaluate_index_rules(tag, lane, samplesheet_dict, percent_on_lane)
                 else:
                     continue
 
     def should_be_evaluated(self, tag, count, number_of_reads_on_lane):
+        # Unknown index means that the sample was run without an index.
+        # Ns indicate errors in read
         return not tag == 'unknown' and \
                'N' not in tag and \
                self.is_significantly_represented(count, number_of_reads_on_lane)
@@ -89,44 +91,47 @@ class UnidentifiedIndexHandler(QCHandler):
         return (float(index_count) / nbr_of_reads_on_lane) > \
                (float(self.qc_config['significance_threshold']) / 100)
 
-    def evaluate_index_rules(self, tag, lane, samplesheet_dict):
+    def evaluate_index_rules(self, tag, lane, samplesheet_dict, percent_on_lane):
         """
         Evaluates a list of 'rules' and yields all warnings found by these rules.
         :param tag:
         :param lane:
         :param samplesheet_dict:
+        :param percent_on_lane:
         :return: generator of QCErrorWarnings
         """
         rules = [self.always_warn_rule, self.check_swapped_dual_index, self.check_reversed_index,
                  self.check_reverse_complement_index, self.check_if_index_in_other_lane,
                  self.check_complement_index]
         for rule in rules:
-            yield from rule(tag, lane, samplesheet_dict)
+            yield from rule(tag=tag, lane=lane, samplesheet_dict=samplesheet_dict, percent_on_lane=percent_on_lane)
 
     @staticmethod
     def yield_qc_warning_with_message(msg, lane, tag):
         yield QCErrorWarning(msg=msg, ordering="{}:{}".format(lane, tag), data={'lane': lane, 'msg': msg})
 
-    def always_warn_rule(self, tag, lane, samplesheet_dict):
+    def always_warn_rule(self, tag, lane, percent_on_lane, **kwargs):
         """
         We always want to warn about an index that is significantly represented. This rule
         will make sure that we do so, and all other rules will contribute extra information
         if there is any.
         :param tag:
         :param lane:
-        :param samplesheet_dict:
+        :param percent_on_lane:
         :return:
         """
         yield from UnidentifiedIndexHandler.\
-            yield_qc_warning_with_message("Index: {} on lane: {} was significantly overrepresented at significance "
+            yield_qc_warning_with_message("Index: {} on lane: {} was significantly "
+                                          "overrepresented ({:.1f}%) at significance "
                                           "threshold of: {}%.".format(tag,
                                                                       lane,
+                                                                      percent_on_lane,
                                                                       self.qc_config["significance_threshold"]),
                                           lane,
                                           tag)
 
     @staticmethod
-    def check_swapped_dual_index(tag, lane, samplesheet_dict):
+    def check_swapped_dual_index(tag, lane, samplesheet_dict, **kwargs):
         if '+' in tag:
             split_tag = tag.split('+')
             swapped_tag = '{}+{}'.format(split_tag[1], split_tag[0])
@@ -137,14 +142,14 @@ class UnidentifiedIndexHandler(QCHandler):
                 yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
 
     @staticmethod
-    def check_reversed_index(tag, lane, samplesheet_dict):
+    def check_reversed_index(tag, lane, samplesheet_dict, **kwargs):
         hits = UnidentifiedIndexHandler.index_in_samplesheet(samplesheet_dict, tag[::-1])
         for hit in hits:
             msg = '\tWe found a possible match for the reverse of tag: {}, on: {}'.format(tag, hit)
             yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
 
     @staticmethod
-    def check_reverse_complement_index(tag, lane, samplesheet_dict):
+    def check_reverse_complement_index(tag, lane, samplesheet_dict, **kwargs):
         hits = UnidentifiedIndexHandler.index_in_samplesheet(samplesheet_dict,
                                                              UnidentifiedIndexHandler.get_complementary_sequence(tag)[::-1])
         for hit in hits:
@@ -152,7 +157,7 @@ class UnidentifiedIndexHandler(QCHandler):
             yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
 
     @staticmethod
-    def check_complement_index(tag, lane, samplesheet_dict):
+    def check_complement_index(tag, lane, samplesheet_dict, **kwargs):
         hits = UnidentifiedIndexHandler.index_in_samplesheet(samplesheet_dict,
                                                              UnidentifiedIndexHandler.get_complementary_sequence(tag))
         for hit in hits:
@@ -160,7 +165,7 @@ class UnidentifiedIndexHandler(QCHandler):
             yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
 
     @staticmethod
-    def check_if_index_in_other_lane(tag, lane, samplesheet_dict):
+    def check_if_index_in_other_lane(tag, lane, samplesheet_dict, **kwargs):
         hits = UnidentifiedIndexHandler.index_in_samplesheet(samplesheet_dict, tag)
         for hit in hits:
             msg = '\tWe found a possible match for the tag: {}, on another lane: {}'.format(tag, hit)
