@@ -8,7 +8,7 @@ from checkQC.exceptions import ConfigurationError, DemuxSummaryNotFound
 
 class DemuxSummaryParser(Parser):
     """
-    The DemuxSummaryParser will read informatino from the DemuxSummaryF1L<Lane number>.txt files.
+    The DemuxSummaryParser will read information from the DemuxSummaryF1L<Lane number>.txt files.
     At the moment it fetches the information about 'Most Popular Unknown Index Sequences'.
 
     It will send the information lane wise as a tuple on the format:
