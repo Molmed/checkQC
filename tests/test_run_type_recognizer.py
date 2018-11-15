@@ -44,7 +44,7 @@ class TestRunTypeRecognizerCorrectInstrumentsReturned(TestCase):
         self.assertTrue(isinstance(actual, HiSeq2500))
 
     def test_returns_iseq(self):
-        runtyperecognizer = self._create_runtype_recognizer("FFSP100")
+        runtyperecognizer = self._create_runtype_recognizer("FS10000263")
         actual = runtyperecognizer.instrument_type()
         self.assertTrue(isinstance(actual, ISeq))
 

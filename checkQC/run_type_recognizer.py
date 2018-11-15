@@ -176,7 +176,7 @@ class RunTypeRecognizer(object):
                                  "D": "hiseq2500",
                                  "ST": "hiseqx",
                                  "A": "novaseq",
-                                 "FFSP": "iseq"}
+                                 "FS": "iseq"}
 
         for key, value in machine_type_mappings.items():
             if instrument_name.startswith(key):
