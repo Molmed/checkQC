@@ -34,7 +34,7 @@ hiseq2500_rapidhighoutput_v4:
       - name: ReadsPerSampleHandler
         warning: unknown
         error: 90 # 50 % of threshold for clusters pass filter
-  101-111:
+  100-111:
     handlers:
       - name: ClusterPFHandler
         warning: 180 # Millons of clusters
@@ -119,7 +119,7 @@ hiseqx_v2:
         warning: 400 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 75 # Give percentage for reads greater than Q30
+        warning: 80 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         allow_missing_error_rate: False
@@ -128,6 +128,38 @@ hiseqx_v2:
       - name: ReadsPerSampleHandler
         warning: unknown
         error: 200 # 50 % of threshold for clusters pass filter
+
+novaseq_SP:
+  51:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 325 # Millons of clusters
+        error: unknown
+      - name: Q30Handler
+        warning: 85 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 162.5 # 50 % of threshold for clusters pass filter
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 325 # Millons of clusters
+        error: unknown
+      - name: Q30Handler
+        warning: 75 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 162.5 # 50 % of threshold for clusters pass filter
 
 novaseq_S1:
   51:
@@ -180,7 +212,7 @@ novaseq_S2:
   51:
     handlers:
       - name: ClusterPFHandler
-        warning: 1600 # Millons of clusters
+        warning: 1650 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 85 # Give percentage for reads greater than Q30
@@ -191,11 +223,11 @@ novaseq_S2:
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 800 # 50 % of threshold for clusters pass filter
+        error: 825 # 50 % of threshold for clusters pass filter
   101:
     handlers:
       - name: ClusterPFHandler
-        warning: 1600 # Millons of clusters
+        warning: 1650 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 80 # Give percentage for reads greater than Q30
@@ -206,11 +238,11 @@ novaseq_S2:
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 800 # 50 % of threshold for clusters pass filter
+        error: 825 # 50 % of threshold for clusters pass filter
   151:
     handlers:
       - name: ClusterPFHandler
-        warning: 1600 # Millons of clusters
+        warning: 1650 # Millons of clusters
         error: unknown
       - name: Q30Handler
         warning: 75 # Give percentage for reads greater than Q30
@@ -221,9 +253,24 @@ novaseq_S2:
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 800 # 50 % of threshold for clusters pass filter
+        error: 825 # 50 % of threshold for clusters pass filter
 
 novaseq_S4:
+  101:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 2000 # Millons of clusters
+        error: unknown
+      - name: Q30Handler
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 1000 # 50 % of threshold for clusters pass filter
   151:
     handlers:
       - name: ClusterPFHandler
@@ -303,6 +350,21 @@ miseq_v3:
       - name: ReadsPerSampleHandler
         warning: unknown
         error: 9 # 50 % of threshold for clusters pass filter
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 18 # Millons of clusters
+        error: unknown
+      - name: Q30Handler
+        warning: 80 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 9 # 50 % of threshold for clusters pass filter
   301:
     handlers:
       - name: ClusterPFHandler
@@ -330,7 +392,7 @@ iseq_v1:
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         allow_missing_error_rate: False
-        warning: 1.5
+        warning: 5
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
