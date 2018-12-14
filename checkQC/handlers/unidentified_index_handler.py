@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from checkQC.handlers.qc_handler import QCHandler, QCErrorWarning
+from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal
 from checkQC.parsers.demux_summary_parser import DemuxSummaryParser
 from checkQC.parsers.stats_json_parser import StatsJsonParser
 from checkQC.parsers.samplesheet_parser import SamplesheetParser
@@ -98,7 +98,7 @@ class UnidentifiedIndexHandler(QCHandler):
         :param lane:
         :param samplesheet_dict:
         :param percent_on_lane:
-        :return: generator of QCErrorWarnings
+        :return: generator of QCErrorFatal
         """
         rules = [self.always_warn_rule, self.check_swapped_dual_index, self.check_reversed_index,
                  self.check_reverse_complement_index, self.check_if_index_in_other_lane,
@@ -108,7 +108,7 @@ class UnidentifiedIndexHandler(QCHandler):
 
     @staticmethod
     def yield_qc_warning_with_message(msg, lane, tag):
-        yield QCErrorWarning(msg=msg, ordering="{}:{}".format(lane, tag), data={'lane': lane, 'msg': msg})
+        yield QCErrorFatal(msg=msg, ordering="{}:{}".format(lane, tag), data={'lane': lane, 'msg': msg})
 
     def always_warn_rule(self, tag, lane, percent_on_lane, **kwargs):
         """

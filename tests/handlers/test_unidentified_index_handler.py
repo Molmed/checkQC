@@ -11,7 +11,7 @@ from checkQC.parsers.stats_json_parser import StatsJsonParser
 from checkQC.parsers.samplesheet_parser import SamplesheetParser
 from checkQC.handlers.unidentified_index_handler import UnidentifiedIndexHandler
 from checkQC.exceptions import ConfigurationError
-from checkQC.handlers.qc_handler import QCErrorWarning
+from checkQC.handlers.qc_handler import QCErrorFatal
 
 
 class TestUnidentifiedIndexHandlerIntegrationTest(HandlerTestBase):
@@ -90,7 +90,7 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
 
     def test_always_warn_rules(self):
         res = next(self.unidentifiedIndexHandler.always_warn_rule(tag="", lane=1, percent_on_lane=1))
-        self.assertTrue(isinstance(res, QCErrorWarning))
+        self.assertTrue(isinstance(res, QCErrorFatal))
 
     def test_check_swapped_dual_index_yes(self):
         samplesheet_dict = self.unidentifiedIndexHandler.transform_samplesheet_to_dict(self.samplesheet)
