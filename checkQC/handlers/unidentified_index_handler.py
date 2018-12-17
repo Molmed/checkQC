@@ -66,7 +66,7 @@ class UnidentifiedIndexHandler(QCHandler):
 
     def check_qc(self):
 
-        samplesheet_dict = self.transform_samplesheet_to_dict(self.samplesheet)
+        samplesheet_searcher = _SamplesheetSearcher(samplesheet=self.samplesheet)
         number_of_reads_per_lane = self.number_of_reads_per_lane()
 
         for lane, indices in self.lanes_and_indices.items():
@@ -76,7 +76,7 @@ class UnidentifiedIndexHandler(QCHandler):
                 count = index['count']
                 if self.should_be_evaluated(tag, count, number_of_reads_on_lane):
                     percent_on_lane = (float(count) / number_of_reads_on_lane) * 100
-                    yield from self.evaluate_index_rules(tag, lane, samplesheet_dict, percent_on_lane)
+                    yield from self.evaluate_index_rules(tag, lane, samplesheet_searcher, percent_on_lane)
                 else:
                     continue
 
@@ -91,20 +91,36 @@ class UnidentifiedIndexHandler(QCHandler):
         return (float(index_count) / nbr_of_reads_on_lane) > \
                (float(self.qc_config['significance_threshold']) / 100)
 
-    def evaluate_index_rules(self, tag, lane, samplesheet_dict, percent_on_lane):
+    def evaluate_index_rules(self, tag, lane, samplesheet_searcher, percent_on_lane):
         """
         Evaluates a list of 'rules' and yields all warnings found by these rules.
         :param tag:
         :param lane:
-        :param samplesheet_dict:
+        :param samplesheet_searcher:
         :param percent_on_lane:
         :return: generator of QCErrorFatal
         """
-        rules = [self.always_warn_rule, self.check_swapped_dual_index, self.check_reversed_index,
+        if "GTAGAGGA" in tag:
+            print("COOL!")
+
+        rules = [self.always_warn_rule, self.check_reversed_index,
                  self.check_reverse_complement_index, self.check_if_index_in_other_lane,
                  self.check_complement_index]
         for rule in rules:
-            yield from rule(tag=tag, lane=lane, samplesheet_dict=samplesheet_dict, percent_on_lane=percent_on_lane)
+            yield from rule(tag=tag,
+                            lane=lane,
+                            samplesheet_searcher=samplesheet_searcher,
+                            percent_on_lane=percent_on_lane)
+
+        dual_index_rules = [self.check_swapped_dual_index, self.check_reverse_complement_in_dual_index,
+                            self.check_reversed_in_dual_index, self.check_complement_in_dual_index]
+
+        if '+' in tag:
+            for rule in dual_index_rules:
+                yield from rule(tag=tag,
+                                lane=lane,
+                                samplesheet_searcher=samplesheet_searcher,
+                                percent_on_lane=percent_on_lane)
 
     @staticmethod
     def yield_qc_warning_with_message(msg, lane, tag):
@@ -131,64 +147,101 @@ class UnidentifiedIndexHandler(QCHandler):
                                           tag)
 
     @staticmethod
-    def check_swapped_dual_index(tag, lane, samplesheet_dict, **kwargs):
+    def check_swapped_dual_index(tag, lane, samplesheet_searcher, **kwargs):
         if '+' in tag:
             split_tag = tag.split('+')
             swapped_tag = '{}+{}'.format(split_tag[1], split_tag[0])
-            hits = UnidentifiedIndexHandler.index_in_samplesheet(samplesheet_dict, swapped_tag)
+            hits = samplesheet_searcher.one_index_match_in_samplesheet(swapped_tag)
             for hit in hits:
                 msg = '\tIt appears that maybe the dual index tag: {} was swapped. There was a hit for' \
                       ' the swapped index: {} at: {}'.format(tag, swapped_tag, hit)
                 yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
 
     @staticmethod
-    def check_reversed_index(tag, lane, samplesheet_dict, **kwargs):
-        hits = UnidentifiedIndexHandler.index_in_samplesheet(samplesheet_dict, tag[::-1])
+    def check_reversed_in_dual_index(tag, lane, samplesheet_searcher, **kwargs):
+        if '+' in tag:
+            split_tags = tag.split('+')
+            for single_tag in split_tags:
+                hits = samplesheet_searcher.one_index_match_in_samplesheet(single_tag[::-1])
+                for hit in hits:
+                    msg = '\tWe found a possible match for the reverse of tag: {}, on: {}. ' \
+                          'This originated from the dual index tag: {}'.format(single_tag, hit, tag)
+                    yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
+
+    @staticmethod
+    def check_reverse_complement_in_dual_index(tag, lane, samplesheet_searcher, **kwargs):
+        if '+' in tag:
+            split_tags = tag.split('+')
+            for single_tag in split_tags:
+                hits = samplesheet_searcher.one_index_match_in_samplesheet(
+                    UnidentifiedIndexHandler.get_complementary_sequence(single_tag)[::-1])
+                for hit in hits:
+                    msg = '\tWe found a possible match for the reverse complement of tag: {}, on: {}. ' \
+                          'This originated from the dual index tag: {}'.format(single_tag, hit, tag)
+                    yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
+
+    @staticmethod
+    def check_complement_in_dual_index(tag, lane, samplesheet_searcher, **kwargs):
+        if '+' in tag:
+            split_tags = tag.split('+')
+            for single_tag in split_tags:
+                hits = samplesheet_searcher.exact_index_in_samplesheet(
+                    UnidentifiedIndexHandler.get_complementary_sequence(single_tag))
+                for hit in hits:
+                    msg = '\tWe found a possible match for the complement of tag: {}, on: {}. ' \
+                          'This originated from the dual index tag: {}'.format(single_tag, hit, tag)
+                    yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
+
+    @staticmethod
+    def check_reversed_index(tag, lane, samplesheet_searcher, **kwargs):
+        hits = samplesheet_searcher.exact_index_in_samplesheet(tag[::-1])
         for hit in hits:
             msg = '\tWe found a possible match for the reverse of tag: {}, on: {}'.format(tag, hit)
             yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
 
     @staticmethod
-    def check_reverse_complement_index(tag, lane, samplesheet_dict, **kwargs):
-        hits = UnidentifiedIndexHandler.index_in_samplesheet(samplesheet_dict,
-                                                             UnidentifiedIndexHandler.get_complementary_sequence(tag)[::-1])
+    def check_reverse_complement_index(tag, lane, samplesheet_searcher, **kwargs):
+        hits = samplesheet_searcher.exact_index_in_samplesheet(
+            UnidentifiedIndexHandler.get_complementary_sequence(tag)[::-1])
         for hit in hits:
             msg = '\tWe found a possible match for the reverse complement of tag: {}, on: {}'.format(tag, hit)
             yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
 
     @staticmethod
-    def check_complement_index(tag, lane, samplesheet_dict, **kwargs):
-        hits = UnidentifiedIndexHandler.index_in_samplesheet(samplesheet_dict,
-                                                             UnidentifiedIndexHandler.get_complementary_sequence(tag))
+    def check_complement_index(tag, lane, samplesheet_searcher, **kwargs):
+        hits = samplesheet_searcher.exact_index_in_samplesheet(
+            UnidentifiedIndexHandler.get_complementary_sequence(tag))
         for hit in hits:
             msg = '\tWe found a possible match for the complementary of tag: {}, on: {}'.format(tag, hit)
             yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
 
     @staticmethod
-    def check_if_index_in_other_lane(tag, lane, samplesheet_dict, **kwargs):
-        hits = UnidentifiedIndexHandler.index_in_samplesheet(samplesheet_dict, tag)
+    def check_if_index_in_other_lane(tag, lane, samplesheet_searcher, **kwargs):
+        hits = samplesheet_searcher.exact_index_in_samplesheet(tag)
         for hit in hits:
             msg = '\tWe found a possible match for the tag: {}, on another lane: {}'.format(tag, hit)
             yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
 
-    @staticmethod
-    def transform_samplesheet_to_dict(samplesheet):
+    def number_of_reads_per_lane(self):
         """
-        Transform samplesheet to dict on form {index -> {lane -> sample name}}
-        :param samplesheet:
-        :return: dict of index, lane and sample name
+        Transform conversion results into dict of lane -> total clusters pass filer
+        :return: dict {<lane>: <total clusters pass filer>}
         """
-        samplesheet_dict = defaultdict(lambda: defaultdict(dict))
-        for s in samplesheet:
-            index = s['index']
-            if s.get('index2'):
-                index += '+{}'.format(s['index2'])
-            # MiSeqs for example do not have lanes in their samplesheets, thus we will default to using lane 1
-            # if nothing has been specified in the samplesheet. /JD 20181101
-            lane = s.get('Lane', '1')
-            samplesheet_dict[index][lane] = s['Sample_Name']
+        nbr_of_reads_per_lane = {}
+        for lane_dict in self.conversion_results:
+            nbr_of_reads_per_lane[int(lane_dict["LaneNumber"])] = int(lane_dict["TotalClustersPF"])
+        return nbr_of_reads_per_lane
 
-        return samplesheet_dict
+    @staticmethod
+    def get_complementary_sequence(seq):
+        conv_table = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N', '+': '+'}
+        comp_seq = ''
+        for c in seq:
+            comp_seq += conv_table[c]
+        return comp_seq
+
+
+class _SamplesheetSearcher(object):
 
     class SearchHit(object):
         def __init__(self, search_index, found_sample, found_lane):
@@ -211,34 +264,50 @@ class UnidentifiedIndexHandler(QCHandler):
         def __hash__(self):
             return hash(self.__class__.__name__ + self.search_index + self.found_sample + self.found_lane)
 
+    def __init__(self, samplesheet):
+        self.samplesheet_dict = self.transform_samplesheet_to_dict(samplesheet)
+
     @staticmethod
-    def index_in_samplesheet(samplesheet_dict, index):
+    def transform_samplesheet_to_dict(samplesheet):
+        """
+        Transform samplesheet to dict on form {index -> {lane -> sample name}}
+        :param samplesheet:
+        :return: dict of index, lane and sample name
+        """
+
+        samplesheet_dict = defaultdict(lambda: defaultdict(dict))
+        for s in samplesheet:
+            index = s['index']
+            if s.get('index2'):
+                index += '+{}'.format(s['index2'])
+            # MiSeqs for example do not have lanes in their samplesheets, thus we will default to using lane 1
+            # if nothing has been specified in the samplesheet. /JD 20181101
+            lane = s.get('Lane', '1')
+            samplesheet_dict[index][lane] = s['Sample_Name']
+
+        return samplesheet_dict
+
+    def exact_index_in_samplesheet(self, index):
         """
         Search the sample sheet dict for an index to find which lane and which sample
         it is associated with.
-        :param samplesheet_dict:
+        :param index:
+        :return: generator of SearchHits
+        """
+        index_hits = self.samplesheet_dict.get(index)
+        if index_hits:
+            for lane, sample in index_hits.items():
+                yield _SamplesheetSearcher.SearchHit(index, sample, lane)
+
+    def one_index_match_in_samplesheet(self, index):
+        """
+        Search for in-exact matches in samplesheet, i.e. hits where there is a hit, for one, but not
+        both indexes in a dual index tag.
         :param index:
         :return:
         """
-        index_hits = samplesheet_dict.get(index)
-        if index_hits:
-            for lane, sample in index_hits.items():
-                yield UnidentifiedIndexHandler.SearchHit(index, sample, lane)
 
-    def number_of_reads_per_lane(self):
-        """
-        Transform conversion results into dict of lane -> total clusters pass filer
-        :return: dict {<lane>: <total clusters pass filer>}
-        """
-        nbr_of_reads_per_lane = {}
-        for lane_dict in self.conversion_results:
-            nbr_of_reads_per_lane[int(lane_dict["LaneNumber"])] = int(lane_dict["TotalClustersPF"])
-        return nbr_of_reads_per_lane
-
-    @staticmethod
-    def get_complementary_sequence(seq):
-        conv_table = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N', '+': '+'}
-        comp_seq = ''
-        for c in seq:
-            comp_seq += conv_table[c]
-        return comp_seq
+        for samplesheet_index in self.samplesheet_dict.keys():
+            if index in samplesheet_index:
+                for lane, sample in self.samplesheet_dict[samplesheet_index].items():
+                    yield _SamplesheetSearcher.SearchHit(index, sample, lane)
