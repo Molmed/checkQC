@@ -100,9 +100,6 @@ class UnidentifiedIndexHandler(QCHandler):
         :param percent_on_lane:
         :return: generator of QCErrorFatal
         """
-        if "GTAGAGGA" in tag:
-            print("COOL!")
-
         rules = [self.always_warn_rule, self.check_reversed_index,
                  self.check_reverse_complement_index, self.check_if_index_in_other_lane,
                  self.check_complement_index]
