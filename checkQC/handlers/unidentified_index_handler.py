@@ -148,7 +148,7 @@ class UnidentifiedIndexHandler(QCHandler):
         if '+' in tag:
             split_tag = tag.split('+')
             swapped_tag = '{}+{}'.format(split_tag[1], split_tag[0])
-            hits = samplesheet_searcher.one_index_match_in_samplesheet(swapped_tag)
+            hits = samplesheet_searcher.exact_index_in_samplesheet(swapped_tag)
             for hit in hits:
                 msg = '\tIt appears that maybe the dual index tag: {} was swapped. There was a hit for' \
                       ' the swapped index: {} at: {}'.format(tag, swapped_tag, hit)
@@ -159,7 +159,7 @@ class UnidentifiedIndexHandler(QCHandler):
         if '+' in tag:
             split_tags = tag.split('+')
             for single_tag in split_tags:
-                hits = samplesheet_searcher.one_index_match_in_samplesheet(single_tag[::-1])
+                hits = samplesheet_searcher.one_index_match_from_dual_index_in_samplesheet(single_tag[::-1])
                 for hit in hits:
                     msg = '\tWe found a possible match for the reverse of tag: {}, on: {}. ' \
                           'This originated from the dual index tag: {}'.format(single_tag, hit, tag)
@@ -170,7 +170,7 @@ class UnidentifiedIndexHandler(QCHandler):
         if '+' in tag:
             split_tags = tag.split('+')
             for single_tag in split_tags:
-                hits = samplesheet_searcher.one_index_match_in_samplesheet(
+                hits = samplesheet_searcher.one_index_match_from_dual_index_in_samplesheet(
                     UnidentifiedIndexHandler.get_complementary_sequence(single_tag)[::-1])
                 for hit in hits:
                     msg = '\tWe found a possible match for the reverse complement of tag: {}, on: {}. ' \
@@ -296,7 +296,7 @@ class _SamplesheetSearcher(object):
             for lane, sample in index_hits.items():
                 yield _SamplesheetSearcher.SearchHit(index, sample, lane)
 
-    def one_index_match_in_samplesheet(self, index):
+    def one_index_match_from_dual_index_in_samplesheet(self, index):
         """
         Search for in-exact matches in samplesheet, i.e. hits where there is a hit, for one, but not
         both indexes in a dual index tag.
@@ -305,6 +305,6 @@ class _SamplesheetSearcher(object):
         """
 
         for samplesheet_index in self.samplesheet_dict.keys():
-            if index in samplesheet_index:
+            if index in set(samplesheet_index.split('+')):
                 for lane, sample in self.samplesheet_dict[samplesheet_index].items():
                     yield _SamplesheetSearcher.SearchHit(index, sample, lane)
