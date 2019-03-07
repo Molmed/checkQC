@@ -155,7 +155,7 @@ novaseq_SP:
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         allow_missing_error_rate: False
-        warning: 1
+        warning: 2
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
