@@ -119,7 +119,7 @@ hiseqx_v2:
         warning: 400 # Millons of clusters
         error: unknown
       - name: Q30Handler
-        warning: 80 # Give percentage for reads greater than Q30
+        warning: 75 # Give percentage for reads greater than Q30
         error: unknown # Give percentage for reads greater than Q30
       - name: ErrorRateHandler
         allow_missing_error_rate: False
