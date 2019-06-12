@@ -23,8 +23,12 @@ class TestUnidentifiedIndexHandlerIntegrationTest(HandlerTestBase):
         parsers = [DemuxSummaryParser(runfolder, config),
                    StatsJsonParser(runfolder, config),
                    SamplesheetParser(runfolder, config)]
-
-        qc_config = {'name': 'UnidentifiedIndexHandler', 'significance_threshold': 0.01}
+        qc_config = {
+            'name': 'UnidentifiedIndexHandler',
+            'significance_threshold': 0.01,
+            'white_listed_indexes':
+                ['.*N.*', 'G{8,}']
+            }
         self.unidentified_index_handler = UnidentifiedIndexHandler(qc_config)
         for parser in parsers:
             parser.add_subscribers(self.unidentified_index_handler)
@@ -40,12 +44,16 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
 
     def setUp(self):
 
-        qc_config = {'name': 'UnidentifiedIndexHandler', 'significance_threshold': 1}
+        qc_config = {
+            'name': 'UnidentifiedIndexHandler',
+            'significance_threshold': 1,
+            'white_listed_indexes':
+                ['.*N.*', 'G{8,}']
+            }
         self.unidentifiedIndexHandler = UnidentifiedIndexHandler(qc_config)
 
         conversion_results_key = "ConversionResults"
         conversion_results = get_stats_json()["ConversionResults"]
-
         samplesheet_key = "samplesheet"
         self.samplesheet = SampleSheet()
         sample_1 = Sample(dict(Lane=1, Sample_ID='1823A', Sample_Name='1823A-tissue', index='AAAA'))
@@ -77,8 +85,17 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
         self.assertFalse(self.unidentifiedIndexHandler.should_be_evaluated(tag='AAAAAA',
                                                                            count=1,
                                                                            number_of_reads_on_lane=1000))
+        # No
+        self.assertFalse(self.unidentifiedIndexHandler.should_be_evaluated(tag='GGGGGGGG',
+                                                                           count=1,
+                                                                           number_of_reads_on_lane=1000))
+
         # Yes
         self.assertTrue(self.unidentifiedIndexHandler.should_be_evaluated(tag='AAAAAA',
+                                                                          count=100,
+                                                                          number_of_reads_on_lane=1000))
+        # Yes
+        self.assertTrue(self.unidentifiedIndexHandler.should_be_evaluated(tag='GGGGGG',
                                                                           count=100,
                                                                           number_of_reads_on_lane=1000))
 

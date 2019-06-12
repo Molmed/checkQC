@@ -1,4 +1,5 @@
 from collections import defaultdict
+import re
 
 from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal
 from checkQC.parsers.demux_summary_parser import DemuxSummaryParser
@@ -28,6 +29,8 @@ class UnidentifiedIndexHandler(QCHandler):
 
     It will ignore any indexes which have N's in them. These are assumed to be read errors.
     """
+
+    WHITE_LIST_QC_KEY = 'white_listed_indexes'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -84,8 +87,21 @@ class UnidentifiedIndexHandler(QCHandler):
         # Unknown index means that the sample was run without an index.
         # Ns indicate errors in read
         return not tag == 'unknown' and \
-               'N' not in tag and \
+               not self.tag_in_white_list(tag) and \
                self.is_significantly_represented(count, number_of_reads_on_lane)
+
+    def tag_in_white_list(self, tag):
+        # This preserves backward compatiblity for users that do not specify
+        # the 'white_listed_indexes' in their configs. /JD 2019-06-12
+        if not self.qc_config.get(self.WHITE_LIST_QC_KEY):
+            return 'N' in tag
+        else:
+            for regex in self.qc_config[self.WHITE_LIST_QC_KEY]:
+                pattern = re.compile(regex)
+                if pattern.match(tag):
+                    return True
+                else:
+                    return False
 
     def is_significantly_represented(self, index_count, nbr_of_reads_on_lane):
         return (float(index_count) / nbr_of_reads_on_lane) > \
