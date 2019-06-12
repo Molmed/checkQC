@@ -87,7 +87,7 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
                                                                            number_of_reads_on_lane=1000))
         # No
         self.assertFalse(self.unidentifiedIndexHandler.should_be_evaluated(tag='GGGGGGGG',
-                                                                           count=1,
+                                                                           count=100,
                                                                            number_of_reads_on_lane=1000))
 
         # Yes
@@ -98,6 +98,39 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
         self.assertTrue(self.unidentifiedIndexHandler.should_be_evaluated(tag='GGGGGG',
                                                                           count=100,
                                                                           number_of_reads_on_lane=1000))
+    
+    def test_should_be_evaluated_backwards_compatible(self):
+        # No white list in config (which was the old behaviour)
+        qc_config = {
+            'name': 'UnidentifiedIndexHandler',
+            'significance_threshold': 1}
+        unidentifiedIndexHandler = UnidentifiedIndexHandler(qc_config)
+
+        # No
+        self.assertFalse(unidentifiedIndexHandler.should_be_evaluated(tag='unknown',
+                                                                      count=1,
+                                                                      number_of_reads_on_lane=10))
+        # No
+        self.assertFalse(unidentifiedIndexHandler.should_be_evaluated(tag='AAATGCNNNN',
+                                                                      count=1,
+                                                                      number_of_reads_on_lane=10))
+        # No
+        self.assertFalse(unidentifiedIndexHandler.should_be_evaluated(tag='AAAAAA',
+                                                                      count=1,
+                                                                      number_of_reads_on_lane=1000))
+        # Yes
+        self.assertTrue(unidentifiedIndexHandler.should_be_evaluated(tag='GGGGGGGG',
+                                                                     count=100,
+                                                                     number_of_reads_on_lane=1000))
+
+        # Yes
+        self.assertTrue(unidentifiedIndexHandler.should_be_evaluated(tag='AAAAAA',
+                                                                     count=100,
+                                                                     number_of_reads_on_lane=1000))
+        # Yes
+        self.assertTrue(unidentifiedIndexHandler.should_be_evaluated(tag='GGGGGG',
+                                                                     count=100,
+                                                                     number_of_reads_on_lane=1000))
 
     def test_get_complementary_sequence(self):
         res = self.unidentifiedIndexHandler.get_complementary_sequence('ATCG+N')

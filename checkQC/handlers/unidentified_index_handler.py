@@ -87,10 +87,10 @@ class UnidentifiedIndexHandler(QCHandler):
         # Unknown index means that the sample was run without an index.
         # Ns indicate errors in read
         return not tag == 'unknown' and \
-               not self.tag_in_white_list(tag) and \
+               not self._tag_in_white_list(tag) and \
                self.is_significantly_represented(count, number_of_reads_on_lane)
 
-    def tag_in_white_list(self, tag):
+    def _tag_in_white_list(self, tag):
         # This preserves backward compatiblity for users that do not specify
         # the 'white_listed_indexes' in their configs. /JD 2019-06-12
         if not self.qc_config.get(self.WHITE_LIST_QC_KEY):
@@ -100,8 +100,7 @@ class UnidentifiedIndexHandler(QCHandler):
                 pattern = re.compile(regex)
                 if pattern.match(tag):
                     return True
-                else:
-                    return False
+            return False
 
     def is_significantly_represented(self, index_count, nbr_of_reads_on_lane):
         return (float(index_count) / nbr_of_reads_on_lane) > \
