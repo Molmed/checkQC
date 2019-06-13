@@ -15,7 +15,7 @@ default_handlers:
     error: 9 # <% Phix on lane> + < value as %>
   - name: UnidentifiedIndexHandler
     significance_threshold: 1 # % of reads in unidentified
-    # Indexes which are will not cause an error even if they occur
+    # Indexes which are white-listed will only cause a warning even if they occur
     # above the significance level.
     # They will be matched like regular expressions,
     # so e.g. NNN will match exactly three NNNs, while
