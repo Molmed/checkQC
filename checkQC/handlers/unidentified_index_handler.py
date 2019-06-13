@@ -1,7 +1,7 @@
 from collections import defaultdict
 import re
 
-from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal
+from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
 from checkQC.parsers.demux_summary_parser import DemuxSummaryParser
 from checkQC.parsers.stats_json_parser import StatsJsonParser
 from checkQC.parsers.samplesheet_parser import SamplesheetParser
@@ -87,7 +87,6 @@ class UnidentifiedIndexHandler(QCHandler):
         # Unknown index means that the sample was run without an index.
         # Ns indicate errors in read
         return not tag == 'unknown' and \
-               not self._tag_in_white_list(tag) and \
                self.is_significantly_represented(count, number_of_reads_on_lane)
 
     def _tag_in_white_list(self, tag):
@@ -148,15 +147,24 @@ class UnidentifiedIndexHandler(QCHandler):
         :param percent_on_lane:
         :return:
         """
-        yield from UnidentifiedIndexHandler.\
-            yield_qc_warning_with_message("Index: {} on lane: {} was significantly "
-                                          "overrepresented ({:.1f}%) at significance "
-                                          "threshold of: {}%.".format(tag,
-                                                                      lane,
-                                                                      percent_on_lane,
-                                                                      self.qc_config["significance_threshold"]),
-                                          lane,
-                                          tag)
+        if self._tag_in_white_list(tag):
+            msg = ("Index: {} on lane: {} was significantly overrepresented ({:.1f}%) at a " +
+                   "significance threshold of {}%. " +
+                   "This index is white-listed.").format(tag,
+                                                         lane,
+                                                         percent_on_lane,
+                                                         self.qc_config["significance_threshold"])
+            yield QCErrorWarning(msg=msg, ordering="{}:{}".format(lane, tag), data={'lane': lane, 'msg': msg})
+        else:
+            yield from UnidentifiedIndexHandler.\
+                yield_qc_warning_with_message("Index: {} on lane: {} was significantly "
+                                              "overrepresented ({:.1f}%) at significance "
+                                              "threshold of: {}%.".format(tag,
+                                                                          lane,
+                                                                          percent_on_lane,
+                                                                          self.qc_config["significance_threshold"]),
+                                              lane,
+                                              tag)
 
     @staticmethod
     def check_swapped_dual_index(tag, lane, samplesheet_searcher, **kwargs):

@@ -11,7 +11,7 @@ from checkQC.parsers.stats_json_parser import StatsJsonParser
 from checkQC.parsers.samplesheet_parser import SamplesheetParser
 from checkQC.handlers.unidentified_index_handler import UnidentifiedIndexHandler, _SamplesheetSearcher
 from checkQC.exceptions import ConfigurationError
-from checkQC.handlers.qc_handler import QCErrorFatal
+from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
 
 
 class TestUnidentifiedIndexHandlerIntegrationTest(HandlerTestBase):
@@ -37,7 +37,7 @@ class TestUnidentifiedIndexHandlerIntegrationTest(HandlerTestBase):
 
     def test_unidentified_index_handler(self):
         result = self.unidentified_index_handler.check_qc()
-        self.assertEqual(len(list(result)), 232)
+        self.assertEqual(len(list(result)), 236)
 
 
 class TestUnidentifiedIndexHandler(HandlerTestBase):
@@ -78,18 +78,9 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
                                                                            count=1,
                                                                            number_of_reads_on_lane=10))
         # No
-        self.assertFalse(self.unidentifiedIndexHandler.should_be_evaluated(tag='AAATGCNNNN',
-                                                                           count=1,
-                                                                           number_of_reads_on_lane=10))
-        # No
         self.assertFalse(self.unidentifiedIndexHandler.should_be_evaluated(tag='AAAAAA',
                                                                            count=1,
                                                                            number_of_reads_on_lane=1000))
-        # No
-        self.assertFalse(self.unidentifiedIndexHandler.should_be_evaluated(tag='GGGGGGGG',
-                                                                           count=100,
-                                                                           number_of_reads_on_lane=1000))
-
         # Yes
         self.assertTrue(self.unidentifiedIndexHandler.should_be_evaluated(tag='AAAAAA',
                                                                           count=100,
@@ -99,39 +90,6 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
                                                                           count=100,
                                                                           number_of_reads_on_lane=1000))
     
-    def test_should_be_evaluated_backwards_compatible(self):
-        # No white list in config (which was the old behaviour)
-        qc_config = {
-            'name': 'UnidentifiedIndexHandler',
-            'significance_threshold': 1}
-        unidentifiedIndexHandler = UnidentifiedIndexHandler(qc_config)
-
-        # No
-        self.assertFalse(unidentifiedIndexHandler.should_be_evaluated(tag='unknown',
-                                                                      count=1,
-                                                                      number_of_reads_on_lane=10))
-        # No
-        self.assertFalse(unidentifiedIndexHandler.should_be_evaluated(tag='AAATGCNNNN',
-                                                                      count=1,
-                                                                      number_of_reads_on_lane=10))
-        # No
-        self.assertFalse(unidentifiedIndexHandler.should_be_evaluated(tag='AAAAAA',
-                                                                      count=1,
-                                                                      number_of_reads_on_lane=1000))
-        # Yes
-        self.assertTrue(unidentifiedIndexHandler.should_be_evaluated(tag='GGGGGGGG',
-                                                                     count=100,
-                                                                     number_of_reads_on_lane=1000))
-
-        # Yes
-        self.assertTrue(unidentifiedIndexHandler.should_be_evaluated(tag='AAAAAA',
-                                                                     count=100,
-                                                                     number_of_reads_on_lane=1000))
-        # Yes
-        self.assertTrue(unidentifiedIndexHandler.should_be_evaluated(tag='GGGGGG',
-                                                                     count=100,
-                                                                     number_of_reads_on_lane=1000))
-
     def test_get_complementary_sequence(self):
         res = self.unidentifiedIndexHandler.get_complementary_sequence('ATCG+N')
         self.assertEqual(res, 'TAGC+N')
@@ -143,6 +101,10 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
     def test_always_warn_rules(self):
         res = next(self.unidentifiedIndexHandler.always_warn_rule(tag="", lane=1, percent_on_lane=1))
         self.assertTrue(isinstance(res, QCErrorFatal))
+
+    def test_always_warn_rules_for_white_listed_tag(self):
+        res = next(self.unidentifiedIndexHandler.always_warn_rule(tag="NNNNN", lane=1, percent_on_lane=1))
+        self.assertTrue(isinstance(res, QCErrorWarning))
 
     def test_check_swapped_dual_index_yes(self):
         res = next(self.unidentifiedIndexHandler.check_swapped_dual_index('TTTT+AAAA', 1, self.samplesheet_searcher))
