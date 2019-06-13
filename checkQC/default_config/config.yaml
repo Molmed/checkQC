@@ -1,5 +1,3 @@
-
-
 # For information about config usage, see http://checkqc.readthedocs.io/en/latest/#configuration-file
 
 # Use this section to provide configuration options to the parsers
@@ -12,11 +10,19 @@ parser_configurations:
     samplesheet_name: SampleSheet.csv
 
 default_handlers:
-    - name: UndeterminedPercentageHandler
-      warning: unknown
-      error: 9 # <% Phix on lane> + < value as %>
-    - name: UnidentifiedIndexHandler
-      significance_threshold: 1 # % of reads in unidentified
+  - name: UndeterminedPercentageHandler
+    warning: unknown
+    error: 9 # <% Phix on lane> + < value as %>
+  - name: UnidentifiedIndexHandler
+    significance_threshold: 1 # % of reads in unidentified
+    # Indexes which are white-listed will only cause a warning even if they occur
+    # above the significance level.
+    # They will be matched like regular expressions,
+    # so e.g. NNN will match exactly three NNNs, while
+    # N{3,} will match three or more Ns.
+    white_listed_indexes:
+      - .*N.*
+      - G{6,}
 
 hiseq2500_rapidhighoutput_v4:
   51-71:
