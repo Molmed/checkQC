@@ -22,7 +22,7 @@ default_handlers:
     # N{3,} will match three or more Ns.
     white_listed_indexes:
       - .*N.*
-      - G{8,}
+      - G{6,}
 
 hiseq2500_rapidhighoutput_v4:
   51-71:
