@@ -41,5 +41,10 @@ class TestQCHandler(unittest.TestCase):
         with self.assertRaises(ConfigurationError):
             mock_handler.validate_configuration()
 
+    def test_report_downgrade_error(self):
+        result = self.qc_handler.report(downgrade_error=True)
+        filtered_list = list(filter(lambda x: isinstance(x, QCErrorWarning), result))
+        self.assertEqual(len(filtered_list), 4)
+
 if __name__ == '__main__':
     unittest.main()
