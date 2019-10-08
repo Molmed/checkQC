@@ -229,7 +229,7 @@ class QCHandler(Subscriber):
         raise NotImplementedError("A handler must provide its own QC checking behaviour by implementing "
                                   "the `check_qc` method.")
 
-    def report(self):
+    def report(self, downgrade_error=False):
         """
         Check the quality criteria as specified in `check_qc` and gather all reports. Will set the objects
         `exit_status` in accordance with what types of reports are found.
@@ -237,6 +237,10 @@ class QCHandler(Subscriber):
         :returns: A sorted list of errors and warnings found when evaluating the qc criteria.
         """
         errors_and_warnings = self.check_qc()
+
+        if downgrade_error:
+            errors_and_warnings = self.downgrade_errors(errors_and_warnings)
+
         sorted_errors_and_warnings = sorted(errors_and_warnings, key=lambda x: x.ordering)
 
         for element in sorted_errors_and_warnings:
@@ -248,3 +252,14 @@ class QCHandler(Subscriber):
 
         return sorted_errors_and_warnings
 
+    def downgrade_errors(self, errors_and_warnings):
+        """
+        Takes a list of error and warnings and downgrade all errors to warnings.
+
+        :returns: A generator object with warnings
+        """
+        for element in errors_and_warnings:
+            if isinstance(element, QCErrorFatal):
+                yield QCErrorWarning(element.message, element.ordering, element.data)
+            else:
+                yield element

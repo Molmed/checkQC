@@ -25,7 +25,8 @@ class QCEngine(object):
     to determine if all handlers were successful or not (zero indicates success, 1 indicates failure)
     """
 
-    def __init__(self, runfolder, parser_configurations, handler_config, qc_handler_factory=None):
+    def __init__(self, runfolder, parser_configurations, handler_config,
+                 downgrade_error=(), qc_handler_factory=None):
         """
         Create a instance of QCEngine
 
@@ -40,6 +41,7 @@ class QCEngine(object):
         self._handlers = []
         self._parsers_and_handlers = defaultdict(list)
         self.exit_status = 0
+        self._downgrade_error = downgrade_error
         if qc_handler_factory:
             self._qc_handler_factory = qc_handler_factory
         else:
@@ -100,9 +102,14 @@ class QCEngine(object):
     def _compile_reports(self):
         reports = {"exit_status": 0}
         for handler in self._handlers:
-            handler_report = handler.report()
+            handler_name = type(handler).__name__
+            if handler_name in self._downgrade_error:
+                log.info("Downgrading errors for {} to warnings".format(handler_name))
+                handler_report = handler.report(downgrade_error=True)
+            else:
+                handler_report = handler.report()
             if handler_report:
-                reports[type(handler).__name__] = list(map(lambda x: x.as_dict(), handler_report))
+                reports[handler_name] = list(map(lambda x: x.as_dict(), handler_report))
             if handler.exit_status() != 0:
                 self.exit_status = 1
                 reports["exit_status"] = 1

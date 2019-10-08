@@ -24,9 +24,10 @@ log = logging.getLogger(__name__)
 @click.command("checkqc")
 @click.option("--config", help="Path to the checkQC configuration file", type=click.Path())
 @click.option('--json', is_flag=True, default=False, help="Print the results of the run as json to stdout")
+@click.option('--downgrade-error', type=str, multiple=True, help="Downgrade errors to warnings for a specific handler, can be used multiple times")
 @click.version_option(checkqc_version)
 @click.argument('runfolder', type=click.Path())
-def start(config, json, runfolder):
+def start(config, json, downgrade_error, runfolder):
     """
     checkQC is a command line utility designed to quickly gather and assess quality control metrics from an
     Illumina sequencing run. It is highly customizable and which quality controls modules should be run
@@ -35,7 +36,7 @@ def start(config, json, runfolder):
     # -----------------------------------
     # This is the application entry point
     # -----------------------------------
-    app = App(runfolder, config, json)
+    app = App(runfolder, config, json, downgrade_error)
     app.run()
     sys.exit(app.exit_status)
 
@@ -45,10 +46,11 @@ class App(object):
     This is the main application object for CheckQC.
     """
 
-    def __init__(self, runfolder, config_file=None, json_mode=False):
+    def __init__(self, runfolder, config_file=None, json_mode=False, downgrade_error=()):
         self._runfolder = runfolder
         self._config_file = config_file
         self._json_mode = json_mode
+        self._downgrade_error = downgrade_error
         self.exit_status = 0
 
     def configure_and_run(self):
@@ -77,7 +79,8 @@ class App(object):
 
         qc_engine = QCEngine(runfolder=self._runfolder,
                              parser_configurations=parser_configurations,
-                             handler_config=handler_config)
+                             handler_config=handler_config,
+                             downgrade_error=self._downgrade_error)
         reports = qc_engine.run()
         reports["run_summary"] = run_type_summary
         self.exit_status = qc_engine.exit_status
