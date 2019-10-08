@@ -24,10 +24,10 @@ log = logging.getLogger(__name__)
 @click.command("checkqc")
 @click.option("--config", help="Path to the checkQC configuration file", type=click.Path())
 @click.option('--json', is_flag=True, default=False, help="Print the results of the run as json to stdout")
-@click.option('--downgrade-error', type=str, multiple=True, help="Downgrade errors to warnings for a specific handler, can be used multiple times")
+@click.option('--downgrade-errors', type=str, multiple=True, help="Downgrade errors to warnings for a specific handler, can be used multiple times")
 @click.version_option(checkqc_version)
 @click.argument('runfolder', type=click.Path())
-def start(config, json, downgrade_error, runfolder):
+def start(config, json, downgrade_errors, runfolder):
     """
     checkQC is a command line utility designed to quickly gather and assess quality control metrics from an
     Illumina sequencing run. It is highly customizable and which quality controls modules should be run
@@ -36,7 +36,7 @@ def start(config, json, downgrade_error, runfolder):
     # -----------------------------------
     # This is the application entry point
     # -----------------------------------
-    app = App(runfolder, config, json, downgrade_error)
+    app = App(runfolder, config, json, downgrade_errors)
     app.run()
     sys.exit(app.exit_status)
 
@@ -46,11 +46,11 @@ class App(object):
     This is the main application object for CheckQC.
     """
 
-    def __init__(self, runfolder, config_file=None, json_mode=False, downgrade_error=()):
+    def __init__(self, runfolder, config_file=None, json_mode=False, downgrade_errors_for=()):
         self._runfolder = runfolder
         self._config_file = config_file
         self._json_mode = json_mode
-        self._downgrade_error = downgrade_error
+        self._downgrade_errors_for = downgrade_errors_for
         self.exit_status = 0
 
     def configure_and_run(self):
@@ -73,14 +73,13 @@ class App(object):
         # TODO For now assume symmetric read lengths
         both_read_lengths = run_type_recognizer.read_length()
         read_length = int(both_read_lengths.split("-")[0])
-        handler_config = config.get_handler_configs(instrument_and_reagent_version, read_length)
+        handler_config = config.get_handler_configs(instrument_and_reagent_version, read_length, self._downgrade_errors_for)
 
         run_type_summary = RunTypeSummarizer.summarize(instrument_and_reagent_version, both_read_lengths, handler_config)
 
         qc_engine = QCEngine(runfolder=self._runfolder,
                              parser_configurations=parser_configurations,
-                             handler_config=handler_config,
-                             downgrade_error=self._downgrade_error)
+                             handler_config=handler_config)
         reports = qc_engine.run()
         reports["run_summary"] = run_type_summary
         self.exit_status = qc_engine.exit_status
