@@ -25,9 +25,10 @@ class CheckQCHandler(tornado.web.RequestHandler):
     def initialize(self, **kwargs):
         self.monitor_path = kwargs["monitoring_path"]
         self.qc_config_file = kwargs["qc_config_file"]
+        self.downgrade_errors_for = ()
 
     @staticmethod
-    def _run_check_qc(monitor_path, qc_config_file, runfolder, downgrade_errors_for=()):
+    def _run_check_qc(monitor_path, qc_config_file, runfolder, downgrade_errors_for):
         path_to_runfolder = os.path.join(monitor_path, runfolder)
         checkqc_app = App(config_file=qc_config_file, runfolder=path_to_runfolder, downgrade_errors_for=downgrade_errors_for)
         reports = checkqc_app.configure_and_run()
@@ -39,9 +40,12 @@ class CheckQCHandler(tornado.web.RequestHandler):
         self.set_status(status_code=status_code)
         self.finish({"reason": reason})
 
-    def get(self, runfolder):
+    def get(self, runfolder, extra_parameter=None):
+        if extra_parameter:
+            if "downgrade_errors" in extra_parameter:
+                self.downgrade_errors_for = extra_parameter.split("=")[1]
         try:
-            reports = self._run_check_qc(self.monitor_path, self.qc_config_file, runfolder)
+            reports = self._run_check_qc(self.monitor_path, self.qc_config_file, runfolder, self.downgrade_errors_for)
             self.set_header("Content-Type", "application/json")
             self.write(reports)
         except RunfolderNotFoundError:
@@ -50,28 +54,6 @@ class CheckQCHandler(tornado.web.RequestHandler):
             self._write_error(status_code=500, reason="There is a problem with the qc config. Are you sure the "
                                                       "type of instrument/run configuration on the run you want to "
                                                       "analyze is available in the qc config?")
-
-    def prepare(self):
-        if self.request.body:
-            try:
-                self.args = json.loads(self.request.body)
-            except JSONDecodeError:
-                self._write_error(status_code=500, reason="Unexpected body, expected json.")
-
-    def post(self, runfolder):
-        if self.args["downgrade_errors"]:
-            downgrade_errors_for = self.args["downgrade_errors"]
-        try:
-            reports = self._run_check_qc(self.monitor_path, self.qc_config_file, runfolder, downgrade_errors_for)
-            self.set_header("Content-Type", "application/json")
-            self.write(reports)
-        except RunfolderNotFoundError:
-            self._write_error(status_code=404, reason="Could not find requested runfolder.")
-        except ConfigurationError:
-            self._write_error(status_code=500, reason="There is a problem with the qc config. Are you sure the "
-                                                      "type of instrument/run configuration on the run you want to "
-                                                      "analyze is available in the qc config?")
-
 
 
 class WebApp(object):
@@ -81,7 +63,7 @@ class WebApp(object):
 
     @staticmethod
     def _routes(**kwargs):
-        return [url(r"/qc/([^/]+)", CheckQCHandler, name="checkqc", kwargs=kwargs)]
+        return [url(r"/qc/([^/]+)/?([^/]+)?", CheckQCHandler, name="checkqc", kwargs=kwargs)]
 
     @staticmethod
     def _make_app(debug=False, **kwargs):

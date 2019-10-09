@@ -23,15 +23,8 @@ class TestWebApp(AsyncHTTPTestCase):
         self.assertEqual(response.code, 404)
 
     def test_qc_downgrade_errors(self):
-        response = self.fetch('/qc/170726_D00118_0303_BCB1TVANXX', method="POST",
-                              body=json.dumps({'downgrade_errors': 'ReadsPerSampleHandler'}))
+        response = self.fetch('/qc/170726_D00118_0303_BCB1TVANXX/downgrade_errors\=ReadsPerSampleHandler')
         self.assertEqual(response.code, 200)
-
-    def test_qc_invalid_body(self):
-        response = self.fetch('/qc/170726_D00118_0303_BCB1TVANXX', method="POST",
-                              body="'downgrade_errors': 'ReadsPerSampleHandler'")
-        self.assertEqual(response.code, 500)
-        self.assertRaises(JSONDecodeError)
 
 
 class TestWebAppWithNonUsefulConfig(AsyncHTTPTestCase):
