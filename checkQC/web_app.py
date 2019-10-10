@@ -40,10 +40,9 @@ class CheckQCHandler(tornado.web.RequestHandler):
         self.set_status(status_code=status_code)
         self.finish({"reason": reason})
 
-    def get(self, runfolder, extra_parameter=None):
-        if extra_parameter:
-            if "downgrade_errors" in extra_parameter:
-                self.downgrade_errors_for = extra_parameter.split("=")[1]
+    def get(self, runfolder):
+        if "downgrade" in self.request.query_arguments:
+            self.downgrade_errors_for = self.get_query_argument("downgrade")
         try:
             reports = self._run_check_qc(self.monitor_path, self.qc_config_file, runfolder, self.downgrade_errors_for)
             self.set_header("Content-Type", "application/json")
@@ -63,7 +62,7 @@ class WebApp(object):
 
     @staticmethod
     def _routes(**kwargs):
-        return [url(r"/qc/([^/]+)/?([^/]+)?", CheckQCHandler, name="checkqc", kwargs=kwargs)]
+        return [url(r"/qc/([^/]+)", CheckQCHandler, name="checkqc", kwargs=kwargs)]
 
     @staticmethod
     def _make_app(debug=False, **kwargs):
