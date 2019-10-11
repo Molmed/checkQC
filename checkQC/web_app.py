@@ -4,6 +4,8 @@ import logging.config
 import os
 
 import click
+import json
+from json.decoder import JSONDecodeError
 
 import tornado.ioloop
 import tornado.web
@@ -23,11 +25,12 @@ class CheckQCHandler(tornado.web.RequestHandler):
     def initialize(self, **kwargs):
         self.monitor_path = kwargs["monitoring_path"]
         self.qc_config_file = kwargs["qc_config_file"]
+        self.downgrade_errors_for = ()
 
     @staticmethod
-    def _run_check_qc(monitor_path, qc_config_file, runfolder):
+    def _run_check_qc(monitor_path, qc_config_file, runfolder, downgrade_errors_for):
         path_to_runfolder = os.path.join(monitor_path, runfolder)
-        checkqc_app = App(config_file=qc_config_file, runfolder=path_to_runfolder)
+        checkqc_app = App(config_file=qc_config_file, runfolder=path_to_runfolder, downgrade_errors_for=downgrade_errors_for)
         reports = checkqc_app.configure_and_run()
         reports["version"] = checkqc_version
         return reports
@@ -38,8 +41,10 @@ class CheckQCHandler(tornado.web.RequestHandler):
         self.finish({"reason": reason})
 
     def get(self, runfolder):
+        if "downgrade" in self.request.query_arguments:
+            self.downgrade_errors_for = self.get_query_argument("downgrade")
         try:
-            reports = self._run_check_qc(self.monitor_path, self.qc_config_file, runfolder)
+            reports = self._run_check_qc(self.monitor_path, self.qc_config_file, runfolder, self.downgrade_errors_for)
             self.set_header("Content-Type", "application/json")
             self.write(reports)
         except RunfolderNotFoundError:

@@ -19,6 +19,11 @@ class TestApp(unittest.TestCase):
         # The test data contains fatal qc errors
         self.assertEqual(app.run(), 1)
 
+    def test_run_downgrade_error(self):
+        app = App(runfolder=self.RUNFOLDER, downgrade_errors_for="ReadsPerSampleHandler")
+        # Test data should not produce fatal qc errors anymore
+        self.assertEqual(app.run(), 0)
+
 
 if __name__ == '__main__':
     unittest.main()

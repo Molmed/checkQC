@@ -11,6 +11,7 @@ class TestConfig(unittest.TestCase):
     def setUp(self):
         self.first_handler = {"name": "first_handler"}
         self.second_handler = {"name": "second_handler"}
+        self.third_handler = {"name": "third_handler", "warning": "unknown", "error": 100}
         self.default_handler = {"name": "default_handler", "config": "some_value"}
         config_dict = {'instrument_type_mappings': {'SN': 'hiseq2000', 'M': 'miseq', 'D': 'hiseq2500', 'ST': 'hiseqx'},
                        'miseq_v3': {
@@ -46,6 +47,13 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(self.config.get("extra_key"), "extra_value")
         self.assertEqual(self.config.get("this_key_does_not_exist", "default"), "default")
         self.assertEqual(self.config.get("this_key_does_not_exist"), None)
+
+    def test_downgrade_errors(self):
+        handler_list = [self.first_handler, self.third_handler]
+        result = self.config._downgrade_errors(handler_list, ("third_handler"))
+        self.assertEqual(len(result), len(handler_list))
+        self.assertEqual(result[1]["error"], "unknown")
+        self.assertEqual(result[1]["warning"], 100)
 
 
 class TestConfigFactory(unittest.TestCase):

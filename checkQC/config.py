@@ -125,7 +125,26 @@ class Config(object):
                 current_handler_config.append(default_handler)
         return current_handler_config
 
-    def get_handler_configs(self, instrument_and_reagent_type, read_length):
+    def _downgrade_errors(self, current_handler_config, downgrade_errors_for):
+        """
+        Downgrade errors to warnings for specific handlers
+
+        :param current_handler_config: a list of handlers.
+        :param downgrade_errors_for: a tuple of handlers for which errors should be downgraded
+        :returns: The provided list where some handlers might have been modified
+        """
+        downgraded_handler_config = []
+        for handler in current_handler_config:
+            if handler["name"] in downgrade_errors_for and handler["error"] != "unknown":
+                log.info("Downgrading errors for {}".format(handler["name"]))
+                handler["warning"] = handler["error"]
+                handler["error"] = "unknown"
+                downgraded_handler_config.append(handler)
+            else:
+                downgraded_handler_config.append(handler)
+        return downgraded_handler_config
+
+    def get_handler_configs(self, instrument_and_reagent_type, read_length, downgrade_errors_for=()):
         """
         Get the handler configurations for the specified parameters.
 
@@ -137,7 +156,10 @@ class Config(object):
         try:
             handler_config = self._get_matching_handler(instrument_and_reagent_type, read_length)
             handler_config_with_defaults = self._add_default_config(handler_config)
-            return handler_config_with_defaults
+            downgraded_handler_config_with_defaults = self._downgrade_errors(
+                                                            handler_config_with_defaults,
+                                                            downgrade_errors_for)
+            return downgraded_handler_config_with_defaults
         except ConfigEntryMissing as e:
             log.error("Could not find a config entry for instrument '{}' "
                       "with read length '{}'. Please check the provided config "
