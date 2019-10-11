@@ -222,6 +222,21 @@ Configuration file
    The Stats.json parser has a bcl2fastq_output_path variable, that can be set to specify where bcl2fastq output is located
    relative to the runfolder. Default value is "Data/Intensities/BaseCalls".
 
+Downgrade errors for a handler
+------------------------------
+
+It is possible to downgrade the error level for a handler, from fatal error to warning, using the `downgrade-errors` parameter:
+
+.. code-block :: console
+
+  $ checkqc --downgrade-errors ReadsPerSampleHandler --downgrade-errors UndeterminedPercentageHandler <RUNFOLDER>
+
+This parameter can be supplied to the webservice as a query argument:
+
+.. code-block :: console
+
+  curl -s -w'\n' localhost:9999/qc/170726_D00118_0303_BCB1TVANXX?downgrade=ReadsPerSampleHandler,UndeterminedPercentageHandler | python -m json.tool
+
 Running CheckQC as a webservice
 -------------------------------
 
