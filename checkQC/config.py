@@ -78,7 +78,7 @@ class Config(object):
         """
         self._config = config
 
-    def _get_matching_handler(self, instrument_and_reagent_type, read_length):
+    def _get_matching_handler(self, instrument_and_reagent_type, read_length, use_closest_read_length=False):
         """
         Get the handler matching the provided parameters.
 
@@ -90,7 +90,6 @@ class Config(object):
 
         try:
             config_read_lengths = list(map(str, self._config[instrument_and_reagent_type].keys()))
-
             for config_read_length in config_read_lengths:
                 if "-" in config_read_length:
                     split_read_length = config_read_length.split("-")
@@ -101,6 +100,10 @@ class Config(object):
                 else:
                     if int(read_length) == int(config_read_length):
                         return self._config[instrument_and_reagent_type][int(config_read_length)]["handlers"]
+            if use_closest_read_length:
+                closest_read_length = self._find_closest_read_length(config_read_lengths, read_length)
+                log.info(f"Read length {read_length} not find in config. Using closest read length: {closest_read_length}")
+                return self._config[instrument_and_reagent_type][closest_read_length]["handlers"]
             raise ConfigEntryMissing("Could not find a config entry matching read length '{}' on "
                                      "instrument '{}'. Please check the provided "
                                      "config.".format(read_length, instrument_and_reagent_type))
@@ -109,6 +112,28 @@ class Config(object):
                                      "with read length '{}'. Please check the provided config "
                                      "file ".format(instrument_and_reagent_type,
                                                     read_length))
+
+    def _find_closest_read_length(self, config_read_lengths, read_length):
+        """
+        Find the closest read length in the config
+
+        :param config_read_lengths: dict with config read lengths for a specific intrument and reagent type
+        :param read_length:  either as a range, e.g. '50-70' or a single value, e.g. '50'
+        :returns: the closest read length, as a string (if interval) or int (if single value)
+        """
+        distance = {}
+        for config_read_length in sorted(config_read_lengths, reverse=True):
+            if "-" in config_read_length:
+                split_read_length = config_read_length.split("-")
+                distance[config_read_length] = min(abs(int(read_length) - int(split_read_length[0])),
+                                                   abs(int(read_length) - int(split_read_length[1])))
+            else:
+                distance[config_read_length] = abs(int(read_length) - int(config_read_length))
+        closest_read_length = min(distance, key=distance.get)
+        if "-" not in closest_read_length:
+            return int(closest_read_length)
+        else:
+            return closest_read_length
 
     def _add_default_config(self, current_handler_config):
         """
@@ -144,7 +169,8 @@ class Config(object):
                 downgraded_handler_config.append(handler)
         return downgraded_handler_config
 
-    def get_handler_configs(self, instrument_and_reagent_type, read_length, downgrade_errors_for=()):
+    def get_handler_configs(self, instrument_and_reagent_type, read_length,
+                            downgrade_errors_for=(), use_closest_read_length=False):
         """
         Get the handler configurations for the specified parameters.
 
@@ -154,7 +180,8 @@ class Config(object):
         """
 
         try:
-            handler_config = self._get_matching_handler(instrument_and_reagent_type, read_length)
+            handler_config = self._get_matching_handler(instrument_and_reagent_type,
+                                                        read_length, use_closest_read_length)
             handler_config_with_defaults = self._add_default_config(handler_config)
             downgraded_handler_config_with_defaults = self._downgrade_errors(
                                                             handler_config_with_defaults,

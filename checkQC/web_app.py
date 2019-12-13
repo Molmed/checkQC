@@ -26,11 +26,15 @@ class CheckQCHandler(tornado.web.RequestHandler):
         self.monitor_path = kwargs["monitoring_path"]
         self.qc_config_file = kwargs["qc_config_file"]
         self.downgrade_errors_for = ()
+        self.use_closest_read_length = False
 
     @staticmethod
-    def _run_check_qc(monitor_path, qc_config_file, runfolder, downgrade_errors_for):
+    def _run_check_qc(monitor_path, qc_config_file, runfolder, downgrade_errors_for,
+                      use_closest_read_length):
         path_to_runfolder = os.path.join(monitor_path, runfolder)
-        checkqc_app = App(config_file=qc_config_file, runfolder=path_to_runfolder, downgrade_errors_for=downgrade_errors_for)
+        checkqc_app = App(config_file=qc_config_file, runfolder=path_to_runfolder,
+                          downgrade_errors_for=downgrade_errors_for,
+                          use_closest_read_length=use_closest_read_length)
         reports = checkqc_app.configure_and_run()
         reports["version"] = checkqc_version
         return reports
@@ -43,8 +47,12 @@ class CheckQCHandler(tornado.web.RequestHandler):
     def get(self, runfolder):
         if "downgrade" in self.request.query_arguments:
             self.downgrade_errors_for = self.get_query_argument("downgrade")
+        if "useClosestReadLength" in self.request.query_arguments:
+            self.use_closest_read_length = True
         try:
-            reports = self._run_check_qc(self.monitor_path, self.qc_config_file, runfolder, self.downgrade_errors_for)
+            reports = self._run_check_qc(self.monitor_path, self.qc_config_file,
+                                         runfolder, self.downgrade_errors_for,
+                                         self.use_closest_read_length)
             self.set_header("Content-Type", "application/json")
             self.write(reports)
         except RunfolderNotFoundError:
