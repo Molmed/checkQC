@@ -42,3 +42,25 @@ class TestWebAppWithNonUsefulConfig(AsyncHTTPTestCase):
     def test_qc_fail_fast_for_unknown_config(self):
         response = self.fetch('/qc/170726_D00118_0303_BCB1TVANXX')
         self.assertEqual(response.code, 500)
+
+
+class TestWebAppReadLengthNotInConfig(AsyncHTTPTestCase):
+
+    def get_app(self):
+        routes = WebApp._routes(monitoring_path=os.path.join("tests", "resources"),
+                                qc_config_file=os.path.join("tests", "resources", "read_length_not_in_config.yaml"))
+        return tornado.web.Application(routes)
+
+    def test_use_closest_read_length(self):
+        response = self.fetch('/qc/170726_D00118_0303_BCB1TVANXX?useClosestReadLength')
+        result = json.loads(response.body)
+        self.assertEqual(response.code, 200)
+        # Test data produce fatal qc errors
+        self.assertEqual(result["exit_status"], 1)
+
+    def test_use_closest_read_length_and_downgrade_errors(self):
+        response = self.fetch('/qc/170726_D00118_0303_BCB1TVANXX?useClosestReadLength&downgrade=ReadsPerSampleHandler')
+        result = json.loads(response.body)
+        self.assertEqual(response.code, 200)
+        # Test data produce fatal qc errors
+        self.assertEqual(result["exit_status"], 0)

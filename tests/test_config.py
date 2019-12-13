@@ -20,6 +20,12 @@ class TestConfig(unittest.TestCase):
                            '150-299': {'handlers': [
                                self.second_handler]}
                        },
+                       'hiseqx': {
+                           50: {'handlers': [
+                               self.first_handler]},
+                           52: {'handlers': [
+                               self.second_handler]}
+                       },
                        "default_handlers": [
                            self.default_handler,
                            self.first_handler
@@ -54,6 +60,18 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(len(result), len(handler_list))
         self.assertEqual(result[1]["error"], "unknown")
         self.assertEqual(result[1]["warning"], 100)
+
+    def test_use_closest_read_length(self):
+        result = self.config._get_matching_handler('miseq_v3', 149, use_closest_read_length=True)
+        self.assertEqual(result, [self.second_handler])
+
+    def test_use_closest_read_length_in_the_middle(self):
+        result = self.config._get_matching_handler('hiseqx', 51, use_closest_read_length=True)
+        self.assertEqual(result, [self.second_handler])
+
+    def test_machine_and_reagent_type_not_found(self):
+        with self.assertRaises(ConfigEntryMissing):
+            self.config._get_matching_handler('foo', 51, use_closest_read_length=True)
 
 
 class TestConfigFactory(unittest.TestCase):
