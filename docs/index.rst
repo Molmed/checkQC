@@ -237,6 +237,24 @@ This parameter can be supplied to the webservice as a query argument:
 
   curl -s -w'\n' localhost:9999/qc/170726_D00118_0303_BCB1TVANXX?downgrade=ReadsPerSampleHandler,UndeterminedPercentageHandler | python -m json.tool
 
+  Use closest read length
+  ------------------------------
+
+  It is possible to instruct CheckQC to use the closest read length if the read length of the run is not found in the config.
+  In case of a tie between two read lengths, the longer read length (with stricter QC criteria) will be used.
+
+  Usage:
+
+  .. code-block :: console
+
+    $ checkqc --use-closest-read-length <RUNFOLDER>
+
+  This parameter can be supplied to the webservice as a query argument:
+
+  .. code-block :: console
+
+    curl -s -w'\n' localhost:9999/qc/170726_D00118_0303_BCB1TVANXX?useClosestReadLength | python -m json.tool
+
 Running CheckQC as a webservice
 -------------------------------
 
