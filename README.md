@@ -3,6 +3,7 @@ checkQC
 [![Build Status](https://travis-ci.org/Molmed/checkQC.svg?branch=master)](https://travis-ci.org/Molmed/checkQC)
 [![codecov](https://codecov.io/gh/Molmed/checkQC/branch/master/graph/badge.svg)](https://codecov.io/gh/Molmed/checkQC)
 [![PyPI](https://img.shields.io/pypi/v/checkqc.svg)](https://pypi.python.org/pypi/checkQC)
+[![Conda](https://img.shields.io/conda/v/bioconda/checkqc)](https://anaconda.org/bioconda/checkqc)
 [![Documentation Status](https://readthedocs.org/projects/checkqc/badge/?version=latest)](http://checkqc.readthedocs.io/en/latest/?badge=latest)
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00556/status.svg)](https://doi.org/10.21105/joss.00556)
 
@@ -11,7 +12,7 @@ More documentation is available at [http://checkqc.readthedocs.io/](http://check
 CheckQC is a program designed to check a set of quality criteria against an Illumina runfolder.
 
 This is useful as part of a pipeline, where one needs to evaluate a set of quality criteria after demultiplexing. CheckQC is fast, and
-should finish a few seconds. It will warn if there are problems breaching warning criteria, and will emit a non-zero exit status if it finds
+should finish within a few seconds. It will warn if there are problems breaching warning criteria, and will emit a non-zero exit status if it finds
 any errors, thus making it easy to stop further processing if the run that is being evaluated needs troubleshooting.
 
 CheckQC has been designed to be modular, and exactly which "qc handlers" are executed with which parameters for a specific run type (i.e. machine
@@ -30,6 +31,12 @@ CheckQC **requires Python 3.6** (or higher to run). CheckQC can be installed wit
 
 ```
 pip install checkqc
+```
+
+Alternatively it can be installed with conda using the bioconda channel:
+
+```
+conda install -c bioconda checkqc
 ```
 
 Running CheckQC
