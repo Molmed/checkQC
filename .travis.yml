@@ -5,6 +5,7 @@ install:
   - pip install --upgrade -e . -r ./requirements/dev
 script:
   - export BOTO_CONFIG=/dev/null
+  - env
   - pytest --cov=checkQC tests/
 after_success:
   - codecov
