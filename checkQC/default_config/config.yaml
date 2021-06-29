@@ -181,6 +181,21 @@ novaseq_SP:
       - name: ReadsPerSampleHandler
         warning: unknown
         error: 243.75
+  251:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 325
+        error: unknown
+      - name: Q30Handler
+        warning: 75
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 243.75
 
 novaseq_S1:
   51:
