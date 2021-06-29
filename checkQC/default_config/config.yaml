@@ -142,7 +142,7 @@ novaseq_SP:
         warning: 325
         error: unknown
       - name: Q30Handler
-        warning: 85
+        warning: 90
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
@@ -157,7 +157,7 @@ novaseq_SP:
         warning: 325
         error: unknown
       - name: Q30Handler
-        warning: 80
+        warning: 85
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
@@ -172,7 +172,7 @@ novaseq_SP:
         warning: 325
         error: unknown
       - name: Q30Handler
-        warning: 75
+        warning: 85
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
@@ -189,7 +189,7 @@ novaseq_S1:
         warning: 650
         error: unknown
       - name: Q30Handler
-        warning: 85
+        warning: 90
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
@@ -204,7 +204,7 @@ novaseq_S1:
         warning: 650
         error: unknown
       - name: Q30Handler
-        warning: 80
+        warning: 85
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
@@ -219,7 +219,7 @@ novaseq_S1:
         warning: 650
         error: unknown
       - name: Q30Handler
-        warning: 75
+        warning: 85
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
@@ -236,7 +236,7 @@ novaseq_S2:
         warning: 1650
         error: unknown
       - name: Q30Handler
-        warning: 85
+        warning: 90
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
@@ -251,7 +251,7 @@ novaseq_S2:
         warning: 1650
         error: unknown
       - name: Q30Handler
-        warning: 80
+        warning: 85
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
@@ -266,7 +266,7 @@ novaseq_S2:
         warning: 1650
         error: unknown
       - name: Q30Handler
-        warning: 75
+        warning: 85
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
@@ -283,7 +283,7 @@ novaseq_S4:
         warning: 2000
         error: unknown
       - name: Q30Handler
-        warning: 80
+        warning: 85
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
@@ -298,7 +298,7 @@ novaseq_S4:
         warning: 2000
         error: unknown
       - name: Q30Handler
-        warning: 75
+        warning: 85
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
