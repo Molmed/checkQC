@@ -184,8 +184,7 @@ class UnidentifiedIndexHandler(QCHandler):
             for single_tag in split_tags:
                 hits = samplesheet_searcher.one_index_match_from_dual_index_in_samplesheet(single_tag[::-1])
                 for hit in hits:
-                    msg = '\tWe found a possible match for the reverse of tag: {}, on: {}. ' \
-                          'This originated from the dual index tag: {}'.format(single_tag, hit, tag)
+                    msg = '\tWe found a possible match for the reverse of tag: {}, on: {}. '.format(single_tag, hit)
                     yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
 
     @staticmethod
@@ -196,8 +195,7 @@ class UnidentifiedIndexHandler(QCHandler):
                 hits = samplesheet_searcher.one_index_match_from_dual_index_in_samplesheet(
                     UnidentifiedIndexHandler.get_complementary_sequence(single_tag)[::-1])
                 for hit in hits:
-                    msg = '\tWe found a possible match for the reverse complement of tag: {}, on: {}. ' \
-                          'This originated from the dual index tag: {}'.format(single_tag, hit, tag)
+                    msg = '\tWe found a possible match for the reverse complement of tag: {}, on: {}. '.format(single_tag, hit)
                     yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
 
     @staticmethod
@@ -208,8 +206,7 @@ class UnidentifiedIndexHandler(QCHandler):
                 hits = samplesheet_searcher.exact_index_in_samplesheet(
                     UnidentifiedIndexHandler.get_complementary_sequence(single_tag))
                 for hit in hits:
-                    msg = '\tWe found a possible match for the complement of tag: {}, on: {}. ' \
-                          'This originated from the dual index tag: {}'.format(single_tag, hit, tag)
+                    msg = '\tWe found a possible match for the complement of tag: {}, on: {}. '.format(single_tag, hit)
                     yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
 
     @staticmethod
@@ -270,7 +267,7 @@ class _SamplesheetSearcher(object):
             self.found_lane = found_lane
 
         def __str__(self):
-            return "Lane: {}, for sample: {}. The tag we found was: {}".format(self.found_lane,
+            return "Lane: {}, for sample: {}. The tag we found in the samplesheet was: {}".format(self.found_lane,
                                                                                self.found_sample,
                                                                                self.search_index)
 
