@@ -1,20 +1,20 @@
 language: python
 python:
-  - '3.6'
+- '3.6'
 install:
-  - pip install --upgrade -e . -r ./requirements/dev
+- pip install --upgrade -e . -r ./requirements/dev
 script:
-  - export BOTO_CONFIG=/dev/null
-  - pytest --cov=checkQC tests/
+- export BOTO_CONFIG=/dev/null
+- pytest --cov=checkQC tests/
 after_success:
-  - codecov
+- codecov
 notifications:
   email: false
 deploy:
   provider: pypi
-  user: johandahlberg
+  username: "__token__"
   password:
-    secure: XjRmFQ5libTp+iMqehiehHIaeoDfz7adlIz9YIv5+g8LWolxCtNAM8pMNE70HzrO6OhvT//ga85KOcQfPQlupNIAtPPElO0NStRMmzA1xGsAOSANdvCrGu6gyy6kxMsxmC5MVvD8sh623K/MgUg/upzojzz5yjSRAC5O72CbsjomUJH6HxrgrbsrkeBe46fRBIbgRolMCYZv1ASJaiUXTAEhwnOnfbdJJoXxcIcP3SRA1SLfYxurhOECTsLgX06V8mqzN4ieBIsTghl8VNm2qiTcnHQIs8WHY2Sq0EZuuuL5RSRTP74bDEJ8fyPNqDKU0NEgXYfExCQ0hZ68cZJ1zUvebrx778O3gj7lGRG5I0IqUzzcVjM4Rhr3FHUzFx4exTn24pZznEzylcEj5bsEN6L/dIh2bEX5N9oe/bq8TPwFE69nxTIPn4/Vju1921xH+6S5BW/vlAHLZnNaQ5SjS3M+ZBNUVf+QhwdzVF0da/KNn+DLOWjFf7ePxaXCzlV8/12cLni2RKtt5WNrRp9DCWLreqaY0fXnPFC9i8JF3zSh043Kiq4hOXavnRDAFD7+k+o3AgYmpZf6c9pla8Eb4gr2zzOeW2YJ6OHSokAayfDUZkuaBR96XbQM8Cam5dFrYrtynYGpc6Et3VT9wI4DSfcCmwNoG9jwDbQYne0z6vI=
+    secure: OoaLWnPPvGh/CWunwV4tK4c7fz1Lzvte/GgKSWAxLYhLZmSIlic85i9RFsHurBOec7JPvz1UMiQLc4ZO9d4BwcO0hXDSVhPos7Xp+wZOYrYEmG9KCAnMoeR6WkurFzbumDLq+H3WiA02G1P/BmDV1Jr0nK512wEAPrBt+EgdbNrAW5n7BZ4dcWE2nHfHGa8yR1DOQHPMoRsg/WtCTwo8pYPNIpsFGoXlv0vcKzms2Tc83ZCI7sA09Qc/69X174KcPES77XDc4bIU3m0dwjB+Xea7MxNJNBAQlmzoG9yNcZBnXEOYrWd46NLJSwCx7Pbb1HcfrLzYukgGcGdnPMAFOKA0GsIzKRVHEplPfk7ybil8+9vzh1vPVXA120vStYoa2TkwflrbHLR7uV1TuO9zlLIuSyMzA89h81G5HOk/oHYQ6rAugHiAsRgXHYMD/eimktN4WAx4XjyrtSocS0m8MqWpKqiy8IKIL7OZFhHnlqQjcIgQMY/s7Nw7uytpiwxzaRz0SaaASM1aM9PfHgkF/dbLqwOLRyxhtwjWVVfoTXIRLJQv1Qn2EfsQPb+C9X3YrYEMI2p/66GPWznPhwj2MO4ECwT2029V4JfFHurJOAKMiqpTo/Q4rD+sURpryp8mZQn32bfkh3GqBsOpCg4FYeZqFxx3LHiOuu2Yt1Ws4TM=
   distributions: sdist bdist_wheel
   on:
     tags: true
