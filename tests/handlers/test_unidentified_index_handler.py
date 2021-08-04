@@ -110,7 +110,7 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
         res = next(self.unidentifiedIndexHandler.check_swapped_dual_index('TTTT+AAAA', 1, self.samplesheet_searcher))
         self.assertTrue('It appears that maybe the dual index tag: TTTT+AAAA was swapped. '
                         'There was a hit for the swapped index: AAAA+TTTT at: Lane: 3, for sample: 1823C-tissue. '
-                        'The tag we found was: AAAA+TTTT' in res.message)
+                        'The tag we found in the samplesheet was: AAAA+TTTT' in res.message)
 
     def test_check_swapped_dual_index_no(self):
         with self.assertRaises(StopIteration):
@@ -119,7 +119,7 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
     def test_check_reversed_index_yes(self):
         res = next(self.unidentifiedIndexHandler.check_reversed_index('GCTA', 1, self.samplesheet_searcher))
         self.assertTrue('We found a possible match for the reverse of tag: GCTA, on: Lane: 6, '
-                        'for sample: 1823D-tissue. The tag we found was: ATCG' in res.message)
+                        'for sample: 1823D-tissue. The tag we found in the samplesheet was: ATCG' in res.message)
 
     def test_check_reversed_index_no(self):
         with self.assertRaises(StopIteration):
@@ -128,7 +128,7 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
     def test_check_complement_index_yes(self):
         res = next(self.unidentifiedIndexHandler.check_complement_index('TTTT', 1, self.samplesheet_searcher))
         self.assertTrue('We found a possible match for the complementary of tag: TTTT, on: Lane: 1, for '
-                        'sample: 1823A-tissue. The tag we found was: AAAA' in res.message)
+                        'sample: 1823A-tissue. The tag we found in the samplesheet was: AAAA' in res.message)
 
     def test_check_complement_index_no(self):
         with self.assertRaises(StopIteration):
@@ -137,7 +137,7 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
     def test_check_if_index_in_other_lane_hit_yes(self):
         res = next(self.unidentifiedIndexHandler.check_if_index_in_other_lane('TTTT', 1, self.samplesheet_searcher))
         self.assertTrue("We found a possible match for the tag: TTTT, on another lane: Lane: 2, for sample: "
-                        "1823B-tissue. The tag we found was: TTTT" in res.message)
+                        "1823B-tissue. The tag we found in the samplesheet was: TTTT" in res.message)
 
     def test_check_if_index_in_other_lane_hit_no(self):
         with self.assertRaises(StopIteration):
@@ -158,8 +158,7 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
                 1,
                 self.samplesheet_searcher))
         self.assertTrue('We found a possible match for the reverse complement of tag: TTTT, on: Lane: 1, for sample: '
-                        '1823A-tissue. The tag we found was: AAAA. This originated from the dual index '
-                        'tag: TTTT+TTTT' in res.message)
+                        '1823A-tissue. The tag we found in the samplesheet was: AAAA.' in res.message)
 
     def test_check_reverse_complement_in_dual_index(self):
         res = next(
@@ -168,8 +167,7 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
                 1,
                 self.samplesheet_searcher))
         self.assertTrue('We found a possible match for the reverse complement of tag: TTTT, on: Lane: 1,'
-                        ' for sample: 1823A-tissue. The tag we found was: AAAA. This originated from the dual '
-                        'index tag: TTTT+TTTT' in res.message)
+                        ' for sample: 1823A-tissue. The tag we found in the samplesheet was: AAAA.' in res.message)
 
     def test_check_complement_in_dual_index(self):
         res = next(
@@ -178,8 +176,7 @@ class TestUnidentifiedIndexHandler(HandlerTestBase):
                 1,
                 self.samplesheet_searcher))
         self.assertTrue('We found a possible match for the reverse complement of tag: TTTT, on: Lane: 1, for sample: '
-                        '1823A-tissue. The tag we found was: AAAA. This originated from the dual '
-                        'index tag: TTTT+TTTT')
+                        '1823A-tissue. The tag we found in the samplesheet was: AAAA.')
 
 if __name__ == '__main__':
     unittest.main()
