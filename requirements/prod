@@ -1,5 +1,5 @@
 click==6.7
-PyYAML==3.12
+PyYAML==6.0
 interop>=1.1.10
 xmltodict==0.11.0
 sample_sheet

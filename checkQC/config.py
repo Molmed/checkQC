@@ -39,7 +39,7 @@ class ConfigFactory(object):
                 log.info("No config file specified, using default config from {}.".format(config_path))
 
             with open(config_path) as stream:
-                return yaml.load(stream)
+                return yaml.safe_load(stream)
         except FileNotFoundError as e:
             log.error("Could not find config file: {}".format(e))
             raise e
@@ -58,7 +58,7 @@ class ConfigFactory(object):
                 config_path = resource_filename(Requirement.parse('checkQC'), 'checkQC/default_config/logger.yaml')
                 log.info("No logging config file specified, using default config from {}.".format(config_path))
             with open(config_path) as stream:
-                return yaml.load(stream)
+                return yaml.safe_load(stream)
         except FileNotFoundError as e:
             log.error("Could not find config file: {}".format(e))
             raise e
