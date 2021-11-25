@@ -13,7 +13,7 @@ setup(
     download_url='https://github.com/Molmed/checkQC/archive/{}.tar.gz'.format(__version__),
     install_requires=[
         "click",
-        "PyYAML>=3.12",
+        "PyYAML>=6.0",
         "interop>=1.1.10",
         "xmltodict",
         "tornado",
