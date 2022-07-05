@@ -115,7 +115,7 @@ class MiSeq(IlluminaInstrument):
 
         def _flowcell_type(runtype_recognizer):
             try:
-                tiles_per_swath = runtype_recognizer.run_parameters["RunParameters"]["Setup"]["NumTilesPerSwath"]
+                tiles_per_swath = int(runtype_recognizer.run_parameters["RunParameters"]["Setup"]["NumTilesPerSwath"])
                 if tiles_per_swath == 2:
                     return "nano"
                 elif tiles_per_swath == 4:
