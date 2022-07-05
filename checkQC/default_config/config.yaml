@@ -43,7 +43,7 @@ hiseq2500_rapidhighoutput_v4:
   100-111:
     handlers:
       - name: ClusterPFHandler
-        warning: 180 
+        warning: 180
         error: unknown
       - name: Q30Handler
         warning: 80
@@ -322,6 +322,55 @@ novaseq_S4:
       - name: ReadsPerSampleHandler
         warning: unknown
         error: 1500
+
+miseq_nano_v2:
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 1
+        error: unknown
+      - name: Q30Handler
+        warning: 80
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 7.5
+  251:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 1
+        error: unknown
+      - name: Q30Handler
+        warning: 75
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 7.5
+
+miseq_micro_v2:
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 4
+        error: unknown
+      - name: Q30Handler
+        warning: 80
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 7.5
 
 miseq_v2:
   51:

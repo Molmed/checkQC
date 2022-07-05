@@ -101,16 +101,36 @@ class MiSeq(IlluminaInstrument):
     @staticmethod
     def reagent_version(runtype_recognizer):
         """
-        Find the reagent version used for this run, as MiSeqs can have multiple
-        different reagent kit versions.
+        Find the reagent kit version (and flowcell mode if applicable) for this run
 
-        :returns: reagent version of format v[number] e.g. v3
+        :returns: reagent version in format v[reagent kit version] or [flowcell mode]_v[reagent kit version],
+         e.g. v3 or nano_v2
         """
-        try:
-            reagent_version = runtype_recognizer.run_parameters["RunParameters"]["ReagentKitVersion"]
-            return reagent_version.replace("Version", "v")
-        except KeyError:
-            raise ReagentVersionUnknown("No reagent version specified for this instrument type")
+        def _reagent_kit_version(runtype_recognizer):
+            try:
+                reagent_version = runtype_recognizer.run_parameters["RunParameters"]["ReagentKitVersion"]
+                return reagent_version.replace("Version", "v")
+            except KeyError:
+                raise ReagentVersionUnknown("No reagent version specified for this instrument type")
+
+        def _flowcell_type(runtype_recognizer):
+            try:
+                tiles_per_swath = runtype_recognizer.run_parameters["RunParameters"]["Setup"]["NumTilesPerSwath"]
+                if tiles_per_swath == 2:
+                    return "nano"
+                elif tiles_per_swath == 4:
+                    return "micro"
+                elif tiles_per_swath >= 14:
+                    return "standard"
+            except KeyError:
+                raise ReagentVersionUnknown("Unable to identify flowcell type through number of tiles per swath")
+
+        flowcell_version = _flowcell_type(runtype_recognizer)
+        reagent_version = _reagent_kit_version(runtype_recognizer)
+        if flowcell_version == "standard":
+            return reagent_version
+        else:
+            return "_".join([flowcell_version, reagent_version])
 
 
 class HiSeq2500(IlluminaInstrument):
@@ -210,6 +230,3 @@ class RunTypeRecognizer(object):
             raise RunModeUnknown("Found no NumCycles in RunInfo.xml, could not determine read length")
 
         return "-".join(map(str, read_lengths))
-
-
-

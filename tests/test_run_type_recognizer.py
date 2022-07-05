@@ -85,8 +85,38 @@ class TestIlluminaInstrument(TestCase):
         with self.assertRaises(ReagentVersionUnknown):
             self.hiseq2500.reagent_version(mock_runtype_recognizer)
 
-    def test_miseq_reagent_version(self):
-        runtype_dict = {"RunParameters": {"ReagentKitVersion": "Version2"}}
+    def test_miseq_reagent_version_nano(self):
+        runtype_dict = {"RunParameters": {"ReagentKitVersion": "Version2", "Setup": {"NumTilesPerSwath": 2}}}
+        mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
+
+        actual = self.miseq.reagent_version(mock_runtype_recognizer)
+
+        expected = "nano_v2"
+
+        self.assertEqual(actual, expected)
+
+    def test_miseq_reagent_version_micro(self):
+        runtype_dict = {"RunParameters": {"ReagentKitVersion": "Version2", "Setup": {"NumTilesPerSwath": 4}}}
+        mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
+
+        actual = self.miseq.reagent_version(mock_runtype_recognizer)
+
+        expected = "micro_v2"
+
+        self.assertEqual(actual, expected)
+
+    def test_miseq_reagent_version_micro(self):
+        runtype_dict = {"RunParameters": {"ReagentKitVersion": "Version2", "Setup": {"NumTilesPerSwath": 4}}}
+        mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
+
+        actual = self.miseq.reagent_version(mock_runtype_recognizer)
+
+        expected = "micro_v2"
+
+        self.assertEqual(actual, expected)
+
+    def test_miseq_reagent_version_standard(self):
+        runtype_dict = {"RunParameters": {"ReagentKitVersion": "Version2", "Setup": {"NumTilesPerSwath": 14}}}
         mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
 
         actual = self.miseq.reagent_version(mock_runtype_recognizer)
