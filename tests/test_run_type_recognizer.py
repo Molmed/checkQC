@@ -115,6 +115,15 @@ class TestIlluminaInstrument(TestCase):
 
         self.assertEqual(actual, expected)
 
+    def test_miseq_reagent_version_unrecognized_number_of_tiles(self):
+        runtype_dict = {"RunParameters": {"ReagentKitVersion": "Version2", "Setup": {"NumTilesPerSwath": 3}}}
+        mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
+
+        with self.assertRaises(ReagentVersionUnknown) as cm:
+            self.miseq.reagent_version(mock_runtype_recognizer)
+            self.assertEqual(cm.exception,
+                             "Unable to identify flowcell type through number of tiles per swath")
+
     def test_miseq_unknown_reagent_version(self):
         runtype_dict = {"RunParameters": {"foo": "bar"}}
         mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)

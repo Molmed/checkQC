@@ -122,7 +122,9 @@ class MiSeq(IlluminaInstrument):
                     return "micro"
                 elif tiles_per_swath >= 14:
                     return "standard"
-            except KeyError:
+                else:
+                    raise ReagentVersionUnknown()
+            except (KeyError, ReagentVersionUnknown):
                 raise ReagentVersionUnknown("Unable to identify flowcell type through number of tiles per swath")
 
         flowcell_version = _flowcell_type(runtype_recognizer)
