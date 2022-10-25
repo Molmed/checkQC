@@ -112,14 +112,15 @@ class MiSeq(IlluminaInstrument):
         def _flowcell_type(runtype_recognizer):
             try:
                 tiles_per_swath = int(runtype_recognizer.run_parameters["RunParameters"]["Setup"]["NumTilesPerSwath"])
-                if tiles_per_swath == 2:
-                    return "nano"
-                elif tiles_per_swath == 4:
-                    return "micro"
-                elif tiles_per_swath >= 14:
-                    return "standard"
-                else:
-                    raise ReagentVersionUnknown()
+                match tiles_per_swath:
+                    case 2:
+                        return "nano"
+                    case 4:
+                        return "micro"
+                    case x if x >= 14:
+                        return "standard"
+                    case _:
+                        raise ReagentVersionUnknown()
             except (KeyError, ReagentVersionUnknown):
                 raise ReagentVersionUnknown("Unable to identify flowcell type through number of tiles per swath")
 
