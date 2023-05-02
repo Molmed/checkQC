@@ -74,7 +74,7 @@ class NovaSeqX(IlluminaInstrument):
             )['Mode']
             return reagent_version
         except (KeyError, StopIteration):
-            raise ReagentVersionUnknown("Could not identify flowcell mode for Novaseq")
+            raise ReagentVersionUnknown("Could not identify flowcell mode for NovaseqX")
 
 
 class HiSeqX(IlluminaInstrument):
