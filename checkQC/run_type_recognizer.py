@@ -14,29 +14,6 @@ class IlluminaInstrument(object):
     """
 
     @staticmethod
-    def get_subclasses():
-        """
-        Get all subclasses which extends this class (which should be all supported Illumina instruments)
-
-        :returns: a list of IlluminaInstrument subclasses
-        """
-        return IlluminaInstrument.__subclasses__()
-
-    @staticmethod
-    def create_instrument_instance(instrument_name):
-        """
-        Get the instrument instance corresponding to the given instrument name
-
-        :param instrument_name: name of instrument to get the implementing class for
-        :returns: a instance of the corresponding IlluminaInstrument
-        """
-        subclasses = IlluminaInstrument.get_subclasses()
-        for subclass in subclasses:
-            if instrument_name == subclass.name():
-                return subclass()
-        raise InstrumentTypeUnknown
-
-    @staticmethod
     def name():
         """
         Name of the instrument, e.g. 'nova_seq'
@@ -44,7 +21,6 @@ class IlluminaInstrument(object):
         :returns: name of instrument as string
         """
         raise NotImplementedError
-
     @staticmethod
     def reagent_version(runtype_recognizer):
         """
@@ -215,17 +191,17 @@ class RunTypeRecognizer(object):
         """
         instrument_name = self.run_info["RunInfo"]["Run"]["Instrument"]
         machine_type_mappings = {
-            "M": "miseq",
-            "D": "hiseq2500",
-            "ST": "hiseqx",
-            "A": "novaseq",
-            "FS": "iseq",
-            "LH": "novaseqx",
+            "M": MiSeq,
+            "D": HiSeq2500,
+            "ST": HiSeqX,
+            "A": NovaSeq,
+            "FS": ISeq,
+            "LH": NovaSeqX,
         }
 
-        for key, value in machine_type_mappings.items():
-            if instrument_name.startswith(key):
-                return IlluminaInstrument.create_instrument_instance(value)
+        for instrument_code, instrument_class in machine_type_mappings.items():
+            if instrument_name.startswith(instrument_code):
+                return instrument_class()
 
         raise InstrumentTypeUnknown("Did not recognize instrument type of: {}".format(instrument_name))
 
