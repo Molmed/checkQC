@@ -4,7 +4,7 @@ import mock
 import os
 
 from checkQC.exceptions import RunModeUnknown, ReagentVersionUnknown
-from checkQC.run_type_recognizer import RunTypeRecognizer, HiSeq2500, MiSeq, NovaSeq, ISeq
+from checkQC.run_type_recognizer import RunTypeRecognizer, HiSeq2500, MiSeq, NovaSeq, ISeq, NovaSeqX
 from checkQC.runfolder_reader import RunfolderReader
 
 
@@ -60,6 +60,7 @@ class TestIlluminaInstrument(TestCase):
         self.miseq = MiSeq()
         self.novaseq = NovaSeq()
         self.iseq = ISeq()
+        self.novaseqx = NovaSeqX()
 
     def test_all_is_well(self):
         runtype_dict = {"RunParameters": {"Setup": {"RunMode": "RapidHighOutput", "Sbs": "HiSeq SBS Kit v4"}}}
@@ -155,3 +156,38 @@ class TestIlluminaInstrument(TestCase):
 
         with self.assertRaises(ReagentVersionUnknown):
             self.novaseq.reagent_version(mock_runtype_recognizer)
+
+    def test_novaseqx_reagent_version(self):
+        runtype_dict = {
+            "RunParameters": {
+                "ConsumableInfo": {
+                    "ConsumableInfo": [
+                        {"Type": "FlowCell"},
+                        {"Type": "Reagent", "Mode": "10B"},
+                        {"Type": "Buffer"},
+                    ]
+                }
+            }
+        }
+        mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
+
+        actual = self.novaseqx.reagent_version(mock_runtype_recognizer)
+        expected = "10B"
+
+        self.assertEqual(actual, expected)
+
+    def test_novaseqx_reagent_version_raises(self):
+        runtype_dict = {
+            "RunParameters": {
+                "ConsumableInfo": {
+                    "ConsumableInfo": [
+                        {"Type": "FlowCell"},
+                        {"Type": "Buffer"},
+                    ]
+                }
+            }
+        }
+        mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
+
+        with self.assertRaises(ReagentVersionUnknown):
+            self.novaseqx.reagent_version(mock_runtype_recognizer)
