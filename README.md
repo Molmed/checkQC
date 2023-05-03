@@ -24,7 +24,7 @@ Instrument types supported in checkQC are the following:
  - iSeq
  - MiSeq
  - NovaSeq
- - NovaSeq X
+ - NovaSeq X Plus
 
 Install instructions
 --------------------
