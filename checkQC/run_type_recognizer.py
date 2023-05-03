@@ -57,7 +57,7 @@ class NovaSeq(IlluminaInstrument):
             raise ReagentVersionUnknown("Could not identify flowcell mode for Novaseq")
 
 
-class NovaSeqX(IlluminaInstrument):
+class NovaSeqXPlus(IlluminaInstrument):
 
     @staticmethod
     def name():
@@ -74,7 +74,7 @@ class NovaSeqX(IlluminaInstrument):
             )['Mode']
             return reagent_version
         except (KeyError, StopIteration):
-            raise ReagentVersionUnknown("Could not identify flowcell mode for NovaseqX")
+            raise ReagentVersionUnknown("Could not identify flowcell mode for NovaSeqXPlus")
 
 
 class HiSeqX(IlluminaInstrument):
@@ -196,7 +196,7 @@ class RunTypeRecognizer(object):
             "ST": HiSeqX,
             "A": NovaSeq,
             "FS": ISeq,
-            "LH": NovaSeqX,
+            "LH": NovaSeqXPlus,
         }
 
         for instrument_code, instrument_class in machine_type_mappings.items():
