@@ -70,7 +70,7 @@ class NovaSeqXPlus(IlluminaInstrument):
             consumables = run_parameters["ConsumableInfo"]["ConsumableInfo"]
             reagent_version = next(
                 consumable for consumable in consumables
-                if consumable['Type'] == 'Reagent'
+                if consumable['Type'] == 'FlowCell'
             )['Mode']
             return reagent_version
         except (KeyError, StopIteration):

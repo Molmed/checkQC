@@ -162,8 +162,8 @@ class TestIlluminaInstrument(TestCase):
             "RunParameters": {
                 "ConsumableInfo": {
                     "ConsumableInfo": [
-                        {"Type": "FlowCell"},
-                        {"Type": "Reagent", "Mode": "10B"},
+                        {"Type": "FlowCell", "Mode": "10B"},
+                        {"Type": "Reagent"},
                         {"Type": "Buffer"},
                     ]
                 }
