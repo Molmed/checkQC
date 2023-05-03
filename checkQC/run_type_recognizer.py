@@ -61,7 +61,7 @@ class NovaSeqXPlus(IlluminaInstrument):
 
     @staticmethod
     def name():
-        return "novaseqx"
+        return "novaseqxplus"
 
     @staticmethod
     def reagent_version(runtype_recognizer):
