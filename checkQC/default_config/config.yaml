@@ -370,7 +370,7 @@ novaseqxplus_1.5B:
         warning: unknown
         error: 375
 
-novaseqXPlus_10B:
+novaseqxplus_10B:
   51:
     handlers:
       - name: ClusterPFHandler
