@@ -432,7 +432,7 @@ novaseqxplus_25B:
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 6000
+        error: 2437.5
 
 miseq_nano_v2:
   151:
