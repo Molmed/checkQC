@@ -327,7 +327,7 @@ novaseqxplus_1.5B:
   51:
     handlers:
       - name: ClusterPFHandler
-        warning: 200
+        warning: 800
         error: unknown
       - name: Q30Handler
         warning: 90 
@@ -342,7 +342,7 @@ novaseqxplus_1.5B:
   101:
     handlers:
       - name: ClusterPFHandler
-        warning: 200
+        warning: 800
         error: unknown
       - name: Q30Handler
         warning: 85
@@ -357,7 +357,7 @@ novaseqxplus_1.5B:
   151:
     handlers:
       - name: ClusterPFHandler
-        warning: 200
+        warning: 800
         error: unknown
       - name: Q30Handler
         warning: 85
