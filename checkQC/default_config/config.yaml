@@ -338,7 +338,7 @@ novaseqxplus_1.5B:
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 150
+        error: 600
   101:
     handlers:
       - name: ClusterPFHandler
@@ -353,7 +353,7 @@ novaseqxplus_1.5B:
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 150
+        error: 600
   151:
     handlers:
       - name: ClusterPFHandler
@@ -368,7 +368,7 @@ novaseqxplus_1.5B:
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 150
+        error: 600
 
 novaseqxplus_10B:
   51:
