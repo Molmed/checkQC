@@ -417,7 +417,7 @@ novaseqxplus_10B:
         warning: unknown
         error: 2250
 
-novaseqXPlus_25B:
+novaseqxplus_25B:
   151:
     handlers:
       - name: ClusterPFHandler
