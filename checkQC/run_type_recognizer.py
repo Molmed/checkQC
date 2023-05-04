@@ -14,29 +14,6 @@ class IlluminaInstrument(object):
     """
 
     @staticmethod
-    def get_subclasses():
-        """
-        Get all subclasses which extends this class (which should be all supported Illumina instruments)
-
-        :returns: a list of IlluminaInstrument subclasses
-        """
-        return IlluminaInstrument.__subclasses__()
-
-    @staticmethod
-    def create_instrument_instance(instrument_name):
-        """
-        Get the instrument instance corresponding to the given instrument name
-
-        :param instrument_name: name of instrument to get the implementing class for
-        :returns: a instance of the corresponding IlluminaInstrument
-        """
-        subclasses = IlluminaInstrument.get_subclasses()
-        for subclass in subclasses:
-            if instrument_name == subclass.name():
-                return subclass()
-        raise InstrumentTypeUnknown
-
-    @staticmethod
     def name():
         """
         Name of the instrument, e.g. 'nova_seq'
@@ -44,7 +21,6 @@ class IlluminaInstrument(object):
         :returns: name of instrument as string
         """
         raise NotImplementedError
-
     @staticmethod
     def reagent_version(runtype_recognizer):
         """
@@ -79,6 +55,26 @@ class NovaSeq(IlluminaInstrument):
             return reagent_version
         except KeyError:
             raise ReagentVersionUnknown("Could not identify flowcell mode for Novaseq")
+
+
+class NovaSeqXPlus(IlluminaInstrument):
+
+    @staticmethod
+    def name():
+        return "novaseqxplus"
+
+    @staticmethod
+    def reagent_version(runtype_recognizer):
+        try:
+            run_parameters = runtype_recognizer.run_parameters['RunParameters']
+            consumables = run_parameters["ConsumableInfo"]["ConsumableInfo"]
+            reagent_version = next(
+                consumable for consumable in consumables
+                if consumable['Type'] == 'FlowCell'
+            )['Mode']
+            return reagent_version
+        except (KeyError, StopIteration):
+            raise ReagentVersionUnknown("Could not identify flowcell mode for NovaSeqXPlus")
 
 
 class HiSeqX(IlluminaInstrument):
@@ -194,15 +190,18 @@ class RunTypeRecognizer(object):
         :returns: the instrument type of the runfolder
         """
         instrument_name = self.run_info["RunInfo"]["Run"]["Instrument"]
-        machine_type_mappings = {"M": "miseq",
-                                 "D": "hiseq2500",
-                                 "ST": "hiseqx",
-                                 "A": "novaseq",
-                                 "FS": "iseq"}
+        machine_type_mappings = {
+            "M": MiSeq,
+            "D": HiSeq2500,
+            "ST": HiSeqX,
+            "A": NovaSeq,
+            "FS": ISeq,
+            "LH": NovaSeqXPlus,
+        }
 
-        for key, value in machine_type_mappings.items():
-            if instrument_name.startswith(key):
-                return IlluminaInstrument.create_instrument_instance(value)
+        for instrument_code, instrument_class in machine_type_mappings.items():
+            if instrument_name.startswith(instrument_code):
+                return instrument_class()
 
         raise InstrumentTypeUnknown("Did not recognize instrument type of: {}".format(instrument_name))
 
