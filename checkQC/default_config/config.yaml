@@ -338,7 +338,7 @@ novaseqxplus_1.5B:
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 375 
+        error: 150
   101:
     handlers:
       - name: ClusterPFHandler
