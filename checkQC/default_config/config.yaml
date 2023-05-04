@@ -323,7 +323,7 @@ novaseq_S4:
         warning: unknown
         error: 1500
 
-novaseqXPlus_1.5B:
+novaseqxplus_1.5B:
   51:
     handlers:
       - name: ClusterPFHandler
