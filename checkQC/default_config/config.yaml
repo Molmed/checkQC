@@ -421,7 +421,7 @@ novaseqxplus_25B:
   151:
     handlers:
       - name: ClusterPFHandler
-        warning: 8000
+        warning: 3250
         error: unknown
       - name: Q30Handler
         warning: 85
