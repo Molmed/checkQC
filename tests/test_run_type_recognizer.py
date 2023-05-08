@@ -48,6 +48,16 @@ class TestRunTypeRecognizerCorrectInstrumentsReturned(TestCase):
         actual = runtyperecognizer.instrument_type()
         self.assertTrue(isinstance(actual, ISeq))
 
+    def test_case_insensitive(self):
+        runtyperecognizer = self._create_runtype_recognizer("lh1234")
+        actual = runtyperecognizer.instrument_type()
+        self.assertTrue(isinstance(actual, NovaSeqXPlus))
+
+        runtyperecognizer = self._create_runtype_recognizer("LH1234")
+        actual = runtyperecognizer.instrument_type()
+        self.assertTrue(isinstance(actual, NovaSeqXPlus))
+
+
 
 class TestIlluminaInstrument(TestCase):
 

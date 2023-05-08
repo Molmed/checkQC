@@ -200,7 +200,7 @@ class RunTypeRecognizer(object):
         }
 
         for instrument_code, instrument_class in machine_type_mappings.items():
-            if instrument_name.startswith(instrument_code):
+            if instrument_name.upper().startswith(instrument_code):
                 return instrument_class()
 
         raise InstrumentTypeUnknown("Did not recognize instrument type of: {}".format(instrument_name))
