@@ -10,24 +10,28 @@ from checkQC.exceptions import ConfigurationError
 
 class UnidentifiedIndexHandler(QCHandler):
     """
-    The UnidentifiedIndexHandler will try to identify if an index is represented at to high a level in unidentified
-    reads, and if that is the case try to pinpoint why that is.
+    The UnidentifiedIndexHandler will try to identify if an index is
+    represented at to high a level in unidentified reads, and if that is the
+    case try to pinpoint why that is.
 
-    It will not output errors, but all information will be displayed as warnings, due to the difficulty
-    of deciding what is an error or not in this context. For most cases the % of unidentified reads will be what
-    is used to issue the error, and then the warnings from this handler can help in identifying the
-    possible underlying cause.
+    It will not output errors, but all information will be displayed as
+    warnings, due to the difficulty of deciding what is an error or not in this
+    context. For most cases the % of unidentified reads will be what is used to
+    issue the error, and then the warnings from this handler can help in
+    identifying the possible underlying cause.
 
-    There are a number of different checks (or rules) in place, which will be checked if and index
-    occurs more then the `significance_threshold`. The samplesheet will be checked to see if the index
-    found matches and of the following rules:
-     - Check if the dual indexes have been swapped
-     - Check if the index has been reversed
-     - Check if the index is the reverse complement
-     - Check if the index is the complementary index
-     - Check if the index is present in another lane
+    There are a number of different checks (or rules) in place, which will be
+    checked if and index occurs more then the `significance_threshold`. The
+    samplesheet will be checked to see if the index found matches and of the
+    following rules:
+    - Check if the dual indexes have been swapped
+    - Check if the index has been reversed
+    - Check if the index is the reverse complement
+    - Check if the index is the complementary index
+    - Check if the index is present in another lane
 
-    It will ignore any indexes which have N's in them. These are assumed to be read errors.
+    It will ignore any indexes which have N's in them. These are assumed to be
+    read errors.
     """
 
     WHITE_LIST_QC_KEY = 'white_listed_indexes'
