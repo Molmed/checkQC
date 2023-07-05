@@ -14,7 +14,7 @@ setup(
     install_requires=[
         "click",
         "PyYAML>=6.0",
-        "interop>=1.1.10",
+        "interop>=1.2.3",
         "xmltodict",
         "tornado",
         "sample_sheet"],
