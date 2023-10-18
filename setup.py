@@ -11,6 +11,7 @@ setup(
     author_email='johan.dahlberg@medsci.uu.se',
     url="https://www.github.com/Molmed/checkQC",
     download_url='https://github.com/Molmed/checkQC/archive/{}.tar.gz'.format(__version__),
+    python_requires='>3.10.0',
     install_requires=[
         "click",
         "PyYAML>=6.0",
