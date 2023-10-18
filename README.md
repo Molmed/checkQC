@@ -28,7 +28,7 @@ Instrument types supported in checkQC are the following:
 
 Install instructions
 --------------------
-CheckQC **requires Python 3.10** (or higher to run). CheckQC can be installed with pip.
+CheckQC requires **Python 3.10**. CheckQC can be installed with pip.
 
 ```
 pip install checkqc

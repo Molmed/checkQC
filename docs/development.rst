@@ -118,39 +118,6 @@ An example of what a full `QCHandler` class might look like can be found below, 
                 else:
                     continue
 
-Upload to PyPI
---------------
-Releases to PyPI should happen automatically when a release is created in GitHub. However, if for one reason or another, 
-you need to manually upload a new release to PyPi, you need to carry out the following steps:
-
-- make sure you have a `~/.pyirc` file which has the following content (substitute your own credentials here)
-
-.. code-block:: console
-
-    [distutils]
-    index-servers =
-      pypi
-      pypitest
-
-    [pypi]
-    username:<your user name>
-    password:<your password>
-
-    [pypitest]
-    repository: https://test.pypi.org/legacy/
-    username:<your user name>
-    password:<your password>
-
-- Make sure that you have updated the version in `checkQC/__init__.py` so that it matches the tag you are releasing
-- Then to create the distributable files and upload them to the correct index (you might want to start by trying to upload them to pypitest before uploading them to the real pypi):
-
-.. code-block :: console
-
-    python setup.py sdist bdist_wheel
-    twine upload -r <pypitest or pypi> dist/*
-
-Once these steps are finished, the current checkQC release should be up on PyPI.
-
 
 Creating docs
 =============
