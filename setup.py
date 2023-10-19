@@ -11,10 +11,11 @@ setup(
     author_email='johan.dahlberg@medsci.uu.se',
     url="https://www.github.com/Molmed/checkQC",
     download_url='https://github.com/Molmed/checkQC/archive/{}.tar.gz'.format(__version__),
+    python_requires='>3.10, <3.11',
     install_requires=[
         "click",
         "PyYAML>=6.0",
-        "interop>=1.2.3",
+        "interop>=1.2.4",
         "xmltodict",
         "tornado",
         "sample_sheet"],
