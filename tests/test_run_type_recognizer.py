@@ -172,6 +172,25 @@ class TestIlluminaInstrument(TestCase):
             "RunParameters": {
                 "ConsumableInfo": {
                     "ConsumableInfo": [
+                        {"Type": "FlowCell", "Name": "10B"},
+                        {"Type": "Reagent"},
+                        {"Type": "Buffer"},
+                    ]
+                }
+            }
+        }
+        mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
+
+        actual = self.novaseqxplus.reagent_version(mock_runtype_recognizer)
+        expected = "10B"
+
+        self.assertEqual(actual, expected)
+
+    def test_novaseqxplus_reagent_version_old(self):
+        runtype_dict = {
+            "RunParameters": {
+                "ConsumableInfo": {
+                    "ConsumableInfo": [
                         {"Type": "FlowCell", "Mode": "10B"},
                         {"Type": "Reagent"},
                         {"Type": "Buffer"},
