@@ -68,10 +68,18 @@ class NovaSeqXPlus(IlluminaInstrument):
         try:
             run_parameters = runtype_recognizer.run_parameters['RunParameters']
             consumables = run_parameters["ConsumableInfo"]["ConsumableInfo"]
-            reagent_version = next(
+            flowcell = next(
                 consumable for consumable in consumables
                 if consumable['Type'] == 'FlowCell'
-            )['Mode']
+            )
+
+            # "Mode" was used to specify the reagent version in the first runfolders that came out
+            # of the NovaSeqX. This is kept for backward compatibility.
+            reagent_version = flowcell.get("Name", flowcell.get("Mode"))
+
+            if not reagent_version:
+                raise KeyError
+
             return reagent_version
         except (KeyError, StopIteration):
             raise ReagentVersionUnknown("Could not identify flowcell mode for NovaSeqXPlus")
