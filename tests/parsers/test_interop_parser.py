@@ -42,6 +42,6 @@ class TestInteropParser(unittest.TestCase):
 
     def test_percent_q30(self):
         self.assertListEqual(self.subscriber.percent_q30_values,
-                             [('percent_q30', {'lane': 1, 'read': 1, 'percent_q30': 93.42070007324219}),
-                              ('percent_q30', {'lane': 1, 'read': 2, 'percent_q30': 84.4270248413086})])
+                             [('percent_q30', {'lane': 1, 'read': 1, 'percent_q30': 93.42070007324219, 'is_index_read': False}),
+                              ('percent_q30', {'lane': 1, 'read': 2, 'percent_q30': 84.4270248413086, 'is_index_read': False})])
 
