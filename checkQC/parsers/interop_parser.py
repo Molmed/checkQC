@@ -53,25 +53,24 @@ class InteropParser(Parser):
         py_interop_summary.summarize_run_metrics(run_metrics, summary)
 
         lanes = summary.lane_count()
-        reads = [read_nbr for read_nbr in range(summary.size())]
 
         for lane in range(lanes):
             # The interop library uses zero based indexing, however most people uses read 1/2
             # to denote the different reads, this enumeration is used to transform from
             # zero based indexing to this form. /JD 2017-10-27
-            for new_read_nbr, original_read_nbr in enumerate(reads):
-                read = summary.at(original_read_nbr).at(lane)
+            for read_nbr in range(summary.size()):
+                read = summary.at(read_nbr).at(lane)
                 error_rate = read.error_rate().mean()
                 percent_q30 = read.percent_gt_q30()
                 percent_phix_aligned = read.percent_aligned().mean()
-                is_index_read = summary.at(original_read_nbr).read().is_index()
+                is_index_read = summary.at(read_nbr).read().is_index()
                 
                 self._send_to_subscribers(("error_rate",
-                                        {"lane": lane+1, "read": new_read_nbr+1, "error_rate": error_rate}))
+                                        {"lane": lane+1, "read": read_nbr+1, "error_rate": error_rate}))
                 self._send_to_subscribers(("percent_q30",
-                                        {"lane": lane+1, "read": new_read_nbr+1, "percent_q30": percent_q30, "is_index_read":is_index_read}))
+                                        {"lane": lane+1, "read": read_nbr+1, "percent_q30": percent_q30, "is_index_read":is_index_read}))
                 self._send_to_subscribers(("percent_phix",
-                                        {"lane": lane+1, "read": new_read_nbr+1, "percent_phix": percent_phix_aligned}))
+                                        {"lane": lane+1, "read": read_nbr+1, "percent_phix": percent_phix_aligned}))
 
 
     def __eq__(self, other):
