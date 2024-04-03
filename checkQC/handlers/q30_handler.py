@@ -32,21 +32,41 @@ class Q30Handler(QCHandler):
             lane_nbr = int(error_dict["lane"])
             read = error_dict["read"]
             percent_q30 = error_dict["percent_q30"]
-
+            is_index_read = error_dict["percent_q30"]
+            read_or_index_text = "index read" if is_index_read else "read"
+            
             if self.error() != self.UNKNOWN and percent_q30 < self.error():
-                yield QCErrorFatal("%Q30 {:.2f} was too low on lane: {} for read: {}".format(percent_q30,
-                                                                                             lane_nbr,
-                                                                                             read),
-                                   ordering=lane_nbr,
-                                   data={"lane": lane_nbr, "read": read,
-                                         "percent_q30": percent_q30, "threshold": self.error()})
+                yield QCErrorFatal(
+                    "%Q30 {:.2f} was too low on lane: {} for {}: {}".format(
+                        percent_q30,
+                        lane_nbr,
+                        read_or_index_text,
+                        read
+                    ),
+                    ordering=lane_nbr,
+                    data={
+                        "lane": lane_nbr, 
+                        "read": read,
+                        "percent_q30": percent_q30, 
+                        "threshold": self.error()
+                    }
+                )
             elif self.warning() != self.UNKNOWN and percent_q30 < self.warning():
-                yield QCErrorWarning("%Q30 {:.2f} was too low on lane: {} for read: {}".format(percent_q30,
-                                                                                               lane_nbr,
-                                                                                               read),
-                                     ordering=lane_nbr,
-                                     data={"lane": lane_nbr, "read": read,
-                                           "percent_q30": percent_q30, "threshold": self.warning()})
+                yield QCErrorWarning(
+                    "%Q30 {:.2f} was too low on lane: {} for {}: {}".format(
+                        percent_q30,
+                        lane_nbr,
+                        read_or_index_text,
+                        read
+                    ),
+                    ordering=lane_nbr,
+                    data={
+                        "lane": lane_nbr, 
+                        "read": read,
+                        "percent_q30": percent_q30, 
+                        "threshold": self.warning()
+                    }
+                )
             else:
                 continue
 
