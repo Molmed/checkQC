@@ -36,8 +36,8 @@ class Q30Handler(QCHandler):
             is_index_read = error_dict.get("is_index_read", False)
             read_or_index_text = "index read" if is_index_read else "read"
             # Differentiate read values for indexed from non-indexed reads
-            index_count += 1 if is_index_read else index_count
-            non_index_count += 1 if not is_index_read else non_index_count
+            index_count += 1 if is_index_read else 0
+            non_index_count += 1 if not is_index_read else 0
             
             read = index_count if is_index_read else non_index_count
             
