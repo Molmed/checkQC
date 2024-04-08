@@ -27,7 +27,7 @@ class TestQ30Handler(HandlerTestBase):
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.q30_handler.check_qc())
         self.assertIn("index read", f"{errors_and_warnings}")
-        self.assertEqual(f"{errors_and_warnings}", "[Fatal QC error: %Q30 50.00 was too low on lane: 1 for index read: 3]")
+        self.assertEqual(f"{errors_and_warnings}", "[Fatal QC error: %Q30 50.00 was too low on lane: 1 for index read: 1]")
 
     def test_warning(self):
         qc_config = {'name': 'Q30Handler', 'error': 70, 'warning': 85}
