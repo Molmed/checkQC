@@ -1,18 +1,34 @@
 
 from checkQC.parsers.parser import Parser
 
-from interop import py_interop_run_metrics, py_interop_run, py_interop_summary
+from interop import py_interop_run_metrics, py_interop_run, \
+    py_interop_summary, imaging
+
 
 
 class InteropParser(Parser):
     """
-    This Parser will get data from the Illumina Interop binary files, and send it to its subscribers as a
-    tuple with the first element being the name of the element and the second one being a the actual data.
+    This Parser will get data from the Illumina Interop binary files, 
+    and send it to its subscribers as a tuple with the first element 
+    being the name of the element and the second one being a the actual data.
 
-    At this point the following data which is fetched from the Interop files and is sent in the following format:
+    At this point the following data which is fetched from the 
+    Interop files and is sent in the following format:
 
-        - ("error_rate", {"lane": <lane nbr>, "read": <read nbr>, "error_rate": <error rate>}))
-        - ("percent_q30", {"lane": <lane nbr>, "read": <read nbr>, "percent_q30": <percent q30>}))
+        - ("error_rate", {"lane": <lane nbr>,
+                          "read": <read nbr>, 
+                          "error_rate": <error rate>}))
+
+        - ("percent_q30", {"lane": <lane nbr>, 
+                           "read": <read nbr>, 
+                           "percent_q30": <percent q30>}))
+
+    WIP - ("percent_q30_per_cycle", {"lane": <lane nbr>, 
+                                          "read": <read nbr>, 
+                                          "percent_q30_per_cycle": 
+                                          [<q30 cycle 1>,
+                                          ...,
+                                          <q30 cycle n>]}))
 
     """
 
@@ -40,6 +56,18 @@ class InteropParser(Parser):
             if not summary.at(read_nbr).read().is_index():
                 non_index_reads.append(read_nbr)
         return non_index_reads
+    
+    def get_percent_q30_per_cycle():
+        """
+        For each lane, read,swath and tile get the mean percent_q30
+        for each cycle. Only include the first 90% of the cycles, i.e.
+        for a run with 151 cycles, only use the first 136 cycles.
+
+        :returns: A list where each element is the mean percent_q30 
+        for the cycle corresponding to the position in the list, i.e
+        list[0] = cycle 1 
+        """
+        return []
 
     def run(self):
         run_metrics = py_interop_run_metrics.run_metrics()
@@ -64,6 +92,7 @@ class InteropParser(Parser):
                 percent_q30 = read.percent_gt_q30()
                 percent_phix_aligned = read.percent_aligned().mean()
                 is_index_read = summary.at(read_nbr).read().is_index()
+                percent_q30_per_cycle = []
                 
                 self._send_to_subscribers(("error_rate",
                                         {"lane": lane+1, "read": read_nbr+1, "error_rate": error_rate}))
@@ -71,7 +100,11 @@ class InteropParser(Parser):
                                         {"lane": lane+1, "read": read_nbr+1, "percent_q30": percent_q30, "is_index_read":is_index_read}))
                 self._send_to_subscribers(("percent_phix",
                                         {"lane": lane+1, "read": read_nbr+1, "percent_phix": percent_phix_aligned}))
-
+                self._send_to_subscribers(("percent_q30_per_cycle",
+                                        {"lane": lane+1,
+                                         "read": read_nbr+1, 
+                                         "percent_q30_per_cycle": percent_q30_per_cycle,
+                                         "is_index_read": is_index_read}))
 
     def __eq__(self, other):
         if isinstance(other, self.__class__) and self.runfolder == other.runfolder:
