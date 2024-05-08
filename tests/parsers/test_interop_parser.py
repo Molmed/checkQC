@@ -78,6 +78,5 @@ class TestInteropParser(unittest.TestCase):
                                 'is_index_read': False})])
     
     def test_get_percent_q30_per_cycle(self):
-        self.assertListEqual(InteropParser.get_percent_q30_per_cycle(),[])
-        
-
+        self.assertListEqual(InteropParser.get_percent_q30_per_cycle(),[])   
+            
