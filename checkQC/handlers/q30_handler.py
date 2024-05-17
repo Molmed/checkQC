@@ -27,13 +27,11 @@ class Q30Handler(QCHandler):
             self.error_results.append(value)
 
     def check_qc(self):
-
-        index_count = 0
-        non_index_count = 0
-        lane_no = 1
+        lane_no = 0
 
         for error_dict in self.error_results:
             lane_nbr = int(error_dict["lane"])
+
             # restart counters for different lanes
             if lane_nbr != lane_no:
                 index_count = 0

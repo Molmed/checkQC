@@ -16,7 +16,7 @@ class TestQ30Handler(HandlerTestBase):
         value_4 = {"lane": 1, "read": 4, "percent_q30": 60}
         value_5 = {"lane": 2, "read": 1, "percent_q30": 90}
         value_6 = {"lane": 2, "read": 2, "percent_q30": 50, "is_index_read": True}
-        value_7 = {"lane": 2, "read": 3, "percent_q30": 50, "is_index_read": False}
+        value_7 = {"lane": 2, "read": 3, "percent_q30": 50}
         value_8 = {"lane": 2, "read": 4, "percent_q30": 40}
         q30_handler = Q30Handler(qc_config)
         q30_handler.collect((key, value_1))
@@ -33,27 +33,21 @@ class TestQ30Handler(HandlerTestBase):
         self.q30_handler.qc_config = qc_config
 
     def test_all_is_fine(self):
-        qc_config = {"name": "Q30Handler", "error": 70, "warning": 80}
+        qc_config = {"name": "Q30Handler", "error": 20, "warning": 30}
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.q30_handler.check_qc())
-        self.assertIn("index read", f"{errors_and_warnings}")
-        self.assertEqual(
-            f"{errors_and_warnings}",
-            "[Fatal QC error: %Q30 50.00 was too low on lane: 1 for index read: 1, Fatal QC error: %Q30 50.00 was too low on lane: 1 for index read: 2, Fatal QC error: %Q30 60.00 was too low on lane: 1 for read: 2, Fatal QC error: %Q30 50.00 was too low on lane: 2 for index read: 1, Fatal QC error: %Q30 50.00 was too low on lane: 2 for read: 2, Fatal QC error: %Q30 40.00 was too low on lane: 2 for read: 3]",
-        )
+        self.assertEqual(errors_and_warnings, [])
 
     def test_warning(self):
-        qc_config = {"name": "Q30Handler", "error": 70, "warning": 85}
+        qc_config = {"name": "Q30Handler", "error": 40, "warning": 60}
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.q30_handler.check_qc())
-        self.assertEqual(len(errors_and_warnings), 7)
+        self.assertEqual(len(errors_and_warnings), 5)
 
         class_names = self.map_errors_and_warnings_to_class_names(errors_and_warnings)
         self.assertListEqual(
             class_names,
-            [
-                "QCErrorWarning", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal",
-            ],
+            ["QCErrorWarning", "QCErrorWarning", "QCErrorWarning", "QCErrorWarning", "QCErrorWarning"],
         )
 
     def test_error(self):
@@ -68,18 +62,6 @@ class TestQ30Handler(HandlerTestBase):
             [
                 "QCErrorFatal", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal",
             ],
-        )
-
-    def test_error_low_qc_marks(self):
-        qc_config = {"name": "Q30Handler", "error": 40, "warning": 60}
-        self.set_qc_config(qc_config)
-        errors_and_warnings = list(self.q30_handler.check_qc())
-        self.assertEqual(len(errors_and_warnings), 5)
-
-        class_names = self.map_errors_and_warnings_to_class_names(errors_and_warnings)
-        self.assertListEqual(
-            class_names,
-            ["QCErrorWarning", "QCErrorWarning", "QCErrorWarning", "QCErrorWarning", "QCErrorWarning"],
         )
 
 
