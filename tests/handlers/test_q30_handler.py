@@ -56,13 +56,24 @@ class TestQ30Handler(HandlerTestBase):
         errors_and_warnings = list(self.q30_handler.check_qc())
         self.assertEqual(len(errors_and_warnings), 8)
 
-        class_names = self.map_errors_and_warnings_to_class_names(errors_and_warnings)
-        self.assertListEqual(
-            class_names,
-            [
-                "QCErrorFatal", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal", "QCErrorFatal",
-            ],
+        self.assertEqual(
+            str(errors_and_warnings),
+            str("[Fatal QC error: %Q30 82.00 was too low on lane: 1 for read: 1, Fatal QC error: %Q30 50.00 was too low on lane: 1 for index read: 1, Fatal QC error: %Q30 50.00 was too low on lane: 1 for index read: 2, Fatal QC error: %Q30 60.00 was too low on lane: 1 for read: 2, Fatal QC error: %Q30 90.00 was too low on lane: 2 for read: 1, Fatal QC error: %Q30 50.00 was too low on lane: 2 for index read: 1, Fatal QC error: %Q30 50.00 was too low on lane: 2 for read: 2, Fatal QC error: %Q30 40.00 was too low on lane: 2 for read: 3]")
         )
+
+    def test_max_read(self):
+        qc_config = {"name": "Q30Handler", "error": 99, "warning": 99}
+        self.set_qc_config(qc_config)
+        errors_and_warnings = list(self.q30_handler.check_qc())
+        self.assertEqual(len(errors_and_warnings), 8)
+
+        [
+            self.assertLessEqual(
+                int(str(read).split("read: ")[1]), 4
+            ) 
+            for read in errors_and_warnings
+        ]
+    
 
 
 if __name__ == "__main__":
