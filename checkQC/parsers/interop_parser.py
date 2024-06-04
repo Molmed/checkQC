@@ -91,7 +91,7 @@ class InteropParser(Parser):
                 (q30_cycle_df["Lane"] == lane_nr+1) &\
                 (q30_cycle_df["Read"] == read_nr+1)]
         
-        q30_per_cycle = []
+        q30_per_cycle = {}
         if is_index_read:
             cycles_q_metrics = int(max(q30_lane_read["Cycle Within Read"]))
             start_cycle = cycles_q_metrics - 5
@@ -112,7 +112,7 @@ class InteropParser(Parser):
                 
             q30_cycle_mean = numpy.mean(q30_lane_read[
                 (q30_lane_read["Cycle Within Read"] == cycle)]["%>= Q30"])
-            q30_per_cycle.append(q30_cycle_mean)
+            q30_per_cycle[cycle] = q30_cycle_mean
 
         return q30_per_cycle
 
