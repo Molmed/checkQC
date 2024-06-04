@@ -79,22 +79,18 @@ class InteropParser(Parser):
            ('Swath', '<f4'), ('Tile Number', '<f4')])
         :param lane: 0-indexed lane, integer 0-7
         :param read: 0-indexed read, integer 0-3
-        :returns: A list where each element is the mean percent_q30 
-        for the cycle corresponding to the position in the list, i.e
-        list[0] = cycle 1
-        #TODO: Return a dictionary instead of a list. Use "Cycle within read"
-        as the key and mean %Q30 as the value. This is to keep track of 
-        the cycle since it does no longer correspond to position in list.  
+        :returns: {int: float}
         """
+
         q30_cycle_df = pd.DataFrame(q_metrics)
         q30_lane_read = q30_cycle_df[
                 (q30_cycle_df["Lane"] == lane_nr+1) &\
                 (q30_cycle_df["Read"] == read_nr+1)]
-        
+
         q30_per_cycle = {}
         if is_index_read:
-            cycles_q_metrics = int(max(q30_lane_read["Cycle Within Read"]))
-            start_cycle = cycles_q_metrics - 5
+            end_cycle = int(max(q30_lane_read["Cycle Within Read"]))
+            start_cycle = end_cycle - 5
             #Remove the first 2 bases in the index read.
 
             #TODO: How to handle for example 6bp reads in a 8bp run?
@@ -103,15 +99,17 @@ class InteropParser(Parser):
             #For now I will solve it by only looking at the last 6 bp.
 
         else:
-            cycles_q_metrics = math.ceil(max(q30_lane_read["Cycle Within Read"])*0.9)
+            end_cycle = math.ceil(max(q30_lane_read["Cycle Within Read"])*0.9)
             #Remove the last 90% of all cycles since they are expected to drop in q30
             start_cycle = 6
             #Remove first 5 cycles since they are expected to have a lower q30
 
-        for cycle in range(start_cycle,cycles_q_metrics+1):
-                
-            q30_cycle_mean = numpy.mean(q30_lane_read[
-                (q30_lane_read["Cycle Within Read"] == cycle)]["%>= Q30"])
+        for cycle in range(start_cycle, end_cycle+1):
+            q30_cycle_mean = float(numpy.mean(
+                q30_lane_read[
+                    (q30_lane_read["Cycle Within Read"] == cycle)
+                ]["%>= Q30"]
+            ))
             q30_per_cycle[cycle] = q30_cycle_mean
 
         return q30_per_cycle
