@@ -15,33 +15,38 @@ class InteropParser(Parser):
     and send it to its subscribers as a tuple with the first element 
     being the name of the element and the second one being a the actual data.
 
-    At this point the following data which is fetched from the 
-    Interop files and is sent in the following format:
+    At this point the following data is fetched from the 
+    Interop files and sent in the following format:
 
         - ("error_rate", {"lane": <lane nbr>,
                           "read": <read nbr>, 
-                          "error_rate": <error rate>}))
+                          "error_rate": <error rate>})
 
         - ("percent_q30", {"lane": <lane nbr>, 
                            "read": <read nbr>, 
-                           "percent_q30": <percent q30>}))
+                           "percent_q30": <percent q30>})
 
-    WIP - ("percent_q30_per_cycle", {"lane": <lane nbr>, 
+        - ("percent_q30_per_cycle", {"lane": <lane nbr>, 
                                           "read": <read nbr>, 
                                           "percent_q30_per_cycle": 
-                                          [<q30 cycle 1>,
-                                          ...,
-                                          <q30 cycle n>]}))
+                                          {1: <q30 cycle 1>,
+                                           2: <q30 cycle 2>,
+                                           ...,
+                                           n: <q30 cycle n>}})
 
     """
 
-    def __init__(self, runfolder, parser_configurations, *args, **kwargs):
+    def __init__(self, 
+                 runfolder, 
+                 parser_configurations, 
+                 *args, 
+                 **kwargs):
         """
         Create a InteropParser instance for the specified runfolder
 
         :param runfolder: to create InteropParser instance for
-        :param parser_configurations: dict containing any extra configuration required by
-        the parser under class name key
+        :param parser_configurations: dict containing any extra 
+        configuration required by the parser under class name key
         """
         super().__init__(*args, **kwargs)
         self.runfolder = runfolder
@@ -51,7 +56,8 @@ class InteropParser(Parser):
         """
         Pick-out the reads which are not index reads
 
-        :param summary: a Interop read summary object to parse the read numbers from
+        :param summary: a Interop read summary object to parse 
+        the read numbers from.
         :returns: all reads which are not index reads
         """
         non_index_reads = []
@@ -61,24 +67,31 @@ class InteropParser(Parser):
         return non_index_reads
     
     @staticmethod
-    def get_percent_q30_per_cycle(q_metrics, lane_nr, read_nr, is_index_read):
+    def get_percent_q30_per_cycle(q_metrics, 
+                                  lane_nr, 
+                                  read_nr, 
+                                  is_index_read):
         """
-        For each lane, read,swath and tile get the mean percent_q30
-        for each cycle. Only include the first 90% of the cycles, i.e.
-        for a run with 151 cycles, only use the first 136 cycles. 
-        Also remove the first 5 cycles since there might be a quality drop there.
+        For each lane and read get the mean percent_q30 over swath and tile
+        for each cycle. The first 90% of the ccycles in a read will 
+        initially be included to correct for known biases in the end 
+        of the read, i.e. for a run with 151 cycles, only use the first 
+        136 cycles. Also the first 5 cycles of a read will be removed since 
+        there might be a quality drop there. Lane and read number are given as
+        input and should be 0-indexed, i.e lane_nr should be an integer 0-7
+        and read_nr should be an integer 0-3. The function will return a 
+        dictionary where each key:value pair corresponds to the cycle 
+        nr within the read and the mean '%>= Q30' for all tiles
+        for that given cycle, read and lane.
+        E.g. {6: 98.76343, 7: 98.718155, 8: 98.529205, ...,136: 98.43606}
         #TODO: Investigate if the quality drop in the beginning of a read
         is instrument specific. 
-        :param q_metrics: A rectangular array containing the following
-        rec.array([(1., 1101.,   1., 1.,   1., 99.73, 98.3 , 1., 1.,  1.),
-           (1., 1101.,   3., 1.,   3., 99.6 , 98.37, 1., 1.,  1.), ...,
-           (1., 2119., 602., 2., 301., 38.07, 13.91, 2., 1., 19.)],
-           dtype=[('Lane', '<f4'), ('Tile', '<f4'), ('Cycle', '<f4'), 
-           ('Read', '<f4'), ('Cycle Within Read', '<f4'), 
-           ('%>= Q20', '<f4'), ('%>= Q30', '<f4'), ('Surface', '<f4'), 
-           ('Swath', '<f4'), ('Tile Number', '<f4')])
-        :param lane: 0-indexed lane, integer 0-7
-        :param read: 0-indexed read, integer 0-3
+        :param q_metrics: A rectangular array containing values of the 
+        following 'Lane', 'Tile', 'Cycle', 'Read', 'Cycle Within Read', 
+        '%>= Q20', '%>= Q30', 'Surface', 'Swath', and 'Tile Number'.
+        :param lane_nr: int 
+        :param read_nr: int 
+        :param is_index_read: boolean 
         :returns: {int: float}
         """
 
@@ -93,16 +106,16 @@ class InteropParser(Parser):
             start_cycle = end_cycle - 5
             #Remove the first 2 bases in the index read.
 
-            #TODO: How to handle for example 6bp reads in a 8bp run?
-            #The first 2 bases will have a quality of 0 in our test run.
-            #Is this the case for all runs?
-            #For now I will solve it by only looking at the last 6 bp.
-
         else:
-            end_cycle = math.ceil(max(q30_lane_read["Cycle Within Read"])*0.9)
-            #Remove the last 90% of all cycles since they are expected to drop in q30
+            end_cycle = math.ceil(
+                max(q30_lane_read["Cycle Within Read"])*0.9
+            )
+
+            #Remove the last 90% of all cycles since 
+            #they are expected to drop in q30
             start_cycle = 6
-            #Remove first 5 cycles since they are expected to have a lower q30
+            #Remove first 5 cycles since they are expected
+            #to have a lower q30
 
         for cycle in range(start_cycle, end_cycle+1):
             q30_cycle_mean = float(numpy.mean(
@@ -119,8 +132,14 @@ class InteropParser(Parser):
         run_metrics = py_interop_run_metrics.run_metrics()
         run_metrics.run_info()
 
-        valid_to_load = py_interop_run.uchar_vector(py_interop_run.MetricCount, 0)
-        py_interop_run_metrics.list_summary_metrics_to_load(valid_to_load)
+        valid_to_load = py_interop_run.uchar_vector(
+            py_interop_run.MetricCount,
+            0
+        )
+
+        py_interop_run_metrics.list_summary_metrics_to_load(
+            valid_to_load
+        )
         run_metrics.read(self.runfolder, valid_to_load)
         
         q_metrics = imaging(self.runfolder, valid_to_load=['Q'])
@@ -131,8 +150,10 @@ class InteropParser(Parser):
         lanes = summary.lane_count()
 
         for lane in range(lanes):
-            # The interop library uses zero based indexing, however most people uses read 1/2
-            # to denote the different reads, this enumeration is used to transform from
+            # The interop library uses zero based indexing, 
+            #however most people uses read 1/2
+            # to denote the different reads, 
+            #this enumeration is used to transform from
             # zero based indexing to this form. /JD 2017-10-27
             for read_nbr in range(summary.size()):
                 read = summary.at(read_nbr).at(lane)
@@ -147,11 +168,18 @@ class InteropParser(Parser):
                                         is_index_read)
                 
                 self._send_to_subscribers(("error_rate",
-                                        {"lane": lane+1, "read": read_nbr+1, "error_rate": error_rate}))
+                                        {"lane": lane+1, 
+                                         "read": read_nbr+1, 
+                                         "error_rate": error_rate}))
                 self._send_to_subscribers(("percent_q30",
-                                        {"lane": lane+1, "read": read_nbr+1, "percent_q30": percent_q30, "is_index_read":is_index_read}))
+                                        {"lane": lane+1, 
+                                         "read": read_nbr+1, 
+                                         "percent_q30": percent_q30, 
+                                         "is_index_read":is_index_read}))
                 self._send_to_subscribers(("percent_phix",
-                                        {"lane": lane+1, "read": read_nbr+1, "percent_phix": percent_phix_aligned}))
+                                        {"lane": lane+1, 
+                                         "read": read_nbr+1, 
+                                         "percent_phix": percent_phix_aligned}))
                 self._send_to_subscribers(("percent_q30_per_cycle",
                                         {"lane": lane+1,
                                          "read": read_nbr+1, 

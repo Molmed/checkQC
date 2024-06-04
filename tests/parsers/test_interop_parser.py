@@ -84,18 +84,15 @@ class TestInteropParser(unittest.TestCase):
         )
     
     def test_get_percent_q30_per_cycle(self):
-        runfolder = os.path.join(os.path.dirname(__file__), "..", 
-                             "resources", 
-                             "MiSeqDemo")
- 
-        q_metrics = imaging(runfolder,
+        q_metrics = imaging(self.runfolder,
               valid_to_load=['Q'])
         
-        get_q30_call_as_var = InteropParser.get_percent_q30_per_cycle(
+        percent_q30_per_cycle = InteropParser.get_percent_q30_per_cycle(
                 q_metrics=q_metrics,
                 lane_nr=0, 
                 read_nr=0,
-                is_index_read=False)
+                is_index_read=False,
+        )
 
         expected_out = {
                 6: 98.76343,
@@ -107,11 +104,12 @@ class TestInteropParser(unittest.TestCase):
                 258: 87.162094,
         }
 
-        filtered_dict = {
-            cycle: get_q30_call_as_var[cycle]
+        #Select cycles from the expected_out-dict.
+        filtered_q30_per_cycle = {
+            cycle: percent_q30_per_cycle[cycle]
             for cycle in expected_out
         }
 
-        for cycle in filtered_dict:
+        for cycle in filtered_q30_per_cycle:
             self.assertTrue(np.isclose(
-                expected_out[cycle], filtered_dict[cycle]))
+                expected_out[cycle], filtered_q30_per_cycle[cycle]))
