@@ -84,6 +84,9 @@ class InteropParser(Parser):
         nr within the read and the mean '%>= Q30' for all tiles
         for that given cycle, read and lane.
         E.g. {6: 98.76343, 7: 98.718155, 8: 98.529205, ...,136: 98.43606}
+        Note that "cycle" is selected based on the actual value in 
+        'Cycle Within Read', which starts at 1, and not the position 
+        in the data frame, which is 0-indexed. 
         #TODO: Investigate if the quality drop in the beginning of a read
         is instrument specific. 
         :param q_metrics: A rectangular array containing values of the 
@@ -103,19 +106,18 @@ class InteropParser(Parser):
         q30_per_cycle = {}
         if is_index_read:
             end_cycle = int(max(q30_lane_read["Cycle Within Read"]))
-            start_cycle = end_cycle - 5
-            #Remove the first 2 bases in the index read.
-
+            start_cycle = 1
         else:
+            #Remove the last 90% of all cycles since 
+            #they are expected to drop in q30
             end_cycle = math.ceil(
                 max(q30_lane_read["Cycle Within Read"])*0.9
             )
 
-            #Remove the last 90% of all cycles since 
-            #they are expected to drop in q30
-            start_cycle = 6
             #Remove first 5 cycles since they are expected
             #to have a lower q30
+            start_cycle = 6
+
 
         for cycle in range(start_cycle, end_cycle+1):
             q30_cycle_mean = float(numpy.mean(
