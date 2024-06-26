@@ -119,15 +119,12 @@ class InteropParser(Parser):
             start_cycle = 6
 
 
-        for cycle in range(start_cycle, end_cycle+1):
-            q30_cycle_mean = float(numpy.mean(
-                q30_lane_read[
-                    (q30_lane_read["Cycle Within Read"] == cycle)
-                ]["%>= Q30"]
-            ))
-            q30_per_cycle[cycle] = q30_cycle_mean
-
-        return q30_per_cycle
+        return {
+            cycle: q30_lane_read[
+                (q30_lane_read["Cycle Within Read"] == cycle)
+            ]["%>= Q30"].mean()
+            for cycle in range(start_cycle, end_cycle+1)
+        }
 
 
     def run(self):
