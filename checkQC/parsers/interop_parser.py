@@ -103,7 +103,6 @@ class InteropParser(Parser):
                 (q30_cycle_df["Lane"] == lane_nr+1) &\
                 (q30_cycle_df["Read"] == read_nr+1)]
 
-        q30_per_cycle = {}
         if is_index_read:
             end_cycle = int(max(q30_lane_read["Cycle Within Read"]))
             start_cycle = 1
