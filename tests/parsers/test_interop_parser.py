@@ -18,6 +18,7 @@ class TestInteropParser(unittest.TestCase):
             self.error_rate_values = []
             self.percent_q30_values = []
             self.percent_q30_per_cycle = []
+            self.phix_aligned_values = []
             self.subscriber = self.subscribe()
             next(self.subscriber)
 
@@ -31,14 +32,16 @@ class TestInteropParser(unittest.TestCase):
                     self.percent_q30_values.append(interop_stat)
                 if key == "percent_q30_per_cycle":
                     self.percent_q30_per_cycle.append(interop_stat)
+                if key == "percent_phix":
+                    self.phix_aligned_values.append(interop_stat)
 
         def send(self, value):
             self.subscriber.send(value)
 
-    runfolder = os.path.join(os.path.dirname(__file__), "..", 
+    runfolder = os.path.join(os.path.dirname(__file__), "..",
                              "resources",
                              "MiSeqDemo")
-    interop_parser = InteropParser(runfolder=runfolder, 
+    interop_parser = InteropParser(runfolder=runfolder,
                                    parser_configurations=None)
     subscriber = Receiver()
     interop_parser.add_subscribers(subscriber)
@@ -46,27 +49,37 @@ class TestInteropParser(unittest.TestCase):
 
     def test_read_error_rate(self):
         self.assertListEqual(self.subscriber.error_rate_values,
-                             [('error_rate', 
-                                {'lane': 1, 
-                                 'read': 1, 
+                             [('error_rate',
+                                {'lane': 1,
+                                 'read': 1,
                                  'error_rate': 1.5317546129226685}),
                               ('error_rate',
                                 {'lane': 1,
                                  'read': 2,
                                  'error_rate': 1.9201501607894897})])
 
+    def test_percent_phix(self):
+        self.assertListEqual(self.subscriber.phix_aligned_values,
+                             [('percent_phix',
+                                {'lane': 1,
+                                 'read': 1,
+                                 'percent_phix': 99.20014190673828}),
+                              ('percent_phix',
+                                {'lane': 1,
+                                 'read': 2,
+                                 'percent_phix': 96.8943862915039})])
 
     def test_percent_q30(self):
         self.assertListEqual(self.subscriber.percent_q30_values,
-                             [('percent_q30', 
-                               {'lane': 1, 
-                                'read': 1, 
-                                'percent_q30': 93.42070007324219, 
+                             [('percent_q30',
+                               {'lane': 1,
+                                'read': 1,
+                                'percent_q30': 93.42070007324219,
                                 'is_index_read': False}),
-                              ('percent_q30', 
-                               {'lane': 1, 
-                                'read': 2, 
-                                'percent_q30': 84.4270248413086, 
+                              ('percent_q30',
+                               {'lane': 1,
+                                'read': 2,
+                                'percent_q30': 84.4270248413086,
                                 'is_index_read': False})])
         
     def test_percent_q30_per_cycle(self):
@@ -89,7 +102,7 @@ class TestInteropParser(unittest.TestCase):
         
         percent_q30_per_cycle = InteropParser.get_percent_q30_per_cycle(
                 q_metrics=q_metrics,
-                lane_nr=0, 
+                lane_nr=0,
                 read_nr=0,
                 is_index_read=False,
         )

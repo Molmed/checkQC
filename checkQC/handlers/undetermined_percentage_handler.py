@@ -1,5 +1,6 @@
 
 from collections import defaultdict
+import numpy as np
 
 from checkQC.handlers.qc_handler import QCHandler, QCErrorFatal, QCErrorWarning
 from checkQC.parsers.stats_json_parser import StatsJsonParser
@@ -33,13 +34,11 @@ class UndeterminedPercentageHandler(QCHandler):
             self.phix_aligned[value["lane"]][value["read"]] = value["percent_phix"]
 
     def _compute_mean_percentage_phix_aligned_for_lanes(self):
-        lane_and_mean_percentage_phix_aliged = {}
+        lane_and_mean_percentage_phix_aligned = {}
         for lane, reads in self.phix_aligned.items():
-            mean = 0
-            for read, value in reads.items():
-                mean += value / len(reads)
-            lane_and_mean_percentage_phix_aliged[lane] = mean
-        return lane_and_mean_percentage_phix_aliged
+            mean_phix = np.nanmean(list(reads.values()))
+            lane_and_mean_percentage_phix_aligned[lane] = mean_phix if not np.isnan(mean_phix) else 0
+        return lane_and_mean_percentage_phix_aligned
 
     def check_qc(self):
 
@@ -74,13 +73,13 @@ class UndeterminedPercentageHandler(QCHandler):
 
                 if self.error() != self.UNKNOWN and percentage_undetermined > compute_threshold(self.error()):
                     yield QCErrorFatal("The percentage of undetermined indexes was"
-                                       " to high on lane {}, it was: {:.2f}%".format(lane_nbr,
+                                       " too high on lane {}, it was: {:.2f}%".format(lane_nbr,
                                                                                      percentage_undetermined),
                                        ordering=lane_nbr,
                                        data=create_data_dict(self.error()))
                 elif self.warning() != self.UNKNOWN and percentage_undetermined > compute_threshold(self.warning()):
                     yield QCErrorWarning("The percentage of undetermined indexes was "
-                                         "to high on lane {}, it was: {:.2f}%".format(lane_nbr,
+                                         "too high on lane {}, it was: {:.2f}%".format(lane_nbr,
                                                                                       percentage_undetermined),
                                          ordering=lane_nbr,
                                          data=create_data_dict(self.warning()))

@@ -148,11 +148,6 @@ class InteropParser(Parser):
         lanes = summary.lane_count()
 
         for lane in range(lanes):
-            # The interop library uses zero based indexing, 
-            #however most people uses read 1/2
-            # to denote the different reads, 
-            #this enumeration is used to transform from
-            # zero based indexing to this form. /JD 2017-10-27
             for read_nbr in range(summary.size()):
                 read = summary.at(read_nbr).at(lane)
                 error_rate = read.error_rate().mean()
