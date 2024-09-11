@@ -40,7 +40,7 @@ class TestInteropParser(unittest.TestCase):
 
     runfolder = os.path.join(os.path.dirname(__file__), "..",
                              "resources",
-                             "MiSeqDemo")
+                             "230825_M04034_0043_000000000-L6NVV")
     interop_parser = InteropParser(runfolder=runfolder,
                                    parser_configurations=None)
     subscriber = Receiver()
@@ -48,58 +48,63 @@ class TestInteropParser(unittest.TestCase):
     interop_parser.run()
 
     def test_read_error_rate(self):
-        self.assertListEqual(self.subscriber.error_rate_values,
-                             [('error_rate',
-                                {'lane': 1,
-                                 'read': 1,
-                                 'error_rate': 1.5317546129226685}),
-                              ('error_rate',
-                                {'lane': 1,
-                                 'read': 2,
-                                 'error_rate': 1.9201501607894897})])
+        error_rates = [x[1]["error_rate"] for x in self.subscriber.error_rate_values]
+        self.assertEqual(error_rates[0], 0.587182343006134)
+        self.assertTrue(np.isnan(error_rates[1]))
+        self.assertTrue(np.isnan(error_rates[2]))
+        self.assertEqual(error_rates[3], 0.8676796555519104)
 
     def test_percent_phix(self):
-        self.assertListEqual(self.subscriber.phix_aligned_values,
-                             [('percent_phix',
-                                {'lane': 1,
-                                 'read': 1,
-                                 'percent_phix': 99.20014190673828}),
-                              ('percent_phix',
-                                {'lane': 1,
-                                 'read': 2,
-                                 'percent_phix': 96.8943862915039})])
+        phix = [x[1]["percent_phix"] for x in self.subscriber.phix_aligned_values]
+        self.assertEqual(phix[0], 15.352058410644531)
+        self.assertTrue(np.isnan(phix[1]))
+        self.assertTrue(np.isnan(phix[2]))
+        self.assertEqual(phix[3], 14.5081205368042)
 
     def test_percent_q30(self):
         self.assertListEqual(self.subscriber.percent_q30_values,
                              [('percent_q30',
                                {'lane': 1,
                                 'read': 1,
-                                'percent_q30': 93.42070007324219,
+                                'percent_q30': 95.3010025024414,
                                 'is_index_read': False}),
                               ('percent_q30',
                                {'lane': 1,
                                 'read': 2,
-                                'percent_q30': 84.4270248413086,
+                                'percent_q30': 82.97042846679688,
+                                'is_index_read': True}),
+                              ('percent_q30',
+                               {'lane': 1,
+                                'read': 3,
+                                'percent_q30': 97.44789123535156,
+                                'is_index_read': True}),
+                              ('percent_q30',
+                               {'lane': 1,
+                                'read': 4,
+                                'percent_q30': 90.55824279785156,
                                 'is_index_read': False})])
-        
-    def test_percent_q30_per_cycle(self):
+
+    def test_percent_q30_per_cycle_subscriber_output(self):
         percent_q30_per_cycle = self.subscriber.percent_q30_per_cycle
         self.assertEqual(percent_q30_per_cycle[0][1]['read'], 1)
         self.assertAlmostEqual(
             percent_q30_per_cycle[0][1]['percent_q30_per_cycle'][10],
-            98.41526794433594
+            96.68322,
+            places=5,
         )
 
         self.assertEqual(percent_q30_per_cycle[1][1]['read'], 2)
+        self.assertTrue(percent_q30_per_cycle[1][1]['is_index_read'])
         self.assertAlmostEqual(
-            percent_q30_per_cycle[1][1]['percent_q30_per_cycle'][10],
-            95.20341491699219
+            percent_q30_per_cycle[1][1]['percent_q30_per_cycle'][1],
+            80.69179,
+            places=5,
         )
-    
+
     def test_get_percent_q30_per_cycle(self):
         q_metrics = imaging(self.runfolder,
               valid_to_load=['Q'])
-        
+
         percent_q30_per_cycle = InteropParser.get_percent_q30_per_cycle(
                 q_metrics=q_metrics,
                 lane_nr=0,
@@ -108,13 +113,13 @@ class TestInteropParser(unittest.TestCase):
         )
 
         expected_out = {
-                6: 98.76343,
-                48: 97.841576,
-                90: 96.81421,
-                132: 95.90264,
-                174: 94.69448,
-                216: 91.90525,
-                258: 87.162094,
+                6: 97.17214,
+                18: 97.1332,
+                25: 97.38965,
+                50: 96.62786,
+                75: 96.30572,
+                100: 94.63465,
+                136: 92.64536,
         }
 
         #Select cycles from the expected_out-dict.
