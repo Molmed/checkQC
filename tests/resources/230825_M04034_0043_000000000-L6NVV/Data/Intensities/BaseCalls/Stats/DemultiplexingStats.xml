@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Stats>
+  <Flowcell flowcell-id="000000000-L6NVV">
+    <Project name="default">
+      <Sample name="Undetermined">
+        <Barcode name="unknown">
+          <Lane number="1">
+            <BarcodeCount>3723431</BarcodeCount>
+            <PerfectBarcodeCount>3723431</PerfectBarcodeCount>
+          </Lane>
+        </Barcode>
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>3723431</BarcodeCount>
+            <PerfectBarcodeCount>3723431</PerfectBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+      <Sample name="all">
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>3723431</BarcodeCount>
+            <PerfectBarcodeCount>3723431</PerfectBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+    </Project>
+    <Project name="AB-1234">
+      <Sample name="TSOCDNA-25ng-MultiCancerDNA-rep1">
+        <Barcode name="ATTACTCG+CCTATCCT">
+          <Lane number="1">
+            <BarcodeCount>2036894</BarcodeCount>
+            <PerfectBarcodeCount>1998163</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>38731</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>2036894</BarcodeCount>
+            <PerfectBarcodeCount>1998163</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>38731</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+      <Sample name="TSOCDNA-25ng-MultiCancerDNA-rep2">
+        <Barcode name="TCCGGAGA+CCTATCCT">
+          <Lane number="1">
+            <BarcodeCount>2785018</BarcodeCount>
+            <PerfectBarcodeCount>2743516</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>41502</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>2785018</BarcodeCount>
+            <PerfectBarcodeCount>2743516</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>41502</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+      <Sample name="TSOCDNA-25ng-MultiCancerDNA-rep3">
+        <Barcode name="CGCTCATT+CCTATCCT">
+          <Lane number="1">
+            <BarcodeCount>2865582</BarcodeCount>
+            <PerfectBarcodeCount>2817228</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>48354</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>2865582</BarcodeCount>
+            <PerfectBarcodeCount>2817228</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>48354</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+      <Sample name="TSOCDNA-50ng-MultiCancerDNA-rep1">
+        <Barcode name="GAGATTCC+CCTATCCT">
+          <Lane number="1">
+            <BarcodeCount>3567282</BarcodeCount>
+            <PerfectBarcodeCount>3512890</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>54392</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>3567282</BarcodeCount>
+            <PerfectBarcodeCount>3512890</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>54392</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+      <Sample name="TSOCDNA-50ng-MultiCancerDNA-rep2">
+        <Barcode name="ATTCAGAA+CCTATCCT">
+          <Lane number="1">
+            <BarcodeCount>2661608</BarcodeCount>
+            <PerfectBarcodeCount>2625269</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>36339</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>2661608</BarcodeCount>
+            <PerfectBarcodeCount>2625269</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>36339</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+      <Sample name="TSOCDNA-50ng-MultiCancerDNA-rep3">
+        <Barcode name="GAATTCGT+CCTATCCT">
+          <Lane number="1">
+            <BarcodeCount>1965125</BarcodeCount>
+            <PerfectBarcodeCount>1929033</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>36092</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>1965125</BarcodeCount>
+            <PerfectBarcodeCount>1929033</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>36092</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+      <Sample name="TSOCRNA-25ng-MultiCancerRNA-rep1">
+        <Barcode name="ATTACTCG+GGCTCTGA">
+          <Lane number="1">
+            <BarcodeCount>171137</BarcodeCount>
+            <PerfectBarcodeCount>163610</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>7527</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>171137</BarcodeCount>
+            <PerfectBarcodeCount>163610</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>7527</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+      <Sample name="TSOCRNA-25ng-MultiCancerRNA-rep2">
+        <Barcode name="TCCGGAGA+GGCTCTGA">
+          <Lane number="1">
+            <BarcodeCount>211720</BarcodeCount>
+            <PerfectBarcodeCount>204536</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>7184</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>211720</BarcodeCount>
+            <PerfectBarcodeCount>204536</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>7184</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+      <Sample name="TSOCRNA-25ng-MultiCancerRNA-rep3">
+        <Barcode name="CGCTCATT+GGCTCTGA">
+          <Lane number="1">
+            <BarcodeCount>270260</BarcodeCount>
+            <PerfectBarcodeCount>260586</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>9674</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>270260</BarcodeCount>
+            <PerfectBarcodeCount>260586</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>9674</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+      <Sample name="TSOCRNA-50ng-MultiCancerRNA-rep1">
+        <Barcode name="GAGATTCC+GGCTCTGA">
+          <Lane number="1">
+            <BarcodeCount>253948</BarcodeCount>
+            <PerfectBarcodeCount>245210</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>8738</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>253948</BarcodeCount>
+            <PerfectBarcodeCount>245210</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>8738</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+      <Sample name="TSOCRNA-50ng-MultiCancerRNA-rep2">
+        <Barcode name="ATTCAGAA+GGCTCTGA">
+          <Lane number="1">
+            <BarcodeCount>253875</BarcodeCount>
+            <PerfectBarcodeCount>245410</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>8465</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>253875</BarcodeCount>
+            <PerfectBarcodeCount>245410</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>8465</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+      <Sample name="TSOCRNA-50ng-MultiCancerRNA-rep3">
+        <Barcode name="GAATTCGT+GGCTCTGA">
+          <Lane number="1">
+            <BarcodeCount>204745</BarcodeCount>
+            <PerfectBarcodeCount>196894</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>7851</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>204745</BarcodeCount>
+            <PerfectBarcodeCount>196894</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>7851</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+      <Sample name="all">
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>17247194</BarcodeCount>
+            <PerfectBarcodeCount>16942345</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>304849</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+    </Project>
+    <Project name="all">
+      <Sample name="all">
+        <Barcode name="all">
+          <Lane number="1">
+            <BarcodeCount>20970625</BarcodeCount>
+            <PerfectBarcodeCount>20665776</PerfectBarcodeCount>
+            <OneMismatchBarcodeCount>304849</OneMismatchBarcodeCount>
+          </Lane>
+        </Barcode>
+      </Sample>
+    </Project>
+  </Flowcell>
+</Stats>

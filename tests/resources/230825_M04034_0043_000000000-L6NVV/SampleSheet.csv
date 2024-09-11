@@ -1,0 +1,25 @@
+[Header],,,,,,,
+FileFormatVersion,2,,,,,,
+RunDescription,Pillar Multi-Cancer with CNV and RNA Fusion panel using TSO Comprehensive DNA and RNA controls as inputs,,,,,,
+RunName,Pillar Multi-Cancer with CNV and RNA Fusion Panel,,,,,,
+,,,,,,,
+[Settings],,,,,,,
+MaskShortReads,35,,,,,,
+SoftwareVersion,4.2.4,,,,,,
+AdapterRead1,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA,,,,,,
+AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT,,,,,,
+,,,,,,,
+[Data],,,,,,,
+Lane,Sample_ID,Sample_Name,Sample_Project,Index_ID,index,index2,Description
+1,Sample_TSOCDNA-25ng-MultiCancerDNA-rep1,TSOCDNA-25ng-MultiCancerDNA-rep1,AB-1234,DummyIndexID,ATTACTCG,CCTATCCT,Test Runfolder
+1,Sample_TSOCDNA-25ng-MultiCancerDNA-rep2,TSOCDNA-25ng-MultiCancerDNA-rep2,AB-1234,DummyIndexID,TCCGGAGA,CCTATCCT,Test Runfolder
+1,Sample_TSOCDNA-25ng-MultiCancerDNA-rep3,TSOCDNA-25ng-MultiCancerDNA-rep3,AB-1234,DummyIndexID,CGCTCATT,CCTATCCT,Test Runfolder
+1,Sample_TSOCDNA-50ng-MultiCancerDNA-rep1,TSOCDNA-50ng-MultiCancerDNA-rep1,AB-1234,DummyIndexID,GAGATTCC,CCTATCCT,Test Runfolder
+1,Sample_TSOCDNA-50ng-MultiCancerDNA-rep2,TSOCDNA-50ng-MultiCancerDNA-rep2,AB-1234,DummyIndexID,ATTCAGAA,CCTATCCT,Test Runfolder
+1,Sample_TSOCDNA-50ng-MultiCancerDNA-rep3,TSOCDNA-50ng-MultiCancerDNA-rep3,AB-1234,DummyIndexID,GAATTCGT,CCTATCCT,Test Runfolder
+1,Sample_TSOCRNA-25ng-MultiCancerRNA-rep1,TSOCRNA-25ng-MultiCancerRNA-rep1,AB-1234,DummyIndexID,ATTACTCG,GGCTCTGA,Test Runfolder
+1,Sample_TSOCRNA-25ng-MultiCancerRNA-rep2,TSOCRNA-25ng-MultiCancerRNA-rep2,AB-1234,DummyIndexID,TCCGGAGA,GGCTCTGA,Test Runfolder
+1,Sample_TSOCRNA-25ng-MultiCancerRNA-rep3,TSOCRNA-25ng-MultiCancerRNA-rep3,AB-1234,DummyIndexID,CGCTCATT,GGCTCTGA,Test Runfolder
+1,Sample_TSOCRNA-50ng-MultiCancerRNA-rep1,TSOCRNA-50ng-MultiCancerRNA-rep1,AB-1234,DummyIndexID,GAGATTCC,GGCTCTGA,Test Runfolder
+1,Sample_TSOCRNA-50ng-MultiCancerRNA-rep2,TSOCRNA-50ng-MultiCancerRNA-rep2,AB-1234,DummyIndexID,ATTCAGAA,GGCTCTGA,Test Runfolder
+1,Sample_TSOCRNA-50ng-MultiCancerRNA-rep3,TSOCRNA-50ng-MultiCancerRNA-rep3,AB-1234,DummyIndexID,GAATTCGT,GGCTCTGA,Test Runfolder
