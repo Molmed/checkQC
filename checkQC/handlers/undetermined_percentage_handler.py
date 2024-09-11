@@ -36,8 +36,9 @@ class UndeterminedPercentageHandler(QCHandler):
     def _compute_mean_percentage_phix_aligned_for_lanes(self):
         lane_and_mean_percentage_phix_aligned = {}
         for lane, reads in self.phix_aligned.items():
-            mean_phix = np.nanmean(list(reads.values()))
-            lane_and_mean_percentage_phix_aligned[lane] = mean_phix if not np.isnan(mean_phix) else 0
+            reads_list = list(reads.values())
+            mean_phix = 0 if all(np.isnan(reads_list)) else np.nanmean(reads_list)
+            lane_and_mean_percentage_phix_aligned[lane] = mean_phix
         return lane_and_mean_percentage_phix_aligned
 
     def check_qc(self):
