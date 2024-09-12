@@ -15,10 +15,11 @@ class TestInteropParser(unittest.TestCase):
 
     class Receiver(object):
         def __init__(self):
-            self.error_rate_values = []
-            self.percent_q30_values = []
-            self.percent_q30_per_cycle = []
-            self.phix_aligned_values = []
+            self.metrics = {'error_rate': [],
+                            'percent_q30': [],
+                            'percent_q30_per_cycle': [],
+                            'percent_phix': [],
+                            }
             self.subscriber = self.subscribe()
             next(self.subscriber)
 
@@ -26,14 +27,7 @@ class TestInteropParser(unittest.TestCase):
             while True:
                 interop_stat = yield
                 key = list(interop_stat)[0]
-                if key == "error_rate":
-                    self.error_rate_values.append(interop_stat)
-                if key == "percent_q30":
-                    self.percent_q30_values.append(interop_stat)
-                if key == "percent_q30_per_cycle":
-                    self.percent_q30_per_cycle.append(interop_stat)
-                if key == "percent_phix":
-                    self.phix_aligned_values.append(interop_stat)
+                self.metrics[key].append(interop_stat)
 
         def send(self, value):
             self.subscriber.send(value)
@@ -48,21 +42,21 @@ class TestInteropParser(unittest.TestCase):
     interop_parser.run()
 
     def test_read_error_rate(self):
-        error_rates = [x[1]["error_rate"] for x in self.subscriber.error_rate_values]
+        error_rates = [x[1]['error_rate'] for x in self.subscriber.metrics['error_rate']]
         self.assertEqual(error_rates[0], 0.587182343006134)
         self.assertTrue(np.isnan(error_rates[1]))
         self.assertTrue(np.isnan(error_rates[2]))
         self.assertEqual(error_rates[3], 0.8676796555519104)
 
     def test_percent_phix(self):
-        phix = [x[1]["percent_phix"] for x in self.subscriber.phix_aligned_values]
+        phix = [x[1]['percent_phix'] for x in self.subscriber.metrics['percent_phix']]
         self.assertEqual(phix[0], 15.352058410644531)
         self.assertTrue(np.isnan(phix[1]))
         self.assertTrue(np.isnan(phix[2]))
         self.assertEqual(phix[3], 14.5081205368042)
 
     def test_percent_q30(self):
-        self.assertListEqual(self.subscriber.percent_q30_values,
+        self.assertListEqual(self.subscriber.metrics['percent_q30'],
                              [('percent_q30',
                                {'lane': 1,
                                 'read': 1,
@@ -85,7 +79,7 @@ class TestInteropParser(unittest.TestCase):
                                 'is_index_read': False})])
 
     def test_percent_q30_per_cycle_subscriber_output(self):
-        percent_q30_per_cycle = self.subscriber.percent_q30_per_cycle
+        percent_q30_per_cycle = self.subscriber.metrics['percent_q30_per_cycle']
         self.assertEqual(percent_q30_per_cycle[0][1]['read'], 1)
         self.assertAlmostEqual(
             percent_q30_per_cycle[0][1]['percent_q30_per_cycle'][10],
