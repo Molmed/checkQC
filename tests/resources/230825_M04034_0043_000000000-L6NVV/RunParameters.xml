@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<RunParameters xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" LineWashRequired="false">
+  <RunParametersVersion>MiSeq_1_2</RunParametersVersion>
+  <CopyManifests>false</CopyManifests>
+  <FlowcellRFIDTag>
+    <SerialNumber>000000000-L6NVV</SerialNumber>
+    <PartNumber>15028382</PartNumber>
+    <ExpirationDate>2024-06-15T00:00:00</ExpirationDate>
+    <LotNumber>20764717</LotNumber>
+  </FlowcellRFIDTag>
+  <PR2BottleRFIDTag>
+    <SerialNumber>MS7903868-00PR2</SerialNumber>
+    <PartNumber>15041807</PartNumber>
+    <ExpirationDate>2024-06-10T00:00:00</ExpirationDate>
+    <LotNumber>20764159</LotNumber>
+  </PR2BottleRFIDTag>
+  <ReagentKitRFIDTag>
+    <SerialNumber>MS3500199-300V2</SerialNumber>
+    <PartNumber>15033572</PartNumber>
+    <ExpirationDate>2024-05-08T00:00:00</ExpirationDate>
+    <LotNumber>20770331</LotNumber>
+  </ReagentKitRFIDTag>
+  <Resumable>true</Resumable>
+  <ManifestFiles />
+  <AfterRunWashMethod>Post-Run Wash</AfterRunWashMethod>
+  <Setup>
+    <SupportMultipleSurfacesInUI>true</SupportMultipleSurfacesInUI>
+    <ApplicationVersion>4.0.0.1769</ApplicationVersion>
+    <NumTilesPerSwath>14</NumTilesPerSwath>
+    <NumSwaths>1</NumSwaths>
+    <NumLanes>1</NumLanes>
+    <ApplicationName>MiSeq Control Software</ApplicationName>
+  </Setup>
+  <RunID>230825_M04034_0043_000000000-L6NVV</RunID>
+  <ScannerID>M04034</ScannerID>
+  <RunNumber>43</RunNumber>
+  <FPGAVersion>9.5.12</FPGAVersion>
+  <MCSVersion>4.0.0.1769</MCSVersion>
+  <RTAVersion>1.18.54.4</RTAVersion>
+  <Barcode>000000000-L6NVV</Barcode>
+  <PR2BottleBarcode>MS7903868-00PR2</PR2BottleBarcode>
+  <ReagentKitPartNumberEntered>15033572</ReagentKitPartNumberEntered>
+  <ReagentKitVersion>Version2</ReagentKitVersion>
+  <ReagentKitBarcode>MS3500199-300V2</ReagentKitBarcode>
+  <PreviousPR2BottleBarcode />
+  <PreviousReagentKitBarcode />
+  <ExperimentName>Pillar MultiCancer DNA RNA 25AUG2023</ExperimentName>
+  <RunDescription>Pillar MC DNA and RNA panel using TSO Comprehensive control DNA as an input</RunDescription>
+  <LibraryPrepKit>Custom</LibraryPrepKit>
+  <IndexKit>Custom</IndexKit>
+  <Chemistry>Amplicon</Chemistry>
+  <Username>kfortmann@illumina.com</Username>
+  <EnableAnalysis>false</EnableAnalysis>
+  <Reads>
+    <RunInfoRead Number="1" NumCycles="151" IsIndexedRead="N" />
+    <RunInfoRead Number="2" NumCycles="8" IsIndexedRead="Y" />
+    <RunInfoRead Number="3" NumCycles="8" IsIndexedRead="Y" />
+    <RunInfoRead Number="4" NumCycles="151" IsIndexedRead="N" />
+  </Reads>
+  <TempFolder>D:\Illumina\MiSeqTemp\230825_M04034_0043_000000000-L6NVV</TempFolder>
+  <RTATempFolder>D:\Illumina\RTATemp\230825_M04034_0043_000000000-L6NVV</RTATempFolder>
+  <AnalysisFolder>D:\Illumina\MiSeqAnalysis\230825_M04034_0043_000000000-L6NVV</AnalysisFolder>
+  <RunStartDate>230825</RunStartDate>
+  <MostRecentWashType>MissedPostRunWash</MostRecentWashType>
+  <RecipeFolder>C:\ProgramData\Illumina\MiSeq Control Software\Recipe</RecipeFolder>
+  <ILMNOnlyRecipeFolder>C:\program files\Illumina\MiSeq Control Software\Recipe</ILMNOnlyRecipeFolder>
+  <SampleSheetName>MS3500199-300V2</SampleSheetName>
+  <SampleSheetFolder>D:\Illumina\MiSeq Control Software\SampleSheets</SampleSheetFolder>
+  <SampleSheetFilePath>C:\Users\sbsadmin\Desktop\MiSeq-SampleSheet2023_08_25.csv</SampleSheetFilePath>
+  <ManifestFolder>D:\Illumina\MiSeq Control Software\Manifests</ManifestFolder>
+  <OutputFolder>D:\230825_M04034_0043_000000000-L6NVV</OutputFolder>
+  <FocusMethod>AutoFocus</FocusMethod>
+  <SurfaceToScan>Both</SurfaceToScan>
+  <SaveFocusImages>false</SaveFocusImages>
+  <SaveScanImages>true</SaveScanImages>
+  <RunManagementType>SampleSheet</RunManagementType>
+  <BaseSpaceRunId>264827563</BaseSpaceRunId>
+  <CloudRunId>264827563</CloudRunId>
+  <SelectedRun>Pillar MultiCancer DNA RNA 25AUG2023</SelectedRun>
+  <ModuleName>GenerateFastQWorkflow</ModuleName>
+  <ModuleVersion>3.0.0.738</ModuleVersion>
+  <MAPRunId>43044</MAPRunId>
+  <DxUserName />
+  <DxUserLevel />
+  <BaseSpaceMode>IpdRequested RunMonitoringRequested RunStorageRequested</BaseSpaceMode>
+  <BaseSpaceUserName>kfortmann@illumina.com</BaseSpaceUserName>
+  <ManualFlowcellEntry>false</ManualFlowcellEntry>
+  <ManualReagentEntry>false</ManualReagentEntry>
+  <ManualPR2Entry>false</ManualPR2Entry>
+  <CopyServiceRunId>1A83A4EC1FB7986F</CopyServiceRunId>
+  <LocalRunManagerRunId>43044</LocalRunManagerRunId>
+</RunParameters>

@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 
 from checkQC.handlers.undetermined_percentage_handler import UndeterminedPercentageHandler
 
@@ -17,9 +18,9 @@ class TestUndeterminedPercentageHandler(HandlerTestBase):
 
         percentage_phix_key = "percent_phix"
         percentage_phix_value_lane_1_read_1 = {"lane": 1, "read": 1, "percent_phix": 1}
-        percentage_phix_value_lane_1_read_2 = {"lane": 1, "read": 2, "percent_phix": 1}
-        percentage_phix_value_lane_2_read_1 = {"lane": 2, "read": 1, "percent_phix": 1}
-        percentage_phix_value_lane_2_read_2 = {"lane": 2, "read": 2, "percent_phix": 1}
+        percentage_phix_value_lane_1_read_2 = {"lane": 1, "read": 2, "percent_phix": np.nan}
+        percentage_phix_value_lane_2_read_1 = {"lane": 2, "read": 1, "percent_phix": np.nan}
+        percentage_phix_value_lane_2_read_2 = {"lane": 2, "read": 2, "percent_phix": np.nan}
         undetermined_handler.collect((percentage_phix_key, percentage_phix_value_lane_1_read_1))
         undetermined_handler.collect((percentage_phix_key, percentage_phix_value_lane_1_read_2))
         undetermined_handler.collect((percentage_phix_key, percentage_phix_value_lane_2_read_1))
@@ -37,7 +38,7 @@ class TestUndeterminedPercentageHandler(HandlerTestBase):
         self.assertEqual(errors_and_warnings, [])
 
     def test_warning(self):
-        qc_config = {'name': 'UndeterminedPercentageHandler', 'error': 2, 'warning': 1}
+        qc_config = {'name': 'UndeterminedPercentageHandler', 'error': 3, 'warning': 1}
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.undetermined_handler.check_qc())
         self.assertEqual(len(errors_and_warnings), 2)

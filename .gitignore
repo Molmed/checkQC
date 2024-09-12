@@ -8,3 +8,4 @@ dist/
 .python-env/
 .coverage
 .cache
+.vscode/
