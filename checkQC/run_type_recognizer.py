@@ -181,7 +181,7 @@ class RunTypeRecognizer(object):
         """
         Create a RunTypeRecognizer instance
 
-        :param runfolder: to gather data about
+        :param runfolder: path to runfolder
         :param runfolder_reader: reader class for for runfolders, defaults to RunfolderReader. Here to make testing
         easier.
         """
