@@ -2,6 +2,8 @@ import interop
 import csv
 import pathlib
 
+from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
+
 class QCData:
     def __init__(
         self,
@@ -11,6 +13,7 @@ class QCData:
         lane_data,  # TODO validate dict content
         # The schema will define mandatory fields but may evolve over time with
         # new instruments
+        # TODO find better name?
     ):
         self.instrument = instrument
         self.read_length = read_length
@@ -39,3 +42,15 @@ class QCData:
 
         return getattr(self, config.get("view", "illumina_view"))(qc_reports)
 
+    def ErrorRateHandler(self, error, warning, allow_missing_error_rate): # Should this be just `error_rate`
+        assert error > warning
+        # TODO impl. allow_missing_error_rate
+
+        return [
+            QCErrorFatal("Error: ErrorRateHandler", data={"lane": lane, "read": read})
+            if read_data["mean_error_rate"] > error else
+            QCErrorWarning("Warning: ErrorRateHandler", data={"lane": lane, "read": read})
+            for lane, lane_data in self.lane_data.items()  # TODO find better name for lane_data
+            for read, read_data in lane_data["reads"].items()
+            if read_data["mean_error_rate"] > warning
+        ]
