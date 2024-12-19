@@ -5,12 +5,8 @@ import pytest
 
 from checkQC.qc_data import QCData
 
+from tests.test_utils import float_eq
 
-def float_eq(a, b):
-    return np.isclose(a, b) or (np.isnan(a) and np.isnan(b))
-
-
-# TODO inverstigate if nans are ok
 
 @pytest.fixture
 def bclconvert_runfolder():
