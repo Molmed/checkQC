@@ -11,7 +11,7 @@ from checkQC.run_type_recognizer import RunTypeRecognizer
 def from_bclconvert(cls, runfolder_path, parser_config):
     runfolder_path = pathlib.Path(runfolder_path)
 
-    summary = _read_interop_summary(runfolder_path)
+    summary, index_summary = _read_interop_summary(runfolder_path)
     quality_metrics = _read_quality_metrics(
         runfolder_path
         / parser_config["reports_location"]
@@ -61,6 +61,16 @@ def from_bclconvert(cls, runfolder_path, parser_config):
                 }
                 for i_read in range(summary.size())
             },
+            "reads_per_sample": [
+                {
+                    "sample_id": (
+                        sample_summary := index_summary.at(lane).at(sample_no)
+                    ).sample_id(),
+                    "cluster_count": sample_summary.cluster_count(),
+                    "fraction_mapped": sample_summary.fraction_mapped()
+                }
+                for sample_no in range(index_summary.at(lane).size())
+            ],
         }
         for lane in range(summary.lane_count())
     }
@@ -82,10 +92,13 @@ def _read_interop_summary(runfolder_path):
     run_metrics = interop.py_interop_run_metrics.run_metrics()
     run_metrics.read(runfolder_path)
 
-    summary = interop.py_interop_summary.run_summary()
-    interop.py_interop_summary.summarize_run_metrics(run_metrics, summary)
+    run_summary = interop.py_interop_summary.run_summary()
+    interop.py_interop_summary.summarize_run_metrics(run_metrics, run_summary)
 
-    return summary
+    index_summary = interop.py_interop_summary.index_flowcell_summary()
+    interop.py_interop_summary.summarize_index_metrics(run_metrics, index_summary)
+
+    return run_summary, index_summary
 
 
 def _read_quality_metrics(quality_metrics_path):
