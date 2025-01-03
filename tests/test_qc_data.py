@@ -16,54 +16,52 @@ def bclconvert_runfolder():
         "expected_read_length": 36,
         "expected_samplesheet": {
             "BCLConvert_Data": {
-                "len": 768,
+                "len": 4,
                 "head": [
                     {
                         "Lane": 1,
                         "Sample_ID": "Sample_14574-Qiagen-IndexSet1-SP-Lane1",
-                        "index": "GAACTGAGCG",
-                        "index2": "TCGTGGAGCG",
+                        "Index": "GAACTGAGCG",
+                        "Index2": "TCGTGGAGCG",
+                        "Sample_Project": "AB-1234",
                     },
                     {
                         "Lane": 1,
                         "Sample_ID": "Sample_14575-Qiagen-IndexSet1-SP-Lane1",
-                        "index": "AGGTCAGATA",
-                        "index2": "CTACAAGATA",
+                        "Index": "AGGTCAGATA",
+                        "Index2": "CTACAAGATA",
+                        "Sample_Project": "CD-5678",
                     },
                     {
-                        "Lane": 1,
-                        "Sample_ID": "Sample_14576-Qiagen-IndexSet1-SP-Lane1",
-                        "index": "CGTCTCATAT",
-                        "index2": "TATAGTAGCT",
+                        "Lane": 2,
+                        "Sample_ID": "Sample_14574-Qiagen-IndexSet1-SP-Lane2",
+                        "Index": "GAACTGAGCG",
+                        "Index2": "TCGTGGAGCG",
+                        "Sample_Project": "AB-1234",
                     },
                     {
-                        "Lane": 1,
-                        "Sample_ID": "Sample_14577-Qiagen-IndexSet1-SP-Lane1",
-                        "index": "ATTCCATAAG",
-                        "index2": "TGCCTGGTGG",
+                        "Lane": 2,
+                        "Sample_ID": "Sample_14575-Qiagen-IndexSet1-SP-Lane2",
+                        "Index": "AGGTCAGATA",
+                        "Index2": "CTACAAGATA",
+                        "Sample_Project": "CD-5678",
                     },
-                    {
-                        "Lane": 1,
-                        "Sample_ID": "Sample_14578-Qiagen-IndexSet1-SP-Lane1",
-                        "index": "GACGAGATTA",
-                        "index2": "ACATTATCCT",
-                    }
                 ],
             },
         },
         "expected_sequencing_metrics": {
             1: {
                 "total_cluster_pf": 532_464_327,
-                "yield": 19_168_715_772,
-                "yield_undetermined": 433_255_752,
+                "yield": 122_605_416,
+                "yield_undetermined": 121_940_136,
                 "top_unknown_barcodes": {
-                    "len": 1004,
+                    "len": 1029,
                     "head": [
-                        {"index+index2": "CCTGACCACT+TAGGAGCGCA", "count": 9457},
-                        {"index+index2": "AAAAAAAAAA+AAAAAAAAAA", "count": 6941},
-                        {"index+index2": "GGGGGGGGGG+GAGCGCAATA", "count": 5267},
-                        {"index+index2": "GCGGTGCTGC+GTCTCGTGAA", "count": 5242},
-                        {"index+index2": "GGGGGGGGGG+TCGAATGGAA", "count": 4364},
+                        {"index+index2": "ATATCTGCTT+TAGACAATCT", "count": 12857},
+                        {"index+index2": "CACCTCTCTT+CTCGACTCCT", "count": 12406},
+                        {"index+index2": "ATGTAACGTT+ACGATTGCTG", "count": 12177},
+                        {"index+index2": "TTCGGTGTGA+GAACAAGTAT", "count": 11590},
+                        {"index+index2": "GGTCCGCTTC+CTCACACAAG", "count": 11509},
                     ],
                 },
                 "reads": {
@@ -89,16 +87,16 @@ def bclconvert_runfolder():
             },
             2: {
                 "total_cluster_pf": 530_917_565,
-                "yield": 19_113_032_340,
-                "yield_undetermined": 426_560_256,
+                "yield": 124_497_108,
+                "yield_undetermined": 123_817_428,
                 "top_unknown_barcodes": {
-                    "len": 1000,
+                    "len": 1055,
                     "head": [
-                        {"index+index2": "CCTGACCACT+TAGGAGCGCA", "count": 9191},
-                        {"index+index2": "AAAAAAAAAA+AAAAAAAAAA", "count": 8182},
-                        {"index+index2": "GGGGGGGGGG+GAGCGCAATA", "count": 5081},
-                        {"index+index2": "GGGGGGGGGG+CACGGATTAT", "count": 4348},
-                        {"index+index2": "GGGGGGGGGG+TCGAATGGAA", "count": 4290},
+                        {"index+index2": "ATATCTGCTT+TAGACAATCT", "count": 13176},
+                        {"index+index2": "ATGTAACGTT+ACGATTGCTG", "count": 12395},
+                        {"index+index2": "CACCTCTCTT+CTCGACTCCT", "count": 12247},
+                        {"index+index2": "TTCGGTGTGA+GAACAAGTAT", "count": 11909},
+                        {"index+index2": "TAATTAGCGT+TGGTTAAGAA", "count": 11330},
                     ],
                 },
                 "reads": {
@@ -143,7 +141,7 @@ def test_qc_data(bclconvert_runfolder):
         == bclconvert_runfolder["expected_samplesheet"]["BCLConvert_Data"]["len"]
     )
     assert (
-        qc_data.samplesheet["BCLConvert_Data"][:5]
+        qc_data.samplesheet["BCLConvert_Data"]
         == bclconvert_runfolder["expected_samplesheet"]["BCLConvert_Data"]["head"]
     )
 
