@@ -51,7 +51,7 @@ def bclconvert_runfolder():
                 ],
             },
         },
-        "expected_lane_data": {
+        "expected_sequencing_metrics": {
             1: {
                 "total_cluster_pf": 532_464_327,
                 "yield": 19_168_715_772,
@@ -127,7 +127,7 @@ def bclconvert_runfolder():
 
 def test_qc_data(bclconvert_runfolder):
     runfolder_path = bclconvert_runfolder["path"]
-    expected_lane_data = bclconvert_runfolder["expected_lane_data"]
+    expected_sequencing_metrics = bclconvert_runfolder["expected_sequencing_metrics"]
 
     qc_data = QCData.from_bclconvert(runfolder_path)
 
@@ -143,20 +143,19 @@ def test_qc_data(bclconvert_runfolder):
         == bclconvert_runfolder["expected_samplesheet"]["BCLConvert_Data"]["head"]
     )
 
-    for lane, lane_data in expected_lane_data.items():
+    for lane, lane_data in expected_sequencing_metrics.items():
         for lane_metric, lane_metric_value in lane_data.items():
             match lane_metric:
                 case "top_unknown_barcodes":
-                    assert len(qc_data.lane_data[lane][lane_metric]) == lane_metric_value["len"]
-                    assert qc_data.lane_data[lane][lane_metric][:5] == lane_metric_value["head"]
+                    assert len(qc_data.sequencing_metrics[lane][lane_metric]) == lane_metric_value["len"]
+                    assert qc_data.sequencing_metrics[lane][lane_metric][:5] == lane_metric_value["head"]
                 case "reads":
                     for read, read_data in lane_metric_value.items():
                         for read_metric, read_metric_value in read_data.items():
-                            actual_value = qc_data.lane_data[lane]["reads"][read][read_metric]
+                            actual_value = qc_data.sequencing_metrics[lane]["reads"][read][read_metric]
                             if type(read_metric_value) == float:
                                 assert float_eq(read_metric_value, actual_value)
                             else:
                                 assert read_metric_value == actual_value
                 case _:
-                    assert qc_data.lane_data[lane][lane_metric] == lane_metric_value
-
+                    assert qc_data.sequencing_metrics[lane][lane_metric] == lane_metric_value

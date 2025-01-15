@@ -15,7 +15,7 @@ def error_rate(
     Sometimes, error rate will be 0. or nan (e.g. when no PhiX has been loaded
     on the lane). Use `allow_missing_error_rate` to allow these values.
     """
-    assert self.lane_data
+    assert self.sequencing_metrics
     assert error_threshold > warning_threshold
 
     def _qualify_error(error, lane, read):
@@ -43,7 +43,7 @@ def error_rate(
 
     return [
         qc_report
-        for lane, lane_data in self.lane_data.items()
+        for lane, lane_data in self.sequencing_metrics.items()
         for read, read_data in lane_data["reads"].items()
         if (qc_report := _qualify_error(read_data["mean_error_rate"], lane, read))
     ]

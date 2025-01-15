@@ -12,7 +12,7 @@ from tests.test_utils import float_eq
 @pytest.fixture
 def qc_data_and_exp_val():
     return (
-        namedtuple("QCData", "lane_data")(
+        namedtuple("QCData", "sequencing_metrics")(
             {
                 1: {
                     "reads": {
