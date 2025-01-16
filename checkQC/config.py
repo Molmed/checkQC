@@ -1,8 +1,10 @@
-
-from pkg_resources import Requirement, resource_filename
+from importlib import resources
 import logging
+import checkQC
 from checkQC.exceptions import ConfigEntryMissing
 
+import json
+import jsonschema
 import yaml
 
 
@@ -33,15 +35,32 @@ class ConfigFactory(object):
         :param config_path: path to the config file or None
         :returns: the content of the config file
         """
+        base_path = resources.files(checkQC)
         try:
-            if not config_path:
-                config_path = resource_filename(Requirement.parse('checkQC'), 'checkQC/default_config/config.yaml')
-                log.info("No config file specified, using default config from {}.".format(config_path))
+            with resources.as_file(
+                    base_path / "default_config/config_schema.json") as schema_path:
+                with open(schema_path) as schema_file:
+                    schema = json.load(schema_file)
 
-            with open(config_path) as stream:
-                return yaml.safe_load(stream)
+            if config_path:
+                with open(config_path) as config_file:
+                    config = yaml.safe_load(config_file)
+            else:
+                with resources.as_file(
+                        base_path / "default_config/config.yaml") as config_path:
+                    log.info(
+                        "No config file specified, "
+                        f"using default config from {config_path}."
+                    )
+                    with open(config_path) as config_file:
+                        config = yaml.safe_load(config_file)
+            jsonschema.validate(config, schema)
+            return config
         except FileNotFoundError as e:
             log.error("Could not find config file: {}".format(e))
+            raise e
+        except jsonschema.exceptions.ValidationError as e:
+            log.exception("")
             raise e
 
     @staticmethod
@@ -54,11 +73,19 @@ class ConfigFactory(object):
         :returns: The content of the logging config file.
         """
         try:
-            if not config_path:
-                config_path = resource_filename(Requirement.parse('checkQC'), 'checkQC/default_config/logger.yaml')
-                log.info("No logging config file specified, using default config from {}.".format(config_path))
-            with open(config_path) as stream:
-                return yaml.safe_load(stream)
+            if config_path:
+                with open(config_path) as stream:
+                    return yaml.safe_load(stream)
+            else:
+                base_path = resources.files(checkQC)
+                with resources.as_file(
+                        base_path / "default_config/logger.yaml") as config_path:
+                    log.info(
+                        "No config file specified, "
+                        f"using default config from {config_path}."
+                    )
+                    with open(config_path) as config_file:
+                        return yaml.safe_load(config_file)
         except FileNotFoundError as e:
             log.error("Could not find config file: {}".format(e))
             raise e

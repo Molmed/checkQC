@@ -7,3 +7,4 @@ sample_sheet~=0.13.0
 pandas~=2.2.2
 numpy~=1.26.4
 samshee~=0.2.3
+jsonschema~=4.23.0
