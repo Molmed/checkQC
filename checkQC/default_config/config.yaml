@@ -8,6 +8,9 @@ parser_configurations:
     bcl2fastq_output_path: Data/Intensities/BaseCalls
   SamplesheetParser:
     samplesheet_name: SampleSheet.csv
+  from_bclconvert:
+    reports_location: Reports
+
 
 default_handlers:
   - name: UndeterminedPercentageHandler

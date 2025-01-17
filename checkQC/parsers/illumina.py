@@ -7,12 +7,20 @@ from samshee.sectionedsheet import read_sectionedsheet
 from checkQC.run_type_recognizer import RunTypeRecognizer
 
 @classmethod
-def from_bclconvert(cls, runfolder_path):
+def from_bclconvert(cls, runfolder_path, parser_config):
     runfolder_path = pathlib.Path(runfolder_path)
 
     summary = _read_interop_summary(runfolder_path)
-    quality_metrics = _read_quality_metrics(runfolder_path)
-    top_unknown_barcodes = _read_top_unknown_barcodes(runfolder_path)
+    quality_metrics = _read_quality_metrics(
+        runfolder_path
+        / parser_config["reports_location"]
+        / "Quality_Metrics.csv"
+    )
+    top_unknown_barcodes = _read_top_unknown_barcodes(
+        runfolder_path
+        / parser_config["reports_location"]
+        / "Top_Unknown_Barcodes.csv"
+    )
     samplesheet = _read_samplesheet(runfolder_path)
 
     instrument, read_length = _read_run_metadata(runfolder_path)
@@ -79,16 +87,16 @@ def _read_interop_summary(runfolder_path):
     return summary
 
 
-def _read_quality_metrics(runfolder_path):
-    with open(runfolder_path / "Reports/Quality_Metrics.csv") as csvfile:
+def _read_quality_metrics(quality_metrics_path):
+    with open(quality_metrics_path) as csvfile:
         reader = csv.DictReader(csvfile)
         quality_metrics = [row for row in reader]
 
     return quality_metrics
 
 
-def _read_top_unknown_barcodes(runfolder_path):
-    with open(runfolder_path / "Reports/Top_Unknown_Barcodes.csv") as csvfile:
+def _read_top_unknown_barcodes(top_unknown_barcodes_path):
+    with open(top_unknown_barcodes_path) as csvfile:
         reader = csv.DictReader(csvfile)
         top_unknown_barcodes = [row for row in reader]
 

@@ -129,7 +129,11 @@ def test_qc_data(bclconvert_runfolder):
     runfolder_path = bclconvert_runfolder["path"]
     expected_sequencing_metrics = bclconvert_runfolder["expected_sequencing_metrics"]
 
-    qc_data = QCData.from_bclconvert(runfolder_path)
+    parser_config = {
+        "reports_location": "Reports"
+    }
+
+    qc_data = QCData.from_bclconvert(runfolder_path, parser_config)
 
     assert qc_data.instrument == bclconvert_runfolder["expected_instrument"]
     assert qc_data.read_length == bclconvert_runfolder["expected_read_length"]
