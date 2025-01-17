@@ -6,6 +6,7 @@ from samshee.sectionedsheet import read_sectionedsheet
 
 from checkQC.run_type_recognizer import RunTypeRecognizer
 
+
 @classmethod
 def from_bclconvert(cls, runfolder_path, parser_config):
     runfolder_path = pathlib.Path(runfolder_path)
@@ -88,19 +89,17 @@ def _read_interop_summary(runfolder_path):
 
 
 def _read_quality_metrics(quality_metrics_path):
-    with open(quality_metrics_path) as csvfile:
+    with open(quality_metrics_path, encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
-        quality_metrics = [row for row in reader]
 
-    return quality_metrics
+    return list(reader)
 
 
 def _read_top_unknown_barcodes(top_unknown_barcodes_path):
-    with open(top_unknown_barcodes_path) as csvfile:
+    with open(top_unknown_barcodes_path, encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
-        top_unknown_barcodes = [row for row in reader]
 
-    return top_unknown_barcodes
+    return list(reader)
 
 
 # TODO add docs
