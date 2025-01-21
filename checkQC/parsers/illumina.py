@@ -67,7 +67,6 @@ def from_bclconvert(cls, runfolder_path, parser_config):
                         sample_summary := index_summary.at(lane).at(sample_no)
                     ).sample_id(),
                     "cluster_count": sample_summary.cluster_count(),
-                    "fraction_mapped": sample_summary.fraction_mapped()
                 }
                 for sample_no in range(index_summary.at(lane).size())
             ],

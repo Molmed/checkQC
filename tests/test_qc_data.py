@@ -88,12 +88,10 @@ def bclconvert_runfolder():
                     {
                         "sample_id": "Sample_14574-Qiagen-IndexSet1-SP-Lane1",
                         "cluster_count": 9920,
-                        "fraction_mapped": 0.0019000000320374966,
                     },
                     {
                         "sample_id": "Sample_14575-Qiagen-IndexSet1-SP-Lane1",
                         "cluster_count": 8560,
-                        "fraction_mapped": 0.0015999999595806003,
                     },
                 ],
             },
@@ -135,12 +133,10 @@ def bclconvert_runfolder():
                     {
                         "sample_id": "Sample_14574-Qiagen-IndexSet1-SP-Lane2",
                         "cluster_count": 10208,
-                        "fraction_mapped": 0.0019000000320374966,
                     },
                     {
                         "sample_id": "Sample_14575-Qiagen-IndexSet1-SP-Lane2",
                         "cluster_count": 8672,
-                        "fraction_mapped": 0.0015999999595806003,
                     },
                 ],
             },
