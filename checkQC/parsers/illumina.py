@@ -104,15 +104,13 @@ def _read_interop_summary(runfolder_path):
 def _read_quality_metrics(quality_metrics_path):
     with open(quality_metrics_path, encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
-
-    return list(reader)
+        return list(reader)
 
 
 def _read_top_unknown_barcodes(top_unknown_barcodes_path):
     with open(top_unknown_barcodes_path, encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
-
-    return list(reader)
+        return list(reader)
 
 
 # TODO add docs

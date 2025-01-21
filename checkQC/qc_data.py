@@ -23,7 +23,7 @@ class QCData:
 
     from checkQC.parsers.illumina import from_bclconvert
 
-    from checkQC.qc_checkers import error_rate
+    from checkQC.qc_checkers import error_rate, reads_per_sample
 
     from checkQC.views.illumina import illumina_view
 
@@ -39,7 +39,7 @@ class QCData:
             qc_report
             for handler_config in config["handlers"]
             for qc_report in getattr(
-                self, to_snake_case(handler_config["name"]))(**handler_config)
+                self, handler2checker(handler_config["name"]))(**handler_config)
         ]
 
         return getattr(self, config.get("view", "illumina_view"))(qc_reports)
