@@ -29,7 +29,8 @@ class QCData:
 
         checker_configs = {
             checker_config["name"]: {
-                k: v for k, v in checker_config.items()
+                f"{k}_threshold" if k in ["error", "warning"] else k: v
+                for k, v in checker_config.items()
                 if k != "name"
             }
             for checker_config in configs.get("default_handlers", []) + config["handlers"]

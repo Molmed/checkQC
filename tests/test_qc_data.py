@@ -16,12 +16,22 @@ def bclconvert_runfolder():
         "reports_location": "Reports"
     }
 
+    qc_data = QCData.from_bclconvert(
+        Path(__file__).parent / "resources/bclconvert/200624_A00834_0183_BHMTFYTINY",
+        parser_config,
+    )
+
+    def checker_generator(name):
+        def checker(self, error_threshold, warning_threshold):
+            return [QCErrorFatal(f"{name}={error_threshold}")]
+        return checker
+
+    qc_data.mock_checker = checker_generator("mock_checker")
+    qc_data.mock_checker_bis = checker_generator("mock_checker_bis")
+    qc_data.mock_view = lambda self, qc_reports: qc_reports
+
     return {
-        "qc_data":  QCData.from_bclconvert(
-            Path(__file__).parent
-                / "resources/bclconvert/200624_A00834_0183_BHMTFYTINY",
-            parser_config,
-        ),
+        "qc_data": qc_data,
         "expected_instrument": "novaseq_SP",
         "expected_read_length": 36,
         "expected_samplesheet": {
@@ -152,22 +162,23 @@ def test_qc_data(bclconvert_runfolder):
         == bclconvert_runfolder["expected_samplesheet"]["BCLConvert_Data"]["head"]
     )
 
-    for lane, lane_data in expected_sequencing_metrics.items():
-        for lane_metric, lane_metric_value in lane_data.items():
+    for lane, expected_lane_data in expected_sequencing_metrics.items():
+        for lane_metric, expected_lane_metric_value in expected_lane_data.items():
+            lane_data = qc_data.sequencing_metrics[lane]
             match lane_metric:
                 case "top_unknown_barcodes":
-                    assert len(qc_data.sequencing_metrics[lane][lane_metric]) == lane_metric_value["len"]
-                    assert qc_data.sequencing_metrics[lane][lane_metric][:5] == lane_metric_value["head"]
+                    assert len(lane_data[lane_metric]) == expected_lane_metric_value["len"]
+                    assert lane_data[lane_metric][:5] == expected_lane_metric_value["head"]
                 case "reads":
-                    for read, read_data in lane_metric_value.items():
-                        for read_metric, read_metric_value in read_data.items():
-                            actual_value = qc_data.sequencing_metrics[lane]["reads"][read][read_metric]
-                            if type(read_metric_value) == float:
-                                assert float_eq(read_metric_value, actual_value)
+                    for read, expected_read_data in expected_lane_metric_value.items():
+                        for read_metric, expected_read_metric_value in expected_read_data.items():
+                            read_metric_value = lane_data["reads"][read][read_metric]
+                            if type(expected_read_metric_value) == float:
+                                assert float_eq(expected_read_metric_value, read_metric_value)
                             else:
-                                assert read_metric_value == actual_value
+                                assert expected_read_metric_value == read_metric_value
                 case _:
-                    assert qc_data.sequencing_metrics[lane][lane_metric] == lane_metric_value
+                    assert lane_data[lane_metric] == expected_lane_metric_value
 
 
 @pytest.fixture
@@ -194,13 +205,11 @@ def test_report(bclconvert_runfolder, checker_configs):
     mock_qc_error = QCErrorFatal("Mock error message")
 
     qc_data = bclconvert_runfolder["qc_data"]
-    qc_data.mock_checker = lambda self, error, warning: [mock_qc_error]
-    qc_data.mock_view = lambda self, qc_reports: qc_reports
 
     reports = qc_data.report(checker_configs)
 
     assert len(reports) == 1
-    assert str(reports[0]) == str(mock_qc_error)
+    assert "mock_checker=5" in str(reports[0])
 
 
 def test_report_default_checker(bclconvert_runfolder, checker_configs):
@@ -210,34 +219,27 @@ def test_report_default_checker(bclconvert_runfolder, checker_configs):
     ]
 
     qc_data = bclconvert_runfolder["qc_data"]
-    qc_data.mock_checker = lambda self, error, warning: [QCErrorFatal(f"error={error}")]
-    qc_data.mock_checker_bis = lambda self, error, warning: [QCErrorFatal(f"error_bis={error}")]
-    qc_data.mock_view = lambda self, qc_reports: qc_reports
 
     reports = qc_data.report(checker_configs)
 
     assert len(reports) == 2
-    assert any("error=5" in str(report) for report in reports)
-    assert any("error_bis=0" in str(report) for report in reports)
+    assert any("mock_checker=5" in str(report) for report in reports)
+    assert any("mock_checker_bis=0" in str(report) for report in reports)
 
 
 def test_report_range_read_len(bclconvert_runfolder, checker_configs):
     qc_data = bclconvert_runfolder["qc_data"]
     qc_data.read_length = 38
-    qc_data.mock_checker = lambda self, error, warning: [QCErrorFatal(f"error={error}")]
-    qc_data.mock_view = lambda self, qc_reports: qc_reports
 
     reports = qc_data.report(checker_configs)
 
     assert len(reports) == 1
-    assert "error=6" in str(reports[0])
+    assert "mock_checker=6" in str(reports[0])
 
 
 def test_report_use_closest_read_len(bclconvert_runfolder, checker_configs):
     qc_data = bclconvert_runfolder["qc_data"]
     qc_data.read_length = 35
-    qc_data.mock_checker = lambda self, error, warning: [QCErrorFatal(f"error={error}")]
-    qc_data.mock_view = lambda self, qc_reports: qc_reports
 
     with pytest.raises(KeyError):
         reports = qc_data.report(checker_configs)
@@ -245,4 +247,4 @@ def test_report_use_closest_read_len(bclconvert_runfolder, checker_configs):
     reports = qc_data.report(checker_configs, use_closest_read_len=True)
 
     assert len(reports) == 1
-    assert "error=5" in str(reports[0])
+    assert "mock_checker=5" in str(reports[0])
