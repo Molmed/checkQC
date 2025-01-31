@@ -1,17 +1,27 @@
 from pathlib import Path
+from unittest import mock
 
 import numpy as np
 import pytest
 
 from checkQC.qc_data import QCData
+from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
 
 from tests.test_utils import float_eq
 
 
 @pytest.fixture
 def bclconvert_runfolder():
+    parser_config = {
+        "reports_location": "Reports"
+    }
+
     return {
-        "path":  Path(__file__).parent / "resources/bclconvert/200624_A00834_0183_BHMTFYTINY",
+        "qc_data":  QCData.from_bclconvert(
+            Path(__file__).parent
+                / "resources/bclconvert/200624_A00834_0183_BHMTFYTINY",
+            parser_config,
+        ),
         "expected_instrument": "novaseq_SP",
         "expected_read_length": 36,
         "expected_samplesheet": {
@@ -125,15 +135,10 @@ def bclconvert_runfolder():
         },
     }
 
+
 def test_qc_data(bclconvert_runfolder):
-    runfolder_path = bclconvert_runfolder["path"]
+    qc_data = bclconvert_runfolder["qc_data"]
     expected_sequencing_metrics = bclconvert_runfolder["expected_sequencing_metrics"]
-
-    parser_config = {
-        "reports_location": "Reports"
-    }
-
-    qc_data = QCData.from_bclconvert(runfolder_path, parser_config)
 
     assert qc_data.instrument == bclconvert_runfolder["expected_instrument"]
     assert qc_data.read_length == bclconvert_runfolder["expected_read_length"]
@@ -163,3 +168,81 @@ def test_qc_data(bclconvert_runfolder):
                                 assert read_metric_value == actual_value
                 case _:
                     assert qc_data.sequencing_metrics[lane][lane_metric] == lane_metric_value
+
+
+@pytest.fixture
+def checker_configs():
+    return {
+        "novaseq_SP": {
+            "37-39": {
+                "view": "mock_view",
+                "handlers": [
+                    {"name": "mock_checker", "error": 6, "warning": 2},
+                ],
+            },
+            "36": {
+                "view": "mock_view",
+                "handlers": [
+                    {"name": "mock_checker", "error": 5, "warning": 2},
+                ],
+            },
+        },
+    }
+
+
+def test_report(bclconvert_runfolder, checker_configs):
+    mock_qc_error = QCErrorFatal("Mock error message")
+
+    qc_data = bclconvert_runfolder["qc_data"]
+    qc_data.mock_checker = lambda self, error, warning: [mock_qc_error]
+    qc_data.mock_view = lambda self, qc_reports: qc_reports
+
+    reports = qc_data.report(checker_configs)
+
+    assert len(reports) == 1
+    assert str(reports[0]) == str(mock_qc_error)
+
+
+def test_report_default_checker(bclconvert_runfolder, checker_configs):
+    checker_configs["default_handlers"] = [
+        {"name": "mock_checker", "error": 2, "warning": 1},
+        {"name": "mock_checker_bis", "error": 0, "warning": 1},
+    ]
+
+    qc_data = bclconvert_runfolder["qc_data"]
+    qc_data.mock_checker = lambda self, error, warning: [QCErrorFatal(f"error={error}")]
+    qc_data.mock_checker_bis = lambda self, error, warning: [QCErrorFatal(f"error_bis={error}")]
+    qc_data.mock_view = lambda self, qc_reports: qc_reports
+
+    reports = qc_data.report(checker_configs)
+
+    assert len(reports) == 2
+    assert any("error=5" in str(report) for report in reports)
+    assert any("error_bis=0" in str(report) for report in reports)
+
+
+def test_report_range_read_len(bclconvert_runfolder, checker_configs):
+    qc_data = bclconvert_runfolder["qc_data"]
+    qc_data.read_length = 38
+    qc_data.mock_checker = lambda self, error, warning: [QCErrorFatal(f"error={error}")]
+    qc_data.mock_view = lambda self, qc_reports: qc_reports
+
+    reports = qc_data.report(checker_configs)
+
+    assert len(reports) == 1
+    assert "error=6" in str(reports[0])
+
+
+def test_report_use_closest_read_len(bclconvert_runfolder, checker_configs):
+    qc_data = bclconvert_runfolder["qc_data"]
+    qc_data.read_length = 35
+    qc_data.mock_checker = lambda self, error, warning: [QCErrorFatal(f"error={error}")]
+    qc_data.mock_view = lambda self, qc_reports: qc_reports
+
+    with pytest.raises(KeyError):
+        reports = qc_data.report(checker_configs)
+
+    reports = qc_data.report(checker_configs, use_closest_read_len=True)
+
+    assert len(reports) == 1
+    assert "error=5" in str(reports[0])
