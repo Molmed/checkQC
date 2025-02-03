@@ -22,7 +22,7 @@ def error_rate(
     )
 
     def _qualify_error(error, lane, read):
-        data={
+        data = {
             "lane": lane,
             "read": read,
             "error": error,
