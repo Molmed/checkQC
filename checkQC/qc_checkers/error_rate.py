@@ -16,7 +16,10 @@ def error_rate(
     on the lane). Use `allow_missing_error_rate` to allow these values.
     """
     assert self.sequencing_metrics
-    assert error_threshold > warning_threshold
+    assert (
+        (error_threshold == "unknown" or warning_threshold == "unknown")
+        or error_threshold > warning_threshold
+    )
 
     def _qualify_error(error, lane, read):
         data={
@@ -34,10 +37,10 @@ def error_rate(
                     "Use \"allow_missing_error_rate: true\" to disable this error message.",
                     data=data,
                 )
-            case error if error > error_threshold:
+            case error if error_threshold != "unknown" and error > error_threshold:
                 data["threshold"] = error_threshold
                 return QCErrorFatal(msg.format(**data), data=data)
-            case error if error > warning_threshold:
+            case error if warning_threshold != "unknown" and error > warning_threshold:
                 data["threshold"] = warning_threshold
                 return QCErrorWarning(msg.format(**data), data=data)
 
