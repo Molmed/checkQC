@@ -20,8 +20,9 @@ class QCData:
 
     from checkQC.parsers.illumina import from_bclconvert
 
-    from checkQC.qc_checkers import error_rate
     from checkQC.qc_checkers import cluster_pf
+    from checkQC.qc_checkers import error_rate
+    from checkQC.qc_checkers import reads_per_sample
 
     from checkQC.views.illumina import illumina_view
 
