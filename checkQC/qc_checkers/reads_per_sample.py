@@ -14,7 +14,8 @@ def reads_per_sample(
     assert self.sequencing_metrics
     assert error_threshold < warning_threshold
 
-    def _qualify_error(lane, number_of_samples, sample_id, sample_reads):
+    def _qualify_error(lane, number_of_samples, sample_id, cluster_count):
+        sample_reads = cluster_count / 10**6
         data = {
             "lane": lane,
             "number_of_samples": number_of_samples,
