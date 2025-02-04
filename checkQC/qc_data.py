@@ -1,10 +1,7 @@
-import interop
-import csv
-import pathlib
-
-from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
+import re
 
 from checkQC.qc_checkers.utils import handler2checker
+
 
 class QCData:
     def __init__(
@@ -27,19 +24,47 @@ class QCData:
 
     from checkQC.views.illumina import illumina_view
 
-    def report(self, config):
-        # TODO select correct config based on read_len and instrument
-        # TODO make sure default_handlers are included
-        # TODO add optional parameter to select closest read length
-        # TODO validate config with schema
-        #   - schema could be dynamic, i.e. we add the handlers named allowed
-        #   based on the methods defined in QCData
+    def report(self, configs, use_closest_read_len=False):
+        config = self._get_config(configs[self.instrument], use_closest_read_len)
+
+        checker_configs = {
+            checker_config["name"]: {
+                f"{k}_threshold" if k in ["error", "warning"] else k: v
+                for k, v in checker_config.items()
+                if k != "name"
+            }
+            for checker_config in configs.get("default_handlers", []) + config["handlers"]
+        }
 
         qc_reports = [
             qc_report
-            for handler_config in config["handlers"]
-            for qc_report in getattr(
-                self, handler2checker(handler_config["name"]))(**handler_config)
+            for checker, checker_config in checker_configs.items()
+            for qc_report in getattr(self, handler2checker(checker))(self, **checker_config)
         ]
 
-        return getattr(self, config.get("view", "illumina_view"))(qc_reports)
+        return getattr(self, config.get("view", "illumina_view"))(self, qc_reports)
+
+    def _get_config(self, instrument_configs, use_closest_read_len):
+        def dist(read_len):
+            if mtch := re.match(r"(\d+)-(\d+)", read_len):
+                low, high = (int(n) for n in mtch.groups())
+                return (
+                    0
+                    if low <= self.read_length <= high
+                    else min(
+                        abs(low - self.read_length),
+                        abs(high - self.read_length)
+                    )
+                )
+            else:
+                return abs(int(read_len) - self.read_length)
+
+        best_match_read_len = min(instrument_configs, key=dist)
+
+        if not use_closest_read_len and dist(best_match_read_len) > 0:
+            raise KeyError(
+                f"No config entry matching read length {self.read_length}"
+                f"found for instrument {self.instrument}."
+            )
+
+        return instrument_configs[best_match_read_len]

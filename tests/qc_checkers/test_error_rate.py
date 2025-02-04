@@ -81,6 +81,51 @@ def test_error_rate(qc_data_and_exp_val):
         for k, v in expected_report.data.items():
             assert float_eq(qc_report.data[k], v)
 
+def test_error_rate_error_unknown(qc_data_and_exp_val):
+    qc_data, exp_val = qc_data_and_exp_val
+    qc_reports = error_rate(
+        qc_data,
+        error_threshold="unknown",
+        warning_threshold=100.,
+    )
+
+    del exp_val[2][1]
+
+    assert len(qc_reports) == sum(len(v) for v in exp_val.values())
+    for qc_report in qc_reports:
+        lane, read = qc_report.data['lane'], qc_report.data['read']
+        expected_report = exp_val[lane][read]
+
+        assert qc_report.message == expected_report.message
+
+        if lane != 1 or read not in [1, 3]:
+            assert qc_report.type() == QCErrorWarning("").type()
+        else:
+            assert qc_report.type() == expected_report.type()
+
+        for k, v in expected_report.data.items():
+            assert float_eq(qc_report.data[k], v)
+
+def test_error_rate_warning_unknown(qc_data_and_exp_val):
+    qc_data, exp_val = qc_data_and_exp_val
+    qc_reports = error_rate(
+        qc_data,
+        error_threshold=100.,
+        warning_threshold="unknown",
+    )
+
+    del exp_val[2][1]
+
+    assert len(qc_reports) == sum(len(v) for v in exp_val.values())
+    for qc_report in qc_reports:
+        lane, read = qc_report.data['lane'], qc_report.data['read']
+        expected_report = exp_val[lane][read]
+
+        assert qc_report.message == expected_report.message
+        assert qc_report.type() == expected_report.type()
+        for k, v in expected_report.data.items():
+            assert float_eq(qc_report.data[k], v)
+
 
 def test_error_rate_allow_missing(qc_data_and_exp_val):
     qc_data, exp_val = qc_data_and_exp_val
