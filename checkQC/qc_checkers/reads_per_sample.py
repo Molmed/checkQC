@@ -1,5 +1,3 @@
-import numpy as np
-
 from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
 
 
@@ -46,7 +44,7 @@ def reads_per_sample(
                 lane,
                 len(lane_data["reads_per_sample"]),
                 sample_data["sample_id"],
-                sample_data["cluster_count"] / np.power(10, 6),
+                sample_data["cluster_count"],
             ),
         )
     ]
