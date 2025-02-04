@@ -1,7 +1,7 @@
 from collections import namedtuple
 import pytest
 
-from checkQC.qc_checkers.reads_per_sample import reads_per_sample
+from checkQC.qc_checkers import reads_per_sample
 from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
 
 
@@ -78,3 +78,25 @@ def test_reads_per_sample(qc_data_and_exp_val):
         assert qc_report.type() == expected_report.type()
         for k, v in expected_report.data.items():
             assert qc_report.data[k] == v
+
+
+def test_reads_per_sample_unknown_threshold(qc_data_and_exp_val):
+    qc_data, exp_val = qc_data_and_exp_val
+    qc_reports = reads_per_sample(
+        qc_data,
+        error_threshold="unknown",
+        warning_threshold=60,
+    )
+
+    assert len(qc_reports) == 4
+    expected_report = QCErrorWarning(
+                "Number of reads for sample Sample_B on lane 1 were too low:"
+                " 20.0 M (threshold: 30.0 M)",
+                data={"lane": 1,
+                      "number_of_samples": 2,
+                      "sample_id": "Sample_B",
+                      "sample_reads": 20,
+                      "threshold": 30}
+                )
+    assert qc_reports[1].type() == expected_report.type()
+    assert qc_reports[1].data == expected_report.data

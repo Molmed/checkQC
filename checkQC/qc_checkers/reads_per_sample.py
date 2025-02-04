@@ -10,7 +10,10 @@ def reads_per_sample(
     Check number of reads per sample
     """
     assert self.sequencing_metrics
-    assert error_threshold < warning_threshold
+    assert (
+        (error_threshold == "unknown" or warning_threshold == "unknown")
+        or error_threshold < warning_threshold
+    )
 
     def _qualify_error(lane, number_of_samples, sample_id, cluster_count):
         sample_reads = cluster_count / 10**6
@@ -24,13 +27,19 @@ def reads_per_sample(
               "{sample_reads} M (threshold: {threshold} M)"
 
         match sample_reads:
-            case sample_reads if sample_reads < (
-                threshold := float(error_threshold) / number_of_samples
+            case sample_reads if (
+                error_threshold != "unknown"
+                and sample_reads < (
+                    threshold := float(error_threshold) / number_of_samples
+                    )
             ):
                 data["threshold"] = threshold
                 return QCErrorFatal(msg.format(**data), data=data)
-            case sample_reads if sample_reads < (
-                threshold := float(warning_threshold) / number_of_samples
+            case sample_reads if (
+                warning_threshold != "unknown"
+                and sample_reads < (
+                    threshold := float(warning_threshold) / number_of_samples
+                    )
             ):
                 data["threshold"] = threshold
                 return QCErrorWarning(msg.format(**data), data=data)
