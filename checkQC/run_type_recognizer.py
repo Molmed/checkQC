@@ -223,7 +223,6 @@ class RunTypeRecognizer(object):
             "A": NovaSeq,
             "FS": ISeq,
             "LH": NovaSeqXPlus,
-            "V": NextSeq2000,
             "NB": NextSeq500
         }
 
