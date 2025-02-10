@@ -606,6 +606,9 @@ nextseq500_high:
       - name: Q30Handler
         warning: 80
         error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 15
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -618,6 +621,9 @@ nextseq500_high:
       - name: Q30Handler
         warning: 75
         error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 15
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -630,12 +636,15 @@ nextseq500_high:
       - name: Q30Handler
         warning: 75
         error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 15
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
         error: unknown
 
-nextseq500_low:
+nextseq500_mid:
   76:
     handlers:
       - name: ClusterPFHandler
@@ -644,6 +653,9 @@ nextseq500_low:
       - name: Q30Handler
         warning: 80
         error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 15
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -656,6 +668,9 @@ nextseq500_low:
       - name: Q30Handler
         warning: 75
         error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 15
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -668,6 +683,103 @@ nextseq500_low:
       - name: Q30Handler
         warning: 75
         error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 15
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1.5
+        error: unknown
+
+nextseq550_high:
+  76:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 60
+        error: unknown
+      - name: Q30Handler
+        warning: 80
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 15
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1.5
+        error: unknown
+  151:
+      handlers:
+      - name: ClusterPFHandler
+        warning: 60
+        error: unknown
+      - name: Q30Handler
+        warning: 75
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 15
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1.5
+        error: unknown
+  301:
+      handlers:
+      - name: ClusterPFHandler
+        warning: 60
+        error: unknown
+      - name: Q30Handler
+        warning: 75
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 15
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1.5
+        error: unknown
+
+nextseq550_mid:
+  76:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 60
+        error: unknown
+      - name: Q30Handler
+        warning: 80
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 15
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1.5
+        error: unknown
+  151:
+      handlers:
+      - name: ClusterPFHandler
+        warning: 60
+        error: unknown
+      - name: Q30Handler
+        warning: 75
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 15
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1.5
+        error: unknown
+  301:
+      handlers:
+      - name: ClusterPFHandler
+        warning: 60
+        error: unknown
+      - name: Q30Handler
+        warning: 75
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 15
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
