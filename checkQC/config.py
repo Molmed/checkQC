@@ -60,7 +60,7 @@ class ConfigFactory(object):
             log.error("Could not find config file: {}".format(e))
             raise e
         except jsonschema.exceptions.ValidationError as e:
-            log.exception("")
+            log.exception(f"Config {config_file} failed schema validation")
             raise e
 
     @staticmethod
