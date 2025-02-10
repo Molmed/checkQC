@@ -15,7 +15,6 @@ def handler2checker(s):
     """
     words = [
         mtch.group().lower().replace('_', '')
-        #for mtch in re.finditer(r"[A-Z]?([a-z0-9]+|[A-Z0-9]+)(?=$|[A-Z]|_)", s)
         for mtch in re.finditer(r"[A-Z]?([a-z0-9]+|[A-Z0-9]+)(?=$|[A-Z]|_)", s)
     ]
 
