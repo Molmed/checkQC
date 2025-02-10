@@ -4,7 +4,7 @@ from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
 
 
 def error_rate(
-        self,
+        qc_data,
         error_threshold,
         warning_threshold,
         allow_missing_error_rate=False,
@@ -15,7 +15,7 @@ def error_rate(
     Sometimes, error rate will be 0. or nan (e.g. when no PhiX has been loaded
     on the lane). Use `allow_missing_error_rate` to allow these values.
     """
-    assert self.sequencing_metrics
+    assert qc_data.sequencing_metrics
     assert (
         (error_threshold == "unknown" or warning_threshold == "unknown")
         or error_threshold > warning_threshold
@@ -46,7 +46,7 @@ def error_rate(
 
     return [
         qc_report
-        for lane, lane_data in self.sequencing_metrics.items()
+        for lane, lane_data in qc_data.sequencing_metrics.items()
         for read, read_data in lane_data["reads"].items()
         if (qc_report := _qualify_error(read_data["mean_error_rate"], lane, read))
     ]

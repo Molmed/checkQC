@@ -14,7 +14,7 @@ def qc_reports():
     ]
 
 def test_illumima_view(qc_reports):
-    result = illumina_view(None, qc_reports)
+    result = illumina_view(qc_reports)
 
     assert len(result["lane reports"]) == 2
     assert len(result["lane reports"][1]["read reports"]) == 2

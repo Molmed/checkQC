@@ -1,7 +1,7 @@
 from itertools import groupby
 
 
-def illumina_view(self, qc_reports):
+def illumina_view(qc_reports):
     """
     Group reports by lane and by read
     """
