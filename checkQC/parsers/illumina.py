@@ -107,7 +107,7 @@ def _read_quality_metrics(quality_metrics_path):
 
 def _read_top_unknown_barcodes(top_unknown_barcodes_path):
     with open(top_unknown_barcodes_path, encoding="utf-8") as csvfile:
-         return  list(csv.DictReader(csvfile))
+         return list(csv.DictReader(csvfile))
 
 
 # TODO add docs
