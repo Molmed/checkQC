@@ -220,8 +220,6 @@ def checker_configs():
 
 
 def test_report(bclconvert_runfolder, checker_configs):
-    mock_qc_error = QCErrorFatal("Mock error message")
-
     qc_data = bclconvert_runfolder["qc_data"]
 
     reports = qc_data.report(checker_configs)
