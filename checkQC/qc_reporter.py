@@ -10,6 +10,9 @@ log = logging.getLogger(__name__)
 
 
 class QCReporter:
+    """
+    Class to generate QC reports based on QCData.
+    """
     def __init__(
         self,
         configs,

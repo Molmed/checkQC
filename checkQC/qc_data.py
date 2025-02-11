@@ -1,4 +1,10 @@
 class QCData:
+    """
+    Represents the data contained in a runfolder.
+
+    Various constructors are available, depending on which demultiplexer
+    was used to process the runfolder.
+    """
     def __init__(
         self,
         instrument,
