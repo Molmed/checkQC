@@ -43,7 +43,11 @@ class QCReporter:
         if any(qc_report.type() == "error" for qc_report in qc_reports):
             exit_status = 1
 
-        return exit_status, getattr(checkQC.views, config["view"])(qc_reports)
+        return exit_status, getattr(checkQC.views, config["view"])(
+            checker_configs,
+            qc_data,
+            qc_reports,
+        )
 
     def _select_configs(
         self,

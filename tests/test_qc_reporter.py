@@ -52,7 +52,7 @@ def qc_reporter(checker_configs):
 
             qc_checkers.mock_checker = checker_generator("mock_checker")
             qc_checkers.mock_checker_bis = checker_generator("mock_checker_bis")
-            qc_views.mock_view = lambda qc_reports: qc_reports
+            qc_views.mock_view = lambda checker_configs, qc_data, qc_reports: qc_reports
 
             yield qc_reporter
 

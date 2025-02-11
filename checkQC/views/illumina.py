@@ -1,7 +1,7 @@
 from itertools import groupby
 
 
-def illumina_view(qc_reports):
+def illumina_view(checker_configs, qc_data, qc_reports):
     """
     Group reports by lane and by read
     """
@@ -33,7 +33,12 @@ def illumina_view(qc_reports):
             str(report)
             for report in qc_reports
             if "lane" not in report.data
-        ]
+        ],
+        "run_summary": {
+            "instrument_and_reagent_version": qc_data.instrument,
+            "read_length": qc_data.read_length,
+            "checkers": checker_configs,
+        }
     }
 
 def group_reports(reports, key):
