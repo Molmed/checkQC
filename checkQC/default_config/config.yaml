@@ -601,14 +601,14 @@ nextseq500_high:
   76:
     handlers:
       - name: ClusterPFHandler
-        warning: 60
+        warning: 100
         error: unknown
       - name: Q30Handler
         warning: 80
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 15
+        error: 75
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -616,14 +616,14 @@ nextseq500_high:
   151:
       handlers:
       - name: ClusterPFHandler
-        warning: 60
+        warning: 100
         error: unknown
       - name: Q30Handler
         warning: 75
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 15
+        error: 75
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -648,14 +648,14 @@ nextseq500_mid:
   76:
     handlers:
       - name: ClusterPFHandler
-        warning: 60
+        warning: 32
         error: unknown
       - name: Q30Handler
         warning: 80
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 15
+        error: 24
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -663,14 +663,14 @@ nextseq500_mid:
   151:
       handlers:
       - name: ClusterPFHandler
-        warning: 60
+        warning: 32
         error: unknown
       - name: Q30Handler
         warning: 75
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 15
+        error: 24
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -678,14 +678,14 @@ nextseq500_mid:
   301:
       handlers:
       - name: ClusterPFHandler
-        warning: 60
+        warning: 32
         error: unknown
       - name: Q30Handler
         warning: 75
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 15
+        error: 24
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -695,14 +695,14 @@ nextseq550_high:
   76:
     handlers:
       - name: ClusterPFHandler
-        warning: 60
+        warning: 100
         error: unknown
       - name: Q30Handler
         warning: 80
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 15
+        error: 75
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -710,14 +710,14 @@ nextseq550_high:
   151:
       handlers:
       - name: ClusterPFHandler
-        warning: 60
+        warning: 100
         error: unknown
       - name: Q30Handler
         warning: 75
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 15
+        error: 75
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -725,14 +725,14 @@ nextseq550_high:
   301:
       handlers:
       - name: ClusterPFHandler
-        warning: 60
+        warning: 100
         error: unknown
       - name: Q30Handler
         warning: 75
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 15
+        error: 75
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -742,14 +742,14 @@ nextseq550_mid:
   76:
     handlers:
       - name: ClusterPFHandler
-        warning: 60
+        warning: 32
         error: unknown
       - name: Q30Handler
         warning: 80
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 15
+        error: 24
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -757,14 +757,14 @@ nextseq550_mid:
   151:
       handlers:
       - name: ClusterPFHandler
-        warning: 60
+        warning: 32
         error: unknown
       - name: Q30Handler
         warning: 75
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 15
+        error: 24
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5
@@ -772,14 +772,14 @@ nextseq550_mid:
   301:
       handlers:
       - name: ClusterPFHandler
-        warning: 60
+        warning: 32
         error: unknown
       - name: Q30Handler
         warning: 75
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
-        error: 15
+        error: 24
       - name: ErrorRateHandler
         allow_missing_error_rate: False
         warning: 1.5

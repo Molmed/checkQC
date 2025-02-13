@@ -168,6 +168,7 @@ class HiSeq2500(IlluminaInstrument):
 
         return "{}_{}".format(run_mode, format_reagent_version)
 
+
 class NextSeq500(IlluminaInstrument):
 
     @staticmethod
@@ -181,7 +182,7 @@ class NextSeq500(IlluminaInstrument):
         Find the reagent kit type for this run (high or mid output kit)
 
         :returns: reagent version in format "high" or "mid"
-         """
+        """
 
         try:
             # Format: "NextSeq RUNTYPE"
@@ -190,6 +191,7 @@ class NextSeq500(IlluminaInstrument):
             raise ReagentVersionUnknown("No reagent version specified for this instrument type")
 
         return reagent_version
+
 
 class NextSeq550(IlluminaInstrument):
 
@@ -204,7 +206,7 @@ class NextSeq550(IlluminaInstrument):
         Find the reagent kit type for this run (high or mid output kit)
 
         :returns: reagent version in format "high" or "mid"
-         """
+        """
 
         try:
             # Format: "NextSeq RUNTYPE"
@@ -252,7 +254,7 @@ class RunTypeRecognizer(object):
             "FS": ISeq,
             "LH": NovaSeqXPlus,
             "NS": NextSeq500,
-            "NB": NextSeq550
+            "NB": NextSeq550,
         }
 
         for instrument_code, instrument_class in machine_type_mappings.items():
