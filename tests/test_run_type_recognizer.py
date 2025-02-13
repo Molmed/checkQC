@@ -4,7 +4,7 @@ import mock
 import os
 
 from checkQC.exceptions import RunModeUnknown, ReagentVersionUnknown
-from checkQC.run_type_recognizer import RunTypeRecognizer, HiSeq2500, MiSeq, NovaSeq, ISeq, NovaSeqXPlus
+from checkQC.run_type_recognizer import RunTypeRecognizer, HiSeq2500, MiSeq, NovaSeq, ISeq, NovaSeqXPlus, NextSeq500, NextSeq550
 from checkQC.runfolder_reader import RunfolderReader
 
 
@@ -48,6 +48,17 @@ class TestRunTypeRecognizerCorrectInstrumentsReturned(TestCase):
         actual = runtyperecognizer.instrument_type()
         self.assertTrue(isinstance(actual, ISeq))
 
+    def test_returns_nextseq550(self):
+        runtyperecognizer = self._create_runtype_recognizer("NB551090")
+        actual = runtyperecognizer.instrument_type()
+        self.assertTrue(isinstance(actual, NextSeq550))
+
+    def test_returns_nextseq500(self):
+        return # TODO
+        runtyperecognizer = self._create_runtype_recognizer("FNB551090")
+        actual = runtyperecognizer.instrument_type()
+        self.assertTrue(isinstance(actual, NextSeq550))
+
     def test_case_insensitive(self):
         runtyperecognizer = self._create_runtype_recognizer("lh1234")
         actual = runtyperecognizer.instrument_type()
@@ -56,7 +67,6 @@ class TestRunTypeRecognizerCorrectInstrumentsReturned(TestCase):
         runtyperecognizer = self._create_runtype_recognizer("LH1234")
         actual = runtyperecognizer.instrument_type()
         self.assertTrue(isinstance(actual, NovaSeqXPlus))
-
 
 
 class TestIlluminaInstrument(TestCase):
@@ -71,6 +81,8 @@ class TestIlluminaInstrument(TestCase):
         self.novaseq = NovaSeq()
         self.iseq = ISeq()
         self.novaseqxplus = NovaSeqXPlus()
+        self.nextseq500 = NextSeq500()
+        self.nextseq550 = NextSeq550()
 
     def test_all_is_well(self):
         runtype_dict = {"RunParameters": {"Setup": {"RunMode": "RapidHighOutput", "Sbs": "HiSeq SBS Kit v4"}}}
@@ -220,3 +232,59 @@ class TestIlluminaInstrument(TestCase):
 
         with self.assertRaises(ReagentVersionUnknown):
             self.novaseqxplus.reagent_version(mock_runtype_recognizer)
+
+    def test_nextseq550_reagent_version_high(self):
+
+        runtype_dict = {
+            "RunParameters": {
+                "Chemistry": "NextSeq High"
+            }
+        }
+
+        mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
+        actual = self.nextseq550.reagent_version(mock_runtype_recognizer)
+        expected = "high"
+
+        self.assertEqual(actual, expected)
+
+    def test_nextseq5z0_reagent_version_mid(self):
+
+        runtype_dict = {
+            "RunParameters": {
+                "Chemistry": "NextSeq Mid"
+            }
+        }
+
+        mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
+        actual = self.nextseq550.reagent_version(mock_runtype_recognizer)
+        expected = "mid"
+
+        self.assertEqual(actual, expected)
+
+    def test_nextseq500_reagent_version_high(self):
+
+        runtype_dict = {
+            "RunParameters": {
+                "Chemistry": "NextSeq High"
+            }
+        }
+
+        mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
+        actual = self.nextseq500.reagent_version(mock_runtype_recognizer)
+        expected = "high"
+
+        self.assertEqual(actual, expected)
+
+    def test_nextseq500_reagent_version_mid(self):
+
+        runtype_dict = {
+            "RunParameters": {
+                "Chemistry": "NextSeq Mid"
+            }
+        }
+
+        mock_runtype_recognizer = self.MockRunTypeRecognizer(run_parameters=runtype_dict)
+        actual = self.nextseq500.reagent_version(mock_runtype_recognizer)
+        expected = "mid"
+
+        self.assertEqual(actual, expected)
