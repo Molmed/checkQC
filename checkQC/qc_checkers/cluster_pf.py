@@ -2,11 +2,11 @@ from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
 
 
 def cluster_pf(
-    self,
+    qc_data,
     error_threshold,
     warning_threshold
 ):
-    assert self.sequencing_metrics
+    assert qc_data.sequencing_metrics
     assert (
         (error_threshold == "unknown" or warning_threshold == "unknown")
         or error_threshold < warning_threshold
@@ -42,7 +42,7 @@ def cluster_pf(
 
     return [
         qc_report
-        for lane, lane_data in self.sequencing_metrics.items()
+        for lane, lane_data in qc_data.sequencing_metrics.items()
         if (qc_report := _qualify_error(lane_data["total_cluster_pf"], lane))
     ]
 

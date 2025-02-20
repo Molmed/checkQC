@@ -2,14 +2,14 @@ from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
 
 
 def reads_per_sample(
-    self,
+    qc_data,
     error_threshold,
     warning_threshold,
 ):
     """
     Check number of reads per sample
     """
-    assert self.sequencing_metrics
+    assert qc_data.sequencing_metrics
     assert (
         (error_threshold == "unknown" or warning_threshold == "unknown")
         or error_threshold < warning_threshold
@@ -46,7 +46,7 @@ def reads_per_sample(
 
     return [
         qc_report
-        for lane, lane_data in self.sequencing_metrics.items()
+        for lane, lane_data in qc_data.sequencing_metrics.items()
         for sample_data in lane_data["reads_per_sample"]
         if (
             qc_report := _qualify_error(

@@ -21,14 +21,6 @@ def bclconvert_runfolder():
         parser_config,
     )
 
-    def checker_generator(name):
-        def checker(self, error_threshold, warning_threshold):
-            return [QCErrorFatal(f"{name}={error_threshold}")]
-        return checker
-
-    qc_data.mock_checker = checker_generator("mock_checker")
-    qc_data.mock_checker_bis = checker_generator("mock_checker_bis")
-    qc_data.mock_view = lambda self, qc_reports: qc_reports
 
     return {
         "qc_data": qc_data,
@@ -197,70 +189,3 @@ def test_qc_data(bclconvert_runfolder):
                                 assert expected_read_metric_value == read_metric_value
                 case _:
                     assert lane_data[lane_metric] == expected_lane_metric_value
-
-
-@pytest.fixture
-def checker_configs():
-    return {
-        "novaseq_SP": {
-            "37-39": {
-                "view": "mock_view",
-                "handlers": [
-                    {"name": "mock_checker", "error": 6, "warning": 2},
-                ],
-            },
-            "36": {
-                "view": "mock_view",
-                "handlers": [
-                    {"name": "mock_checker", "error": 5, "warning": 2},
-                ],
-            },
-        },
-    }
-
-
-def test_report(bclconvert_runfolder, checker_configs):
-    qc_data = bclconvert_runfolder["qc_data"]
-
-    reports = qc_data.report(checker_configs)
-
-    assert len(reports) == 1
-    assert "mock_checker=5" in str(reports[0])
-
-
-def test_report_default_checker(bclconvert_runfolder, checker_configs):
-    checker_configs["default_handlers"] = [
-        {"name": "mock_checker", "error": 2, "warning": 1},
-        {"name": "mock_checker_bis", "error": 0, "warning": 1},
-    ]
-
-    qc_data = bclconvert_runfolder["qc_data"]
-
-    reports = qc_data.report(checker_configs)
-
-    assert len(reports) == 2
-    assert any("mock_checker=5" in str(report) for report in reports)
-    assert any("mock_checker_bis=0" in str(report) for report in reports)
-
-
-def test_report_range_read_len(bclconvert_runfolder, checker_configs):
-    qc_data = bclconvert_runfolder["qc_data"]
-    qc_data.read_length = 38
-
-    reports = qc_data.report(checker_configs)
-
-    assert len(reports) == 1
-    assert "mock_checker=6" in str(reports[0])
-
-
-def test_report_use_closest_read_len(bclconvert_runfolder, checker_configs):
-    qc_data = bclconvert_runfolder["qc_data"]
-    qc_data.read_length = 35
-
-    with pytest.raises(KeyError):
-        reports = qc_data.report(checker_configs)
-
-    reports = qc_data.report(checker_configs, use_closest_read_len=True)
-
-    assert len(reports) == 1
-    assert "mock_checker=5" in str(reports[0])
