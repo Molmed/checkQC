@@ -47,22 +47,26 @@ class ErrorRateHandler(QCHandler):
             lane_nbr = int(error_dict["lane"])
             read = error_dict["read"]
             error_rate = error_dict["error_rate"]
+            is_index_read = error_dict.get("is_index_read", False)
+            read_or_index_text = "read (I)" if is_index_read else "read"
 
             if error_rate == 0 and not self.qc_config[self.ALLOW_MISSING_ERROR_RATE]:
-                yield QCErrorFatal("Error rate was found to be 0 on lane: {} for read: {}, this is probably "
+                yield QCErrorFatal("Error rate was found to be 0 on lane: {} for {}: {}, this is probably "
                                    "because there was no PhiX loaded on this lane. If do not use PhiX for your "
                                    "runs you can set 'allow_missing_error_rate' in the config to True, which will "
-                                   "remove the messages in the future.".format(lane_nbr, read))
+                                   "remove the messages in the future.".format(lane_nbr, read_or_index_text, read))
             elif self.error() != self.UNKNOWN and error_rate > self.error():
-                yield QCErrorFatal("Error rate {} was to high on lane: {} for read: {}".format(error_rate,
+                yield QCErrorFatal("Error rate {} was to high on lane: {} for {}: {}".format(error_rate,
                                                                                                lane_nbr,
+                                                                                               read_or_index_text,
                                                                                                read),
                                    ordering=lane_nbr,
                                    data={"lane": lane_nbr, "read": read,
                                          "error_rate": error_rate, "threshold": self.error()})
             elif self.warning() != self.UNKNOWN and error_rate > self.warning():
-                yield QCErrorWarning("Error rate {} was to high on lane: {} for read: {}".format(error_rate,
+                yield QCErrorWarning("Error rate {} was to high on lane: {} for {}: {}".format(error_rate,
                                                                                                  lane_nbr,
+                                                                                                 read_or_index_text,
                                                                                                  read),
                                      ordering=lane_nbr,
                                      data={"lane": lane_nbr, "read": read,
