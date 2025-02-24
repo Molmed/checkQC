@@ -48,7 +48,7 @@ def percent_q30(
         for lane, lane_data in qc_data.sequencing_metrics.items()
         for read, read_data in lane_data["reads"].items()
         if (qc_report := _qualify_q30(
-            read_data["percent_q30"], lane, read, read_data.get("is_index")
+            read_data["percent_q30"], lane, read, read_data["is_index"]
             )
         )
     ]
