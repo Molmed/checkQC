@@ -1,5 +1,3 @@
-import numpy as np
-
 from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
 
 
@@ -25,7 +23,7 @@ def percent_q30(
             "q30": q30,
         }
 
-        read_or_index_text = "index read" if is_index_read else "read"
+        read_or_index_text = "read (I)" if is_index_read else "read"
         msg = ("%Q30 {q30} was too low on lane: {lane} "
                "for {read_or_index_text}: {read}")
 
@@ -40,7 +38,7 @@ def percent_q30(
                 q30 < warning_threshold):
             data["threshold"] = warning_threshold
             return QCErrorWarning(
-                msg.format(**data,read_or_index_text=read_or_index_text),
+                msg.format(**data, read_or_index_text=read_or_index_text),
                 data=data
             )
 
@@ -50,7 +48,7 @@ def percent_q30(
         for lane, lane_data in qc_data.sequencing_metrics.items()
         for read, read_data in lane_data["reads"].items()
         if (qc_report := _qualify_q30(
-            read_data["percent_q30"], lane, read, read_data.get("is_index", False)
+            read_data["percent_q30"], lane, read, read_data.get("is_index")
             )
         )
     ]
