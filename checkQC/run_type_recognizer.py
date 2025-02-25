@@ -216,6 +216,7 @@ class NextSeq550(IlluminaInstrument):
 
         return reagent_version
 
+
 class RunTypeRecognizer(object):
     """
     RunTypeRecognizer will read files in the runfolder to determine information about the run,

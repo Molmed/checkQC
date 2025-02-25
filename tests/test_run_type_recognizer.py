@@ -54,10 +54,9 @@ class TestRunTypeRecognizerCorrectInstrumentsReturned(TestCase):
         self.assertTrue(isinstance(actual, NextSeq550))
 
     def test_returns_nextseq500(self):
-        return # TODO
-        runtyperecognizer = self._create_runtype_recognizer("FNB551090")
+        runtyperecognizer = self._create_runtype_recognizer("NS500101")
         actual = runtyperecognizer.instrument_type()
-        self.assertTrue(isinstance(actual, NextSeq550))
+        self.assertTrue(isinstance(actual, NextSeq500))
 
     def test_case_insensitive(self):
         runtyperecognizer = self._create_runtype_recognizer("lh1234")
@@ -247,7 +246,7 @@ class TestIlluminaInstrument(TestCase):
 
         self.assertEqual(actual, expected)
 
-    def test_nextseq5z0_reagent_version_mid(self):
+    def test_nextseq550_reagent_version_mid(self):
 
         runtype_dict = {
             "RunParameters": {
