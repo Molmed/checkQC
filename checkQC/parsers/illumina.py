@@ -22,7 +22,7 @@ def from_bclconvert(cls, runfolder_path, parser_config):
         / parser_config["reports_location"]
         / "Top_Unknown_Barcodes.csv"
     )
-    samplesheet = _read_samplesheet(runfolder_path)
+    samplesheet = _read_samplesheet(runfolder_path)["BCLConvert_Data"]
 
     instrument, read_length = _read_run_metadata(runfolder_path)
 
@@ -44,8 +44,10 @@ def from_bclconvert(cls, runfolder_path, parser_config):
             ),
             "top_unknown_barcodes": [
                 {
-                    "index+index2": f"{row['index']}+{row['index2']}",
-                    "count": int(row["# Reads"])
+                    "lane": int(row["Lane"]),
+                    "index": row["index"],
+                    "index2": row["index2"],
+                    "count": int(row["# Reads"]),
                 }
                 for row in top_unknown_barcodes
                 if row["Lane"] == str(lane + 1)

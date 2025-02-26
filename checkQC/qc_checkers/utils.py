@@ -1,5 +1,6 @@
 import re
 
+
 def handler2checker(s):
     """
     Convert a handler name to it's equivalent QC checker
@@ -22,3 +23,11 @@ def handler2checker(s):
         words.pop()
 
     return "_".join(words)
+
+def get_complement(index):
+    conv_table = {
+        "A": "T", "T": "A",
+        "C": "G", "G": "C",
+    }
+
+    return ''.join(conv_table.get(c, c) for c in index)
