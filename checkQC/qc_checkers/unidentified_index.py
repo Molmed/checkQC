@@ -2,7 +2,7 @@ import re
 import functools
 
 from checkQC.qc_checkers.utils import get_complement
-from checkQC.handlers.qc_handler import QCErrorWarning
+from checkQC.handlers.qc_handler import QCErrorWarning, QCErrorFatal
 
 def unidentified_index(
     qc_data,
@@ -12,21 +12,35 @@ def unidentified_index(
     """
     Identify unidentified indices with are significantly overrepresented
     and suggest possible causes based on the indices found in the samplesheet.
+
+    Possible causes are:
+    - swap between the first and second index
+    - the index is present on another lane
+    - the index complement, reverse or reverse complement is found in the
+    samplesheet.
+
+    Parameters:
+    -----------
+    qc_data: QCData
+        sequencing data to investigate
+    significance_threshold: float
+        threshold above which errors should be reported (in % on the total read
+        counts for that lane)
+    white_listed_indexes: [str]
+        list of regexes. Indices matching this regex will be reported as
+        warnings instead of errors.
     """
-    if white_listed_indexes is None:
-        white_listed_indexes = []
-    significance_threshold /= 100.
-
-    for i, re_index in enumerate(white_listed_indexes):
-        white_listed_indexes[i] = re.compile(re_index)
-
     samplesheet_matcher = SamplesheetMatcher(qc_data.samplesheet)
 
-    qc_warnings = []
+    white_listed_indexes = [
+        re.compile(re_index)
+        for re_index in white_listed_indexes
+    ] if white_listed_indexes else []
 
+    qc_errors = []
     for lane, lane_data in qc_data.sequencing_metrics.items():
         for barcode in lane_data["top_unknown_barcodes"]:
-            significance = barcode["count"] / lane_data["total_cluster_pf"]
+            significance = barcode["count"] / lane_data["total_cluster_pf"] * 100.
             if significance < significance_threshold:
                 continue
             index = (
@@ -34,33 +48,33 @@ def unidentified_index(
                 if barcode.get("index2") else
                 barcode["index"]
             )
-
-            data = {
-                "index": index,
-                "lane": lane,
-                "causes": [],
-            }
-            msg = (
-                f"Overrepresented unknown barcode: {data['index']} "
-                f"({significance*100.:.1f}% > {significance_threshold*100.:.1f}%)."
-            )
-            if any(
+            is_white_listed = any(
                 re_allowed_index.match(index)
                 for re_allowed_index in white_listed_indexes
-            ):
-                msg += " This barcode is white-listed."
-            else:
-                causes = samplesheet_matcher.list_causes(barcode)
-                if causes:
-                    msg += '\nPossible causes are:\n' + '\n'.join(
-                        [f"- {m}" for m, _ in causes]
-                    )
+            )
+
+            data = {"index": index, "lane": lane, "causes": []}
+            msg = (
+                f"Overrepresented unknown barcode: {data['index']} "
+                f"({significance:.1f}% > {significance_threshold:.1f}%)."
+                + (" This barcode is white-listed" if is_white_listed else "")
+            )
+
+            causes = samplesheet_matcher.list_causes(barcode)
+            if causes:
+                msg += '\nPossible causes are:\n' + '\n'.join(
+                    [f"- {m}" for m, _ in causes]
+                )
                 for _, cause_data in causes:
                     data["causes"].append(cause_data)
 
-            qc_warnings.append(QCErrorWarning(msg=msg, data=data))
+            qc_errors.append(
+                (QCErrorWarning if is_white_listed else QCErrorFatal)(
+                    msg=msg, data=data
+                )
+            )
 
-    return qc_warnings
+    return qc_errors
 
 
 class SamplesheetMatcher:

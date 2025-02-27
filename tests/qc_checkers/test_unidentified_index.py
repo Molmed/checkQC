@@ -115,6 +115,7 @@ def test_unidentified_index(qc_data):
 Possible causes are:
 - reverse index "TCCA" found in samplesheet for sample reverse, lane 1
 - index ACCT found on lane 2"""
+    assert reports[0].type() == "error"
 
 
 def test_whitelist_index(qc_data):
@@ -126,3 +127,4 @@ def test_whitelist_index(qc_data):
         "QC warning: Overrepresented unknown barcode: ACCT (10.0% > 5.0%). "
         "This barcode is white-listed."
     )
+    assert reports[0].type() == "warning"
