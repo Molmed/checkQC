@@ -16,16 +16,16 @@ def qc_data_and_exp_val():
             {
                 1: {
                     "reads": {
-                        1: {"mean_error_rate": 0.},
-                        2: {"mean_error_rate": 110.},
-                        3: {"mean_error_rate": np.nan},
+                        1: {"mean_error_rate": 0., "is_index": True},
+                        2: {"mean_error_rate": 110., "is_index": False},
+                        3: {"mean_error_rate": np.nan, "is_index": False},
                     },
                 },
                 2: {
                     "reads": {
-                        1: {"mean_error_rate": 11.},
-                        2: {"mean_error_rate": 110.},
-                        3: {"mean_error_rate": 9.},
+                        1: {"mean_error_rate": 11., "is_index": False},
+                        2: {"mean_error_rate": 110., "is_index": False},
+                        3: {"mean_error_rate": 9., "is_index": False},
                     },
                 },
             }
@@ -33,7 +33,7 @@ def qc_data_and_exp_val():
         {
             1: {
                 1: QCErrorFatal(
-                    "Error rate is 0.0 on lane 1 for read 1. "
+                    "Error rate is 0.0 on lane 1 for read (I) 1. "
                     "This may be because no PhiX was loaded on this lane. "
                     "Use \"allow_missing_error_rate: true\" to disable this error message.",
                     data={"lane": 1, "read": 1, "error": 0.},
