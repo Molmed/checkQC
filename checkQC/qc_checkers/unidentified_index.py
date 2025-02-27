@@ -55,9 +55,9 @@ def unidentified_index(
 
             data = {"index": index, "lane": lane, "causes": []}
             msg = (
-                f"Overrepresented unknown barcode: {data['index']} "
+                f"Overrepresented unknown barcode \"{data['index']}\" on lane {lane} "
                 f"({significance:.1f}% > {significance_threshold:.1f}%)."
-                + (" This barcode is white-listed" if is_white_listed else "")
+                + (" This barcode is white-listed." if is_white_listed else "")
             )
 
             causes = samplesheet_matcher.list_causes(barcode)
@@ -139,8 +139,8 @@ class SamplesheetMatcher:
             ]:
                 for row in samplesheet_indices.get(variation, []):
                     msg = (
-                        f"{cause} index \"{variation}\" found in samplesheet"
-                        f" for sample {row['Sample_ID']}, lane {row['Lane']}"
+                        f"{cause} index swap: \"{variation}\" found in samplesheet"
+                        f" for sample \"{row['Sample_ID']}\", lane {row['Lane']}"
                     )
                     data = (cause, row)
                     causes.append((msg, data))
@@ -166,7 +166,10 @@ class SamplesheetMatcher:
         causes = []
         for row in samplesheet_indices.get(index, []):
             if row["Lane"] != barcode["lane"]:
-                msg = f"index {index} found on lane {row['Lane']}"
+                msg = (
+                    f"lane swap: index \"{index}\" found in samplesheet "
+                    f"for sample \"{row['Sample_ID']}\", lane {row['Lane']}"
+                )
                 data = ("lane swap", row)
                 causes.append((msg, data))
 
@@ -182,7 +185,7 @@ class SamplesheetMatcher:
         for row in self.samplesheet_dual_indices.get(swaped_index, []):
             msg = (
                 f"dual index swap: barcode \"{swaped_index}\" found"
-                f" in samplesheet for sample {row['Sample_ID']}, lane {row['Lane']}",
+                f" in samplesheet for sample \"{row['Sample_ID']}\", lane {row['Lane']}"
             )
             data = ("dual index swap", row)
             causes.append((msg, data))
