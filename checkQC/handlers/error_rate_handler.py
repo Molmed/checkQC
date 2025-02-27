@@ -51,26 +51,36 @@ class ErrorRateHandler(QCHandler):
             read_or_index_text = "read (I)" if is_index_read else "read"
 
             if error_rate == 0 and not self.qc_config[self.ALLOW_MISSING_ERROR_RATE]:
-                yield QCErrorFatal("Error rate was found to be 0 on lane: {} for {}: {}, this is probably "
-                                   "because there was no PhiX loaded on this lane. If do not use PhiX for your "
-                                   "runs you can set 'allow_missing_error_rate' in the config to True, which will "
-                                   "remove the messages in the future.".format(lane_nbr, read_or_index_text, read))
+                yield QCErrorFatal(
+                    f"Error rate was found to be 0 on lane: {lane_nbr} for "
+                    f"{read_or_index_text}: {read}, this is probably because "
+                    f"there was no PhiX loaded on this lane. If do not use PhiX "
+                    f"for your runs you can set 'allow_missing_error_rate' in the "
+                    f"config to True, which will remove the messages in the future.")
             elif self.error() != self.UNKNOWN and error_rate > self.error():
-                yield QCErrorFatal("Error rate {} was to high on lane: {} for {}: {}".format(error_rate,
-                                                                                               lane_nbr,
-                                                                                               read_or_index_text,
-                                                                                               read),
-                                   ordering=lane_nbr,
-                                   data={"lane": lane_nbr, "read": read,
-                                         "error_rate": error_rate, "threshold": self.error()})
+                yield QCErrorFatal(
+                    f"Error rate {error_rate} was to high on lane: {lane_nbr} "
+                    f"for {read_or_index_text}: {read}",
+                    ordering=lane_nbr,
+                    data={
+                        "lane": lane_nbr,
+                        "read": read,
+                        "error_rate": error_rate,
+                        "threshold": self.error()
+                    }
+                )
             elif self.warning() != self.UNKNOWN and error_rate > self.warning():
-                yield QCErrorWarning("Error rate {} was to high on lane: {} for {}: {}".format(error_rate,
-                                                                                                 lane_nbr,
-                                                                                                 read_or_index_text,
-                                                                                                 read),
-                                     ordering=lane_nbr,
-                                     data={"lane": lane_nbr, "read": read,
-                                           "error_rate": error_rate, "threshold": self.warning()})
+                yield QCErrorWarning(
+                    f"Error rate {error_rate} was to high on lane: {lane_nbr} "
+                    f"for {read_or_index_text}: {read}",
+                    ordering=lane_nbr,
+                    data={
+                        "lane": lane_nbr,
+                        "read": read,
+                        "error_rate": error_rate,
+                        "threshold": self.warning()
+                    }
+                )
             else:
                 continue
 

@@ -36,12 +36,8 @@ class Q30Handler(QCHandler):
 
             if self.error() != self.UNKNOWN and percent_q30 < self.error():
                 yield QCErrorFatal(
-                    "%Q30 {:.2f} was too low on lane: {} for {}: {}".format(
-                        percent_q30,
-                        lane_nbr,
-                        read_or_index_text,
-                        read
-                    ),
+                    f"%Q30 {percent_q30:.2f} was too low on lane: {lane_nbr} "
+                    f"for {read_or_index_text}: {read}",
                     ordering=lane_nbr,
                     data={
                         "lane": lane_nbr, 
@@ -52,12 +48,8 @@ class Q30Handler(QCHandler):
                 )
             elif self.warning() != self.UNKNOWN and percent_q30 < self.warning():
                 yield QCErrorWarning(
-                    "%Q30 {:.2f} was too low on lane: {} for {}: {}".format(
-                        percent_q30,
-                        lane_nbr,
-                        read_or_index_text,
-                        read
-                    ),
+                    f"%Q30 {percent_q30:.2f} was too low on lane: {lane_nbr} "
+                    f"for {read_or_index_text}: {read}",
                     ordering=lane_nbr,
                     data={
                         "lane": lane_nbr, 
