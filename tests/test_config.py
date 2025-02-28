@@ -1,5 +1,9 @@
 
 import unittest
+import tempfile
+import json
+
+import jsonschema
 
 from checkQC.config import Config, ConfigFactory
 
@@ -75,6 +79,39 @@ class TestConfig(unittest.TestCase):
 
 
 class TestConfigFactory(unittest.TestCase):
+
+    def test_default_config_factory(self):
+        config = ConfigFactory.from_config_path("")
+
+        expected_keys = [
+            'parser_configurations',
+            'default_handlers',
+            'hiseq2500_rapidhighoutput_v4',
+            'hiseq2500_rapidrun_v2',
+            'hiseqx_v2',
+            'novaseq_SP',
+            'novaseq_S1',
+            'novaseq_S2',
+            'novaseq_S4',
+            'novaseqxplus_1.5B',
+            'novaseqxplus_10B',
+            'novaseqxplus_25B',
+            'miseq_nano_v2',
+            'miseq_micro_v2',
+            'miseq_v2',
+            'miseq_v3',
+            'iseq_v1',
+        ]
+
+        self.assertEqual(list(config._config.keys()), expected_keys)
+
+    def test_config_validation(self):
+        dummy_config = {"unknown_key": 1}
+        with tempfile.NamedTemporaryFile(mode='w') as f:
+            json.dump(dummy_config, f)
+
+            with self.assertRaises(jsonschema.ValidationError):
+                ConfigFactory.from_config_path(f.name)
 
     def test_get_logging_config_file_default(self):
         result = ConfigFactory.get_logging_config_dict(None)
