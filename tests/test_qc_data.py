@@ -69,23 +69,23 @@ def bclconvert_runfolder():
                     "head": [
                         {
                             'index': 'ATATCTGCTT', 'index2': 'TAGACAATCT',
-                            'lane': 1, 'count': 12857,
+                            'count': 12857,
                         },
                         {
                             'index': 'CACCTCTCTT', 'index2': 'CTCGACTCCT',
-                            'lane': 1, 'count': 12406,
+                            'count': 12406,
                         },
                         {
                             'index': 'ATGTAACGTT', 'index2': 'ACGATTGCTG',
-                            'lane': 1, 'count': 12177,
+                            'count': 12177,
                         },
                         {
                             'index': 'TTCGGTGTGA', 'index2': 'GAACAAGTAT',
-                            'lane': 1, 'count': 11590,
+                            'count': 11590,
                         },
                         {
                             'index': 'GGTCCGCTTC', 'index2': 'CTCACACAAG',
-                            'lane': 1, 'count': 11509,
+                            'count': 11509,
                         },
                     ],
                 },
@@ -129,23 +129,23 @@ def bclconvert_runfolder():
                     "head": [
                         {
                             'index': 'ATATCTGCTT', 'index2': 'TAGACAATCT',
-                            'lane': 2, 'count': 13176,
+                            'count': 13176,
                         },
                         {
                             'index': 'ATGTAACGTT', 'index2': 'ACGATTGCTG',
-                            'lane': 2, 'count': 12395,
+                            'count': 12395,
                         },
                         {
                             'index': 'CACCTCTCTT', 'index2': 'CTCGACTCCT',
-                            'lane': 2, 'count': 12247,
+                            'count': 12247,
                         },
                         {
                             'index': 'TTCGGTGTGA', 'index2': 'GAACAAGTAT',
-                            'lane': 2, 'count': 11909,
+                            'count': 11909,
                         },
                         {
                             'index': 'TAATTAGCGT', 'index2': 'TGGTTAAGAA',
-                            'lane': 2, 'count': 11330,
+                            'count': 11330,
                         },
                     ],
                 },

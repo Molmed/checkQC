@@ -53,24 +53,31 @@ def unidentified_index(
                 for re_allowed_index in white_listed_indexes
             )
 
-            data = {"index": index, "lane": lane, "causes": []}
+            barcode_data = {
+                "barcode": barcode.copy(),
+                "is_white_listed": is_white_listed,
+                "significance": significance,
+                "threshold": significance_threshold,
+                "lane": lane,
+                "causes": [],
+            }
             msg = (
-                f"Overrepresented unknown barcode \"{data['index']}\" on lane {lane} "
+                f"Overrepresented unknown barcode \"{index}\" on lane {lane} "
                 f"({significance:.1f}% > {significance_threshold:.1f}%)."
                 + (" This barcode is white-listed." if is_white_listed else "")
             )
 
-            causes = samplesheet_matcher.list_causes(barcode)
+            causes = samplesheet_matcher.list_causes(barcode_data)
             if causes:
                 msg += '\nPossible causes are:\n' + '\n'.join(
                     [f"- {m}" for m, _ in causes]
                 )
                 for _, cause_data in causes:
-                    data["causes"].append(cause_data)
+                    barcode_data["causes"].append(cause_data)
 
             qc_errors.append(
                 (QCErrorWarning if is_white_listed else QCErrorFatal)(
-                    msg=msg, data=data
+                    msg=msg, data=barcode_data
                 )
             )
 
@@ -102,24 +109,25 @@ class SamplesheetMatcher:
                 self.samplesheet_single_indices.setdefault(
                     row["Index"], []).append(row)
 
-    def list_causes(self, barcode):
+    def list_causes(self, barcode_data):
         """
         returns a list of causes (msg + data)
         """
         causes = []
-        causes.extend(self.check_complement_and_reverse(barcode))
-        causes.extend(self.check_lane_swap(barcode))
-        if barcode.get("index2"):
-            causes.extend(self.check_dual_index_swap(barcode))
+        causes.extend(self.check_complement_and_reverse(barcode_data))
+        causes.extend(self.check_lane_swap(barcode_data))
+        if barcode_data["barcode"].get("index2"):
+            causes.extend(self.check_dual_index_swap(barcode_data))
 
         return causes
 
-    def check_complement_and_reverse(self, barcode):
+    def check_complement_and_reverse(self, barcode_data):
         """
         Check if reverse, complement and reverse complement indices exist in
         the samplesheet.
         """
         causes = []
+        barcode = barcode_data["barcode"]
 
         indices = [barcode["index"]]
         if barcode.get("index2"):
@@ -147,10 +155,11 @@ class SamplesheetMatcher:
 
         return causes
 
-    def check_lane_swap(self, barcode):
+    def check_lane_swap(self, barcode_data):
         """
         Check if barcode is found on a different lane in the samplesheet.
         """
+        barcode = barcode_data["barcode"]
         index = (
             f"{barcode['index']}+{barcode['index2']}"
             if barcode.get("index2") else
@@ -165,7 +174,7 @@ class SamplesheetMatcher:
 
         causes = []
         for row in samplesheet_indices.get(index, []):
-            if row["Lane"] != barcode["lane"]:
+            if row["Lane"] != barcode_data["lane"]:
                 msg = (
                     f"lane swap: index \"{index}\" found in samplesheet "
                     f"for sample \"{row['Sample_ID']}\", lane {row['Lane']}"
@@ -176,11 +185,12 @@ class SamplesheetMatcher:
         return causes
 
 
-    def check_dual_index_swap(self, barcode):
+    def check_dual_index_swap(self, barcode_data):
         """
         Check if dual indices have been swapped in samplesheet.
         """
         causes = []
+        barcode = barcode_data["barcode"]
         swaped_index = f"{barcode['index2']}+{barcode['index']}"
         for row in self.samplesheet_dual_indices.get(swaped_index, []):
             msg = (

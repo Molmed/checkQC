@@ -47,7 +47,6 @@ def from_bclconvert(cls, runfolder_path, parser_config):
             ),
             "top_unknown_barcodes": [
                 {
-                    "lane": int(row["Lane"]),
                     "index": row["index"],
                     "index2": row["index2"],
                     "count": int(row["# Reads"]),

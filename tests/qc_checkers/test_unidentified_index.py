@@ -21,12 +21,12 @@ def samplesheet_matcher():
 
 
 def test_check_complement(samplesheet_matcher):
-    barcode = {
-        "index": "TTCC",
-        "index2": "",
+    barcode_data = {
+        "barcode": {"index": "TTCC", "index2": ""},
         "lane": 1,
     }
-    causes = samplesheet_matcher.check_complement_and_reverse(barcode)
+
+    causes = samplesheet_matcher.check_complement_and_reverse(barcode_data)
 
     assert len(causes) == 1
 
@@ -40,12 +40,11 @@ def test_check_complement(samplesheet_matcher):
 
 
 def test_check_reverse(samplesheet_matcher):
-    barcode = {
-        "index": "GGAA",
-        "index2": "",
+    barcode_data = {
+        "barcode": {"index": "GGAA", "index2": ""},
         "lane": 1,
     }
-    causes = samplesheet_matcher.check_complement_and_reverse(barcode)
+    causes = samplesheet_matcher.check_complement_and_reverse(barcode_data)
 
     assert len(causes) == 1
 
@@ -59,12 +58,11 @@ def test_check_reverse(samplesheet_matcher):
 
 
 def test_check_reverse_complement(samplesheet_matcher):
-    barcode = {
-        "index": "CCTT",
-        "index2": "",
+    barcode_data = {
+        "barcode": {"index": "CCTT", "index2": ""},
         "lane": 1,
     }
-    causes = samplesheet_matcher.check_complement_and_reverse(barcode)
+    causes = samplesheet_matcher.check_complement_and_reverse(barcode_data)
 
     assert len(causes) == 1
 
@@ -78,61 +76,56 @@ def test_check_reverse_complement(samplesheet_matcher):
 
 
 def test_check_complement_and_reverse(samplesheet_matcher):
-    barcode = {
-        "index": "ACGA",
-        "index2": "AACC",
+    barcode_data = {
+        "barcode": {"index": "ACGA", "index2": "AACC"},
         "lane": 1,
     }
 
-    # OBS: samplesheet rows are reported twice because it matches both indices
-    causes = samplesheet_matcher.check_complement_and_reverse(barcode)
+    # NOTE: samplesheet rows are reported twice because it matches both indices
+    causes = samplesheet_matcher.check_complement_and_reverse(barcode_data)
     assert len(causes) == 6
     assert any(data[0] == "reverse" for _, data in causes)
     assert any(data[0] == "complement" for _, data in causes)
     assert any(data[0] == "reverse complement" for _, data in causes)
     assert all(data[1]["Sample_ID"].startswith("dual") for _, data in causes)
-    assert all(data[1]["Sample_ID"].startswith("dual") for _, data in causes)
-    assert all(data[1]["Sample_ID"].startswith("dual") for _, data in causes)
 
-    barcode = {
-        "index": "ACGT",
+    barcode_data = {
+        "barcode": {"index": "ACGT"},
         "lane": 1,
     }
-    causes = samplesheet_matcher.check_complement_and_reverse(barcode)
+    causes = samplesheet_matcher.check_complement_and_reverse(barcode_data)
     assert len(causes) == 0
 
 
 def test_check_complement_and_reverse_single_indices(samplesheet_matcher):
-    barcode = {
-        "index": "ACCT",
+    barcode_data = {
+        "barcode": {"index": "ACCT"},
         "lane": 1,
     }
-    causes = samplesheet_matcher.check_complement_and_reverse(barcode)
+    causes = samplesheet_matcher.check_complement_and_reverse(barcode_data)
     assert len(causes) == 3
     assert any(data[0] == "reverse" for _, data in causes)
     assert any(data[0] == "complement" for _, data in causes)
     assert any(data[0] == "reverse complement" for _, data in causes)
 
-    barcode = {
-        "index": "ACCT",
-        "index2": "CCCC",
+    barcode_data = {
+        "barcode": {"index": "ACCT", "index2": "CCCC"},
         "lane": 1,
     }
-    causes = samplesheet_matcher.check_complement_and_reverse(barcode)
+    causes = samplesheet_matcher.check_complement_and_reverse(barcode_data)
     assert len(causes) == 0
 
 
 def test_lane_swap(samplesheet_matcher):
-    barcode = {
-        "index": "CCAA",
-        "index2": "AGCA",
+    barcode_data = {
+        "barcode": {"index": "CCAA", "index2": "AGCA"},
         "lane": 1,
     }
-    causes = samplesheet_matcher.check_lane_swap(barcode)
+    causes = samplesheet_matcher.check_lane_swap(barcode_data)
     assert len(causes) == 0
 
-    barcode["lane"] = 2
-    causes = samplesheet_matcher.check_lane_swap(barcode)
+    barcode_data["lane"] = 2
+    causes = samplesheet_matcher.check_lane_swap(barcode_data)
     assert len(causes) == 1
     msg, data = causes[0]
     assert msg == "lane swap: index \"CCAA+AGCA\" found in samplesheet for sample \"dual reverse\", lane 1"
@@ -148,12 +141,11 @@ def test_lane_swap(samplesheet_matcher):
 
 
 def test_dual_index_swap(samplesheet_matcher):
-    barcode = {
-        "index": "AGCA",
-        "index2": "CCAA",
+    barcode_data = {
+        "barcode": {"index": "AGCA", "index2": "CCAA"},
         "lane": 1,
     }
-    causes = samplesheet_matcher.check_dual_index_swap(barcode)
+    causes = samplesheet_matcher.check_dual_index_swap(barcode_data)
     assert len(causes) == 1
     msg, data = causes[0]
     assert msg == "dual index swap: barcode \"CCAA+AGCA\" found in samplesheet for sample \"dual reverse\", lane 1"
@@ -175,7 +167,8 @@ def qc_data():
             1: {
                 "total_cluster_pf": 100,
                 "top_unknown_barcodes": [
-                    { "lane": 1, "index": "ACCT", "count": 10 },
+                    {"lane": 1, "index": "ACCT", "count": 10},
+                    {"lane": 1, "index": "AC", "count": 50},
                 ],
             }
         },
@@ -189,19 +182,21 @@ def qc_data():
 def test_unidentified_index(qc_data):
     reports = unidentified_index(qc_data, 5.)
 
-    assert len(reports) == 1
+    assert len(reports) == 2
     assert str(reports[0]) == """Fatal QC error: Overrepresented unknown barcode "ACCT" on lane 1 (10.0% > 5.0%).
 Possible causes are:
 - reverse index swap: "TCCA" found in samplesheet for sample "reverse", lane 1
 - lane swap: index "ACCT" found in samplesheet for sample "lane swap", lane 2"""
     assert reports[0].type() == "error"
+    assert str(reports[1]) == "Fatal QC error: Overrepresented unknown barcode \"AC\" on lane 1 (50.0% > 5.0%)."
+    assert reports[1].type() == "error"
 
 
 def test_whitelist_index(qc_data):
     reports = unidentified_index(
             qc_data, 5.,
-            white_listed_indexes=[".*AC.*"])
-    assert len(reports) == 1
+            white_listed_indexes=[".*CC.*"])
+    assert len(reports) == 2
     assert str(reports[0]).startswith(
         "QC warning: Overrepresented unknown barcode \"ACCT\" on lane 1 (10.0% > 5.0%). "
         "This barcode is white-listed."
