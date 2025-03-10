@@ -23,6 +23,9 @@ def from_bclconvert(cls, runfolder_path, parser_config):
         / "Top_Unknown_Barcodes.csv"
     )
     samplesheet = _read_samplesheet(runfolder_path)["BCLConvert_Data"]
+    for row in samplesheet:
+        row["Index"] = row["Index"].replace(" ", "")
+        row["Index2"] = row["Index2"].replace(" ", "")
 
     instrument, read_length = _read_run_metadata(runfolder_path)
 
