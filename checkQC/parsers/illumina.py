@@ -29,7 +29,7 @@ def from_bclconvert(cls, runfolder_path, parser_config):
 
     instrument, read_length = _read_run_metadata(runfolder_path)
 
-    lane_data = {
+    sequencing_metrics = {
         lane + 1: {
             "total_cluster_pf": summary.at(0).at(lane).reads_pf(),
             "yield": sum(
@@ -83,7 +83,7 @@ def from_bclconvert(cls, runfolder_path, parser_config):
         instrument,
         read_length,
         samplesheet,
-        lane_data,
+        sequencing_metrics,
     )
 
 
