@@ -16,16 +16,16 @@ def qc_data_and_exp_val():
             {
                 1: {
                     "reads": {
-                        1: {"mean_error_rate": 0.},
-                        2: {"mean_error_rate": 110.},
-                        3: {"mean_error_rate": np.nan},
+                        1: {"mean_error_rate": 0., "is_index": False},
+                        2: {"mean_error_rate": 110., "is_index": False},
+                        3: {"mean_error_rate": np.nan, "is_index": False},
                     },
                 },
                 2: {
                     "reads": {
-                        1: {"mean_error_rate": 11.},
-                        2: {"mean_error_rate": 110.},
-                        3: {"mean_error_rate": 9.},
+                        1: {"mean_error_rate": 11., "is_index": False},
+                        2: {"mean_error_rate": 110., "is_index": False},
+                        3: {"mean_error_rate": 13., "is_index": True},
                     },
                 },
             }

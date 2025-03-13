@@ -49,6 +49,7 @@ def error_rate(
         for lane, lane_data in qc_data.sequencing_metrics.items()
         for read, read_data in lane_data["reads"].items()
         if (qc_report := _qualify_error(read_data["mean_error_rate"], lane, read))
+           and not read_data["is_index"]
     ]
 
 
