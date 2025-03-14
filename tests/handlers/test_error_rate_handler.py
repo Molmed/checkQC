@@ -46,8 +46,8 @@ class TestErrorRateHandler(HandlerTestBase):
 
     def test_error_rate_zero_not_allowed(self):
         key = "error_rate"
-        value_1 = {"lane": 1, "read": 1, "error_rate": 0}
-        value_2 = {"lane": 1, "read": 2, "error_rate": 0}
+        value_1 = {"lane": 1, "read": 1, "error_rate": 0, "is_index_read": False}
+        value_2 = {"lane": 1, "read": 2, "error_rate": 0, "is_index_read": False}
         # Empty the default list, and then add some more values
         self.error_handler.error_results = []
         self.error_handler.collect((key, value_1))
@@ -63,8 +63,8 @@ class TestErrorRateHandler(HandlerTestBase):
 
     def test_error_rate_zero_is_allowed(self):
         key = "error_rate"
-        value_1 = {"lane": 1, "read": 1, "error_rate": 0}
-        value_2 = {"lane": 1, "read": 2, "error_rate": 0}
+        value_1 = {"lane": 1, "read": 1, "error_rate": 0, "is_index_read": False}
+        value_2 = {"lane": 1, "read": 2, "error_rate": 0, "is_index_read": False}
         # Empty the default list, and then add some more values
         self.error_handler.error_results = []
         self.error_handler.collect((key, value_1))
@@ -77,8 +77,8 @@ class TestErrorRateHandler(HandlerTestBase):
 
     def test_skipped_index_reads(self):
         key = "error_rate"
-        value_1 = {"lane": 1, "read": 1, "error_rate": 0}
-        value_2 = {"lane": 1, "read": 2, "error_rate": 0}
+        value_1 = {"lane": 1, "read": 1, "error_rate": 0, "is_index_read": False}
+        value_2 = {"lane": 1, "read": 2, "error_rate": 0, "is_index_read": False}
         value_3 = {"lane": 1, "read": 3, "error_rate": 3, "is_index_read": True}
         # Empty the default list, and then add some more values
         self.error_handler.error_results = []

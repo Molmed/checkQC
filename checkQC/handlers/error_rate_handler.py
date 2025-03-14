@@ -42,46 +42,44 @@ class ErrorRateHandler(QCHandler):
                                      "ErrorRate handler config. Value was: {}".format(value))
 
     def check_qc(self):
-
-        for error_dict in self.error_results:
+        # error_rate handler is not supposed to handle index reads.
+        for error_dict in filter(lambda x: not x["is_index_read"], self.error_results):
             lane_nbr = int(error_dict["lane"])
             read = error_dict["read"]
             error_rate = error_dict["error_rate"]
             is_index_read = error_dict.get("is_index_read", False)
 
-            # error_rate handler is not supposed to handle index reads.
-            if not is_index_read:
-                if error_rate == 0 and not self.qc_config[self.ALLOW_MISSING_ERROR_RATE]:
-                    yield QCErrorFatal(
-                        f"Error rate was found to be 0 on lane: {lane_nbr} for read: "
-                        f"{read}, this is probably because there was no PhiX loaded "
-                        f"on this lane. If do not use PhiX for your runs you can "
-                        f"set 'allow_missing_error_rate' in the config to True, "
-                        f"which will remove the messages in the future.")
-                elif self.error() != self.UNKNOWN and error_rate > self.error():
-                    yield QCErrorFatal(
-                        f"Error rate {error_rate} was to high on lane: {lane_nbr} "
-                        f"for read: {read}",
-                        ordering=lane_nbr,
-                        data={
-                            "lane": lane_nbr,
-                            "read": read,
-                            "error_rate": error_rate,
-                            "threshold": self.error()
-                        }
-                    )
-                elif self.warning() != self.UNKNOWN and error_rate > self.warning():
-                    yield QCErrorWarning(
-                        f"Error rate {error_rate} was to high on lane: {lane_nbr} "
-                        f"for read: {read}",
-                        ordering=lane_nbr,
-                        data={
-                            "lane": lane_nbr,
-                            "read": read,
-                            "error_rate": error_rate,
-                            "threshold": self.warning()
-                        }
-                    )
-                else:
-                    continue
+            if error_rate == 0 and not self.qc_config[self.ALLOW_MISSING_ERROR_RATE]:
+                yield QCErrorFatal(
+                    f"Error rate was found to be 0 on lane: {lane_nbr} for read: "
+                    f"{read}, this is probably because there was no PhiX loaded "
+                    f"on this lane. If do not use PhiX for your runs you can "
+                    f"set 'allow_missing_error_rate' in the config to True, "
+                    f"which will remove the messages in the future.")
+            elif self.error() != self.UNKNOWN and error_rate > self.error():
+                yield QCErrorFatal(
+                    f"Error rate {error_rate} was to high on lane: {lane_nbr} "
+                    f"for read: {read}",
+                    ordering=lane_nbr,
+                    data={
+                        "lane": lane_nbr,
+                        "read": read,
+                        "error_rate": error_rate,
+                        "threshold": self.error()
+                    }
+                )
+            elif self.warning() != self.UNKNOWN and error_rate > self.warning():
+                yield QCErrorWarning(
+                    f"Error rate {error_rate} was to high on lane: {lane_nbr} "
+                    f"for read: {read}",
+                    ordering=lane_nbr,
+                    data={
+                        "lane": lane_nbr,
+                        "read": read,
+                        "error_rate": error_rate,
+                        "threshold": self.warning()
+                    }
+                )
+            else:
+                continue
 
