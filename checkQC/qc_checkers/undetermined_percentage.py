@@ -32,27 +32,35 @@ def undetermined_percentage(
             ]
         ), nan=0.0)
 
+        # NOTE this includes the mean percentage phiX
         percentage_undetermined = (
             lane_data["yield_undetermined"] / lane_data["yield"] * 100
-            - mean_percent_phix_aligned
         )
 
         data = {
             "lane": lane,
             "percentage_undetermined": percentage_undetermined,
+            "mean_percent_phix_aligned": mean_percent_phix_aligned,
         }
 
         msg = (
             "Percentage of undetermined indices "
-            "{percentage_undetermined:.2f}% > {threshold:.2f}% "
+            "{percentage_undetermined:.2f}% (- {mean_percent_phix_aligned:.2f}% phiX) "
+            "> {threshold:.2f}% "
             "on lane {lane}."
         )
 
         match percentage_undetermined:
-            case percentage_undetermined if error_threshold != "unknown" and percentage_undetermined > error_threshold:
+            case percentage_undetermined if (
+                error_threshold != "unknown"
+                and percentage_undetermined - mean_percent_phix_aligned > error_threshold
+            ):
                 data["threshold"] = error_threshold
                 return QCErrorFatal(msg.format(**data), data=data)
-            case percentage_undetermined if warning_threshold != "unknown" and percentage_undetermined > warning_threshold:
+            case percentage_undetermined if (
+                warning_threshold != "unknown"
+                and percentage_undetermined - mean_percent_phix_aligned > warning_threshold
+            ):
                 data["threshold"] = warning_threshold
                 return QCErrorWarning(msg.format(**data), data=data)
 
