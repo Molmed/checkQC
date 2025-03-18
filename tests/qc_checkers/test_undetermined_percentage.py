@@ -172,7 +172,7 @@ def test_yield_0():
 
     assert len(qc_reports) == 1
     assert qc_reports[0].type() == "error"
-    assert str(qc_reports[0]) == "Fatal QC error: Yield for lane 1 wa 0. No undetermined percentage could be computed"
+    assert str(qc_reports[0]) == "Fatal QC error: Yield for lane 1 was 0. No undetermined percentage could be computed"
     assert qc_reports[0].data == {"lane": 1, "percentage_undetermined": None}
 
 

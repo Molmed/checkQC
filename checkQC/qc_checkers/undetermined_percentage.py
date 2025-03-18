@@ -20,7 +20,7 @@ def undetermined_percentage(
     def _qualify_error(lane_data, lane):
         if lane_data["yield"] == 0:
             return QCErrorFatal(
-                f"Yield for lane {lane} wa 0. "
+                f"Yield for lane {lane} was 0. "
                 "No undetermined percentage could be computed",
                 data={"lane": lane, "percentage_undetermined": None},
             )
