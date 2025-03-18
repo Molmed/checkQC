@@ -20,6 +20,26 @@
                 },
                 "warning": {"oneOf": [{"type": "number"}, {"const": "unknown"}]},
                 "error": {"oneOf": [{"type": "number"}, {"const": "unknown"}]}
+            },
+            "if": {
+                "properties": {
+                    "name": {
+                        "oneOf": [
+                            {"const": "UnidentifiedIndexHandler" },
+                            {"const": "unidentified_index_handler"}
+                        ]
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "significance_threshold": { "type": "number" },
+                    "white_listed_indexes": {
+                        "type": "array",
+                        "item": { "type": "string" }
+                    }
+                },
+                "required": ["significance_threshold"]
             }
         }
     },
