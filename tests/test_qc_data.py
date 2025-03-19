@@ -27,39 +27,37 @@ def bclconvert_runfolder():
         "expected_instrument": "novaseq_SP",
         "expected_read_length": 36,
         "expected_samplesheet": {
-            "BCLConvert_Data": {
-                "len": 4,
-                "head": [
-                    {
-                        "Lane": 1,
-                        "Sample_ID": "Sample_14574-Qiagen-IndexSet1-SP-Lane1",
-                        "Index": "GAACTGAGCG",
-                        "Index2": "TCGTGGAGCG",
-                        "Sample_Project": "AB-1234",
-                    },
-                    {
-                        "Lane": 1,
-                        "Sample_ID": "Sample_14575-Qiagen-IndexSet1-SP-Lane1",
-                        "Index": "AGGTCAGATA",
-                        "Index2": "CTACAAGATA",
-                        "Sample_Project": "CD-5678",
-                    },
-                    {
-                        "Lane": 2,
-                        "Sample_ID": "Sample_14574-Qiagen-IndexSet1-SP-Lane2",
-                        "Index": "GAACTGAGCG",
-                        "Index2": "TCGTGGAGCG",
-                        "Sample_Project": "AB-1234",
-                    },
-                    {
-                        "Lane": 2,
-                        "Sample_ID": "Sample_14575-Qiagen-IndexSet1-SP-Lane2",
-                        "Index": "AGGTCAGATA",
-                        "Index2": "CTACAAGATA",
-                        "Sample_Project": "CD-5678",
-                    },
-                ],
-            },
+            "len": 4,
+            "head": [
+                {
+                    "Lane": 1,
+                    "Sample_ID": "Sample_14574-Qiagen-IndexSet1-SP-Lane1",
+                    "Index": "GAACTGAGCG",
+                    "Index2": "TCGTGGAGCG",
+                    "Sample_Project": "AB-1234",
+                },
+                {
+                    "Lane": 1,
+                    "Sample_ID": "Sample_14575-Qiagen-IndexSet1-SP-Lane1",
+                    "Index": "AGGTCAGATA",
+                    "Index2": "CTACAAGATA",
+                    "Sample_Project": "CD-5678",
+                },
+                {
+                    "Lane": 2,
+                    "Sample_ID": "Sample_14574-Qiagen-IndexSet1-SP-Lane2",
+                    "Index": "GAACTGAGCG",
+                    "Index2": "TCGTGGAGCG",
+                    "Sample_Project": "AB-1234",
+                },
+                {
+                    "Lane": 2,
+                    "Sample_ID": "Sample_14575-Qiagen-IndexSet1-SP-Lane2",
+                    "Index": "AGGTCAGATA",
+                    "Index2": "CTACAAGATA",
+                    "Sample_Project": "CD-5678",
+                },
+            ],
         },
         "expected_sequencing_metrics": {
             1: {
@@ -69,11 +67,26 @@ def bclconvert_runfolder():
                 "top_unknown_barcodes": {
                     "len": 1029,
                     "head": [
-                        {"index+index2": "ATATCTGCTT+TAGACAATCT", "count": 12857},
-                        {"index+index2": "CACCTCTCTT+CTCGACTCCT", "count": 12406},
-                        {"index+index2": "ATGTAACGTT+ACGATTGCTG", "count": 12177},
-                        {"index+index2": "TTCGGTGTGA+GAACAAGTAT", "count": 11590},
-                        {"index+index2": "GGTCCGCTTC+CTCACACAAG", "count": 11509},
+                        {
+                            'index': 'ATATCTGCTT', 'index2': 'TAGACAATCT',
+                            'count': 12857,
+                        },
+                        {
+                            'index': 'CACCTCTCTT', 'index2': 'CTCGACTCCT',
+                            'count': 12406,
+                        },
+                        {
+                            'index': 'ATGTAACGTT', 'index2': 'ACGATTGCTG',
+                            'count': 12177,
+                        },
+                        {
+                            'index': 'TTCGGTGTGA', 'index2': 'GAACAAGTAT',
+                            'count': 11590,
+                        },
+                        {
+                            'index': 'GGTCCGCTTC', 'index2': 'CTCACACAAG',
+                            'count': 11509,
+                        },
                     ],
                 },
                 "reads": {
@@ -114,11 +127,26 @@ def bclconvert_runfolder():
                 "top_unknown_barcodes": {
                     "len": 1055,
                     "head": [
-                        {"index+index2": "ATATCTGCTT+TAGACAATCT", "count": 13176},
-                        {"index+index2": "ATGTAACGTT+ACGATTGCTG", "count": 12395},
-                        {"index+index2": "CACCTCTCTT+CTCGACTCCT", "count": 12247},
-                        {"index+index2": "TTCGGTGTGA+GAACAAGTAT", "count": 11909},
-                        {"index+index2": "TAATTAGCGT+TGGTTAAGAA", "count": 11330},
+                        {
+                            'index': 'ATATCTGCTT', 'index2': 'TAGACAATCT',
+                            'count': 13176,
+                        },
+                        {
+                            'index': 'ATGTAACGTT', 'index2': 'ACGATTGCTG',
+                            'count': 12395,
+                        },
+                        {
+                            'index': 'CACCTCTCTT', 'index2': 'CTCGACTCCT',
+                            'count': 12247,
+                        },
+                        {
+                            'index': 'TTCGGTGTGA', 'index2': 'GAACAAGTAT',
+                            'count': 11909,
+                        },
+                        {
+                            'index': 'TAATTAGCGT', 'index2': 'TGGTTAAGAA',
+                            'count': 11330,
+                        },
                     ],
                 },
                 "reads": {
@@ -164,12 +192,12 @@ def test_qc_data(bclconvert_runfolder):
     assert qc_data.read_length == bclconvert_runfolder["expected_read_length"]
 
     assert (
-        len(qc_data.samplesheet["BCLConvert_Data"])
-        == bclconvert_runfolder["expected_samplesheet"]["BCLConvert_Data"]["len"]
+        len(qc_data.samplesheet)
+        == bclconvert_runfolder["expected_samplesheet"]["len"]
     )
     assert (
-        qc_data.samplesheet["BCLConvert_Data"]
-        == bclconvert_runfolder["expected_samplesheet"]["BCLConvert_Data"]["head"]
+        qc_data.samplesheet
+        == bclconvert_runfolder["expected_samplesheet"]["head"]
     )
 
     for lane, expected_lane_data in expected_sequencing_metrics.items():

@@ -22,11 +22,14 @@ def from_bclconvert(cls, runfolder_path, parser_config):
         / parser_config["reports_location"]
         / "Top_Unknown_Barcodes.csv"
     )
-    samplesheet = _read_samplesheet(runfolder_path)
+    samplesheet = _read_samplesheet(runfolder_path)["BCLConvert_Data"]
+    for row in samplesheet:
+        row["Index"] = row["Index"].replace(" ", "")
+        row["Index2"] = row["Index2"].replace(" ", "")
 
     instrument, read_length = _read_run_metadata(runfolder_path)
 
-    lane_data = {
+    sequencing_metrics = {
         lane + 1: {
             "total_cluster_pf": summary.at(0).at(lane).reads_pf(),
             "yield": sum(
@@ -44,8 +47,9 @@ def from_bclconvert(cls, runfolder_path, parser_config):
             ),
             "top_unknown_barcodes": [
                 {
-                    "index+index2": f"{row['index']}+{row['index2']}",
-                    "count": int(row["# Reads"])
+                    "index": row["index"],
+                    "index2": row["index2"],
+                    "count": int(row["# Reads"]),
                 }
                 for row in top_unknown_barcodes
                 if row["Lane"] == str(lane + 1)
@@ -78,7 +82,7 @@ def from_bclconvert(cls, runfolder_path, parser_config):
         instrument,
         read_length,
         samplesheet,
-        lane_data,
+        sequencing_metrics,
     )
 
 

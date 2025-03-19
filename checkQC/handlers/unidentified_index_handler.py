@@ -14,12 +14,6 @@ class UnidentifiedIndexHandler(QCHandler):
     represented at to high a level in unidentified reads, and if that is the
     case try to pinpoint why that is.
 
-    It will not output errors, but all information will be displayed as
-    warnings, due to the difficulty of deciding what is an error or not in this
-    context. For most cases the % of unidentified reads will be what is used to
-    issue the error, and then the warnings from this handler can help in
-    identifying the possible underlying cause.
-
     There are a number of different checks (or rules) in place, which will be
     checked if and index occurs more then the `significance_threshold`. The
     samplesheet will be checked to see if the index found matches and of the
@@ -30,8 +24,7 @@ class UnidentifiedIndexHandler(QCHandler):
     - Check if the index is the complementary index
     - Check if the index is present in another lane
 
-    It will ignore any indexes which have N's in them. These are assumed to be
-    read errors.
+    White listed indices will be reported as warnings instead of errors.
     """
 
     WHITE_LIST_QC_KEY = 'white_listed_indexes'
@@ -137,10 +130,6 @@ class UnidentifiedIndexHandler(QCHandler):
                                 samplesheet_searcher=samplesheet_searcher,
                                 percent_on_lane=percent_on_lane)
 
-    @staticmethod
-    def yield_qc_warning_with_message(msg, lane, tag):
-        yield QCErrorFatal(msg=msg, ordering="{}:{}".format(lane, tag), data={'lane': lane, 'msg': msg})
-
     def always_warn_rule(self, tag, lane, percent_on_lane, **kwargs):
         """
         We always want to warn about an index that is significantly represented. This rule
@@ -151,24 +140,19 @@ class UnidentifiedIndexHandler(QCHandler):
         :param percent_on_lane:
         :return:
         """
-        if self._tag_in_white_list(tag):
-            msg = ("Index: {} on lane: {} was significantly overrepresented ({:.1f}%) at a " +
-                   "significance threshold of {}%. " +
-                   "This index is white-listed.").format(tag,
-                                                         lane,
-                                                         percent_on_lane,
-                                                         self.qc_config["significance_threshold"])
-            yield QCErrorWarning(msg=msg, ordering="{}:{}".format(lane, tag), data={'lane': lane, 'msg': msg})
-        else:
-            yield from UnidentifiedIndexHandler.\
-                yield_qc_warning_with_message("Index: {} on lane: {} was significantly "
-                                              "overrepresented ({:.1f}%) at significance "
-                                              "threshold of: {}%.".format(tag,
-                                                                          lane,
-                                                                          percent_on_lane,
-                                                                          self.qc_config["significance_threshold"]),
-                                              lane,
-                                              tag)
+        msg = (
+            f"Index: {tag} on lane: {lane} was significantly overrepresented "
+            f"({percent_on_lane:.1f}%) significance threshold of "
+            f"{self.qc_config['significance_threshold']}%."
+        )
+        if (is_white_listed := self._tag_in_white_list(tag)):
+            msg += " This index is white-listed"
+
+        yield (QCErrorWarning if is_white_listed else QCErrorFatal)(
+            msg=msg,
+            ordering="{}:{}".format(lane, tag),
+            data={"lane": lane, "msg": msg},
+        )
 
     @staticmethod
     def check_swapped_dual_index(tag, lane, samplesheet_searcher, **kwargs):
@@ -179,7 +163,11 @@ class UnidentifiedIndexHandler(QCHandler):
             for hit in hits:
                 msg = '\tIt appears that maybe the dual index tag: {} was swapped. There was a hit for' \
                       ' the swapped index: {} at: {}'.format(tag, swapped_tag, hit)
-                yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
+                yield QCErrorFatal(
+                    msg=msg,
+                    ordering="{}:{}".format(lane, tag),
+                    data={"lane": lane, "msg": msg},
+                )
 
     @staticmethod
     def check_reversed_in_dual_index(tag, lane, samplesheet_searcher, **kwargs):
@@ -189,7 +177,11 @@ class UnidentifiedIndexHandler(QCHandler):
                 hits = samplesheet_searcher.one_index_match_from_dual_index_in_samplesheet(single_tag[::-1])
                 for hit in hits:
                     msg = '\tWe found a possible match for the reverse of tag: {}, on: {}. '.format(single_tag, hit)
-                    yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
+                    yield QCErrorFatal(
+                        msg=msg,
+                        ordering="{}:{}".format(lane, tag),
+                        data={"lane": lane, "msg": msg},
+                    )
 
     @staticmethod
     def check_reverse_complement_in_dual_index(tag, lane, samplesheet_searcher, **kwargs):
@@ -200,7 +192,11 @@ class UnidentifiedIndexHandler(QCHandler):
                     UnidentifiedIndexHandler.get_complementary_sequence(single_tag)[::-1])
                 for hit in hits:
                     msg = '\tWe found a possible match for the reverse complement of tag: {}, on: {}. '.format(single_tag, hit)
-                    yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
+                    yield QCErrorFatal(
+                        msg=msg,
+                        ordering="{}:{}".format(lane, tag),
+                        data={"lane": lane, "msg": msg},
+                    )
 
     @staticmethod
     def check_complement_in_dual_index(tag, lane, samplesheet_searcher, **kwargs):
@@ -211,14 +207,22 @@ class UnidentifiedIndexHandler(QCHandler):
                     UnidentifiedIndexHandler.get_complementary_sequence(single_tag))
                 for hit in hits:
                     msg = '\tWe found a possible match for the complement of tag: {}, on: {}. '.format(single_tag, hit)
-                    yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
+                    yield QCErrorFatal(
+                        msg=msg,
+                        ordering="{}:{}".format(lane, tag),
+                        data={"lane": lane, "msg": msg},
+                    )
 
     @staticmethod
     def check_reversed_index(tag, lane, samplesheet_searcher, **kwargs):
         hits = samplesheet_searcher.exact_index_in_samplesheet(tag[::-1])
         for hit in hits:
             msg = '\tWe found a possible match for the reverse of tag: {}, on: {}'.format(tag, hit)
-            yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
+            yield QCErrorFatal(
+                msg=msg,
+                ordering="{}:{}".format(lane, tag),
+                data={"lane": lane, "msg": msg},
+            )
 
     @staticmethod
     def check_reverse_complement_index(tag, lane, samplesheet_searcher, **kwargs):
@@ -226,7 +230,11 @@ class UnidentifiedIndexHandler(QCHandler):
             UnidentifiedIndexHandler.get_complementary_sequence(tag)[::-1])
         for hit in hits:
             msg = '\tWe found a possible match for the reverse complement of tag: {}, on: {}'.format(tag, hit)
-            yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
+            yield QCErrorFatal(
+                msg=msg,
+                ordering="{}:{}".format(lane, tag),
+                data={"lane": lane, "msg": msg},
+            )
 
     @staticmethod
     def check_complement_index(tag, lane, samplesheet_searcher, **kwargs):
@@ -234,14 +242,22 @@ class UnidentifiedIndexHandler(QCHandler):
             UnidentifiedIndexHandler.get_complementary_sequence(tag))
         for hit in hits:
             msg = '\tWe found a possible match for the complementary of tag: {}, on: {}'.format(tag, hit)
-            yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
+            yield QCErrorFatal(
+                msg=msg,
+                ordering="{}:{}".format(lane, tag),
+                data={"lane": lane, "msg": msg},
+            )
 
     @staticmethod
     def check_if_index_in_other_lane(tag, lane, samplesheet_searcher, **kwargs):
         hits = samplesheet_searcher.exact_index_in_samplesheet(tag)
         for hit in hits:
             msg = '\tWe found a possible match for the tag: {}, on another lane: {}'.format(tag, hit)
-            yield from UnidentifiedIndexHandler.yield_qc_warning_with_message(msg, lane, tag)
+            yield QCErrorFatal(
+                msg=msg,
+                ordering="{}:{}".format(lane, tag),
+                data={"lane": lane, "msg": msg},
+            )
 
     def number_of_reads_per_lane(self):
         """
