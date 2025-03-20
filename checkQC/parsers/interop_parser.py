@@ -163,7 +163,8 @@ class InteropParser(Parser):
                 self._send_to_subscribers(("error_rate",
                                         {"lane": lane+1, 
                                          "read": read_nbr+1, 
-                                         "error_rate": error_rate}))
+                                         "error_rate": error_rate,
+                                         "is_index_read":is_index_read}))
                 self._send_to_subscribers(("percent_q30",
                                         {"lane": lane+1, 
                                          "read": read_nbr+1, 

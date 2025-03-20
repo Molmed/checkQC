@@ -10,8 +10,8 @@ class TestErrorRateHandler(HandlerTestBase):
     def setUp(self):
         key = "error_rate"
         qc_config = {'name': 'ErrorHandler', 'error': 2, 'warning': 1}
-        value_1 = {"lane": 1, "read": 1, "error_rate": 3}
-        value_2 = {"lane": 1, "read": 2, "error_rate": 4}
+        value_1 = {"lane": 1, "read": 1, "error_rate": 3, "is_index_read": False}
+        value_2 = {"lane": 1, "read": 2, "error_rate": 4, "is_index_read": False}
         error_handler = ErrorRateHandler(qc_config)
         error_handler.collect((key, value_1))
         error_handler.collect((key, value_2))
@@ -46,8 +46,8 @@ class TestErrorRateHandler(HandlerTestBase):
 
     def test_error_rate_zero_not_allowed(self):
         key = "error_rate"
-        value_1 = {"lane": 1, "read": 1, "error_rate": 0}
-        value_2 = {"lane": 1, "read": 2, "error_rate": 0}
+        value_1 = {"lane": 1, "read": 1, "error_rate": 0, "is_index_read": False}
+        value_2 = {"lane": 1, "read": 2, "error_rate": 0, "is_index_read": False}
         # Empty the default list, and then add some more values
         self.error_handler.error_results = []
         self.error_handler.collect((key, value_1))
@@ -63,12 +63,28 @@ class TestErrorRateHandler(HandlerTestBase):
 
     def test_error_rate_zero_is_allowed(self):
         key = "error_rate"
-        value_1 = {"lane": 1, "read": 1, "error_rate": 0}
-        value_2 = {"lane": 1, "read": 2, "error_rate": 0}
+        value_1 = {"lane": 1, "read": 1, "error_rate": 0, "is_index_read": False}
+        value_2 = {"lane": 1, "read": 2, "error_rate": 0, "is_index_read": False}
         # Empty the default list, and then add some more values
         self.error_handler.error_results = []
         self.error_handler.collect((key, value_1))
         self.error_handler.collect((key, value_2))
+
+        qc_config = {'name': 'ErrorHandler', 'error': 2.9, 'warning': 1, 'allow_missing_error_rate': True}
+        self.set_qc_config(qc_config)
+        errors_and_warnings = list(self.error_handler.check_qc())
+        self.assertEqual(len(errors_and_warnings), 0)
+
+    def test_skipped_index_reads(self):
+        key = "error_rate"
+        value_1 = {"lane": 1, "read": 1, "error_rate": 0, "is_index_read": False}
+        value_2 = {"lane": 1, "read": 2, "error_rate": 0, "is_index_read": False}
+        value_3 = {"lane": 1, "read": 3, "error_rate": 3, "is_index_read": True}
+        # Empty the default list, and then add some more values
+        self.error_handler.error_results = []
+        self.error_handler.collect((key, value_1))
+        self.error_handler.collect((key, value_2))
+        self.error_handler.collect((key, value_3))
 
         qc_config = {'name': 'ErrorHandler', 'error': 2.9, 'warning': 1, 'allow_missing_error_rate': True}
         self.set_qc_config(qc_config)

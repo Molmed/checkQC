@@ -55,10 +55,10 @@ class TestQ30Handler(HandlerTestBase):
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.q30_handler.check_qc())
         self.assertEqual(len(errors_and_warnings), 8)
-
+       
         self.assertEqual(
             str(errors_and_warnings),
-            str("[Fatal QC error: %Q30 82.00 was too low on lane: 1 for read: 1, Fatal QC error: %Q30 50.00 was too low on lane: 1 for index read: 1, Fatal QC error: %Q30 50.00 was too low on lane: 1 for index read: 2, Fatal QC error: %Q30 60.00 was too low on lane: 1 for read: 2, Fatal QC error: %Q30 90.00 was too low on lane: 2 for read: 1, Fatal QC error: %Q30 50.00 was too low on lane: 2 for index read: 1, Fatal QC error: %Q30 50.00 was too low on lane: 2 for read: 2, Fatal QC error: %Q30 40.00 was too low on lane: 2 for read: 3]")
+            str("[Fatal QC error: %Q30 82.00 was too low on lane: 1 for read: 1, Fatal QC error: %Q30 50.00 was too low on lane: 1 for read (I): 2, Fatal QC error: %Q30 50.00 was too low on lane: 1 for read (I): 3, Fatal QC error: %Q30 60.00 was too low on lane: 1 for read: 4, Fatal QC error: %Q30 90.00 was too low on lane: 2 for read: 1, Fatal QC error: %Q30 50.00 was too low on lane: 2 for read (I): 2, Fatal QC error: %Q30 50.00 was too low on lane: 2 for read: 3, Fatal QC error: %Q30 40.00 was too low on lane: 2 for read: 4]")
         )
 
     def test_max_read(self):
@@ -66,10 +66,9 @@ class TestQ30Handler(HandlerTestBase):
         self.set_qc_config(qc_config)
         errors_and_warnings = list(self.q30_handler.check_qc())
         self.assertEqual(len(errors_and_warnings), 8)
-
         [
             self.assertLessEqual(
-                int(str(read).split("read: ")[1]), 4
+                int(str(read).split(": ")[-1]), 4
             ) 
             for read in errors_and_warnings
         ]
