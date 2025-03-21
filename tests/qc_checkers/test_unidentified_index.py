@@ -203,6 +203,7 @@ Possible causes are:
         "lane": 1,
         "significance": 10.0,
         "threshold": 5.0,
+        "qc_checker": "unidentified_index",
     }
     assert str(reports[1]) == "Fatal QC error: Overrepresented unknown barcode \"AC\" on lane 1 (50.0% > 5.0%)."
     assert reports[1].type() == "error"

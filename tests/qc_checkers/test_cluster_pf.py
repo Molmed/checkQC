@@ -16,7 +16,7 @@ def qc_data():
     )
 
 
-def format_msg(total_cluster_pf, threshold, lane):
+def format_msg(total_cluster_pf, threshold, lane, **kwargs):
     return f"Clusters PF {total_cluster_pf / 10**6}M < {threshold / 10**6}M on lane {lane}"
 
 
@@ -37,6 +37,7 @@ def test_cluster_pf(qc_data):
                     "total_cluster_pf": qc_data.sequencing_metrics[lane]["total_cluster_pf"],
                     "threshold": 50_000_000,
                     "lane": lane,
+                    "qc_checker": "cluster_pf",
                 }
                 assert report.message == format_msg(**exp_data)
                 assert report.type() == "error"
@@ -46,6 +47,7 @@ def test_cluster_pf(qc_data):
                     "total_cluster_pf": qc_data.sequencing_metrics[lane]["total_cluster_pf"],
                     "threshold": 500_500_000,
                     "lane": lane,
+                    "qc_checker": "cluster_pf",
                 }
                 assert report.message == format_msg(**exp_data)
                 assert report.type() == "warning"
@@ -70,6 +72,7 @@ def test_cluster_pf_error_unknown(qc_data):
                     "total_cluster_pf": qc_data.sequencing_metrics[lane]["total_cluster_pf"],
                     "threshold": 500_000_000,
                     "lane": lane,
+                    "qc_checker": "cluster_pf",
                 }
                 assert report.message == format_msg(**exp_data)
                 assert report.type() == "warning"
@@ -79,6 +82,7 @@ def test_cluster_pf_error_unknown(qc_data):
                     "total_cluster_pf": qc_data.sequencing_metrics[lane]["total_cluster_pf"],
                     "threshold": 500_000_000,
                     "lane": lane,
+                    "qc_checker": "cluster_pf",
                 }
                 assert report.message == format_msg(**exp_data)
                 assert report.type() == "warning"
@@ -103,6 +107,7 @@ def test_cluster_pf_warning_unknown(qc_data):
                 "total_cluster_pf": qc_data.sequencing_metrics[lane]["total_cluster_pf"],
                 "threshold": 50_000_000,
                 "lane": lane,
+                "qc_checker": "cluster_pf",
             }
             assert report.message == format_msg(**exp_data)
             assert report.type() == "error"
