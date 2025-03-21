@@ -78,7 +78,7 @@ class QCReporter:
 
     def _select_read_len(self, qc_data, use_closest_read_len):
         def dist(read_len):
-            if mtch := re.match(r"(\d+)-(\d+)", read_len):
+            if mtch := re.match(r"(\d+)-(\d+)", str(read_len)):
                 low, high = (int(n) for n in mtch.groups())
                 return (
                     0
@@ -109,7 +109,7 @@ class QCReporter:
     ):
         checker_configs = {
             checker_config["name"]: {
-                f"{k}_threshold" if k in ["error", "warning"] else k: v
+                (f"{k}_threshold" if k in ["error", "warning"] else k): v
                 for k, v in checker_config.items()
                 if k != "name"
             }

@@ -26,7 +26,7 @@ def checker_configs():
                     {"name": "mock_checker", "error": 6, "warning": 2},
                 ],
             },
-            "36": {
+            36: {
                 "view": "mock_view",
                 "handlers": [
                     {"name": "mock_checker", "error": 5, "warning": 2},
