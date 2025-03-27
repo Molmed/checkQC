@@ -70,6 +70,7 @@ def test_reads_per_sample(qc_data_and_exp_val):
     )
 
     assert len(qc_reports) == 2
+    assert None not in qc_reports
     for qc_report in qc_reports:
         lane = qc_report.data['lane']
         expected_report = exp_val[lane]
@@ -89,6 +90,7 @@ def test_reads_per_sample_unknown_threshold(qc_data_and_exp_val):
     )
 
     assert len(qc_reports) == 2
+    assert None not in qc_reports
     expected_report = QCErrorWarning(
         "Number of reads for sample Sample_B on lane 1 were too low:"
         " 20.0 M (threshold: 30.0 M)",
