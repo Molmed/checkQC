@@ -69,8 +69,8 @@ def test_reads_per_sample(qc_data_and_exp_val):
         warning_threshold=60,
     )
 
-    assert len(qc_reports) == 4
-    for qc_report in filter(None, qc_reports):
+    assert len(qc_reports) == 2
+    for qc_report in qc_reports:
         lane = qc_report.data['lane']
         expected_report = exp_val[lane]
 
@@ -88,15 +88,20 @@ def test_reads_per_sample_unknown_threshold(qc_data_and_exp_val):
         warning_threshold=60,
     )
 
-    assert len(qc_reports) == 4
+    assert len(qc_reports) == 2
     expected_report = QCErrorWarning(
-                "Number of reads for sample Sample_B on lane 1 were too low:"
-                " 20.0 M (threshold: 30.0 M)",
-                data={"lane": 1,
-                      "number_of_samples": 2,
-                      "sample_id": "Sample_B",
-                      "sample_reads": 20,
-                      "threshold": 30}
-                )
-    assert qc_reports[1].type() == expected_report.type()
-    assert qc_reports[1].data == expected_report.data
+        "Number of reads for sample Sample_B on lane 1 were too low:"
+        " 20.0 M (threshold: 30.0 M)",
+        data={
+            "lane": 1,
+            "number_of_samples": 2,
+            "sample_id": "Sample_B",
+            "sample_reads": 20,
+            "threshold": 30,
+            "qc_checker": "reads_per_sample",
+        }
+    )
+    assert qc_reports[0].type() == expected_report.type()
+    assert qc_reports[0].data == expected_report.data
+
+    assert qc_reports[1].type() == "warning"
