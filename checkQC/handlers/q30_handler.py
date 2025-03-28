@@ -27,33 +27,17 @@ class Q30Handler(QCHandler):
             self.error_results.append(value)
 
     def check_qc(self):
-        lane_no = 0
-
         for error_dict in self.error_results:
             lane_nbr = int(error_dict["lane"])
-
-            # restart counters for different lanes
-            if lane_nbr != lane_no:
-                index_count = 0
-                non_index_count = 0
-                lane_no = lane_nbr
-
+            read = int(error_dict["read"])
             percent_q30 = error_dict["percent_q30"]
             is_index_read = error_dict.get("is_index_read", False)
-            read_or_index_text = "index read" if is_index_read else "read"
-            # Differentiate read values for indexed from non-indexed reads
-            index_count += 1 if is_index_read else 0
-            non_index_count += 1 if not is_index_read else 0
-            read = index_count if is_index_read else non_index_count
+            read_or_index_text = "read (I)" if is_index_read else "read" 
 
             if self.error() != self.UNKNOWN and percent_q30 < self.error():
                 yield QCErrorFatal(
-                    "%Q30 {:.2f} was too low on lane: {} for {}: {}".format(
-                        percent_q30,
-                        lane_nbr,
-                        read_or_index_text,
-                        read
-                    ),
+                    f"%Q30 {percent_q30:.2f} was too low on lane: {lane_nbr} "
+                    f"for {read_or_index_text}: {read}",
                     ordering=lane_nbr,
                     data={
                         "lane": lane_nbr, 
@@ -64,12 +48,8 @@ class Q30Handler(QCHandler):
                 )
             elif self.warning() != self.UNKNOWN and percent_q30 < self.warning():
                 yield QCErrorWarning(
-                    "%Q30 {:.2f} was too low on lane: {} for {}: {}".format(
-                        percent_q30,
-                        lane_nbr,
-                        read_or_index_text,
-                        read
-                    ),
+                    f"%Q30 {percent_q30:.2f} was too low on lane: {lane_nbr} "
+                    f"for {read_or_index_text}: {read}",
                     ordering=lane_nbr,
                     data={
                         "lane": lane_nbr, 
