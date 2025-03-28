@@ -98,9 +98,8 @@ def test_reads_per_sample_unknown_threshold(qc_data_and_exp_val):
             "lane": 1,
             "number_of_samples": 2,
             "sample_id": "Sample_B",
-            "sample_reads": 20,
-            "threshold": 30,
-            "qc_checker": "reads_per_sample",
+            "sample_reads": 20.,
+            "threshold": 30.,
         }
     )
     assert qc_reports[0].type() == expected_report.type()
