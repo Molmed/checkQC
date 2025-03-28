@@ -54,6 +54,6 @@ def reads_per_sample(
                 len(lane_data["reads_per_sample"]),
                 sample_data["sample_id"],
                 sample_data["cluster_count"],
-            ),
+            )
         )
     ]

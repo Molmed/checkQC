@@ -183,6 +183,7 @@ def test_unidentified_index(qc_data):
     reports = unidentified_index(qc_data, 5.)
 
     assert len(reports) == 2
+    assert None not in reports
     assert str(reports[0]) == """Fatal QC error: Overrepresented unknown barcode "ACCT" on lane 1 (10.0% > 5.0%).
 Possible causes are:
 - reverse index swap: "TCCA" found in samplesheet for sample "reverse", lane 1
@@ -197,6 +198,7 @@ def test_whitelist_index(qc_data):
             qc_data, 5.,
             white_listed_indexes=[".*CC.*"])
     assert len(reports) == 2
+    assert None not in reports
     assert str(reports[0]).startswith(
         "QC warning: Overrepresented unknown barcode \"ACCT\" on lane 1 (10.0% > 5.0%). "
         "This barcode is white-listed."

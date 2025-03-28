@@ -29,6 +29,7 @@ def test_error_threshold():
     )
 
     assert len(qc_reports) == 1
+    assert None not in qc_reports
     assert qc_reports[0].type() == "error"
     assert str(qc_reports[0]) == "Fatal QC error: Percentage of undetermined indices 20.00% (- 1.00% phiX) > 15.00% on lane 1."
     assert qc_reports[0].data == {
@@ -60,6 +61,7 @@ def test_warning_threshold():
     )
 
     assert len(qc_reports) == 1
+    assert None not in qc_reports
     assert qc_reports[0].type() == "warning"
     assert str(qc_reports[0]) == "QC warning: Percentage of undetermined indices 20.00% (- 1.00% phiX) > 5.00% on lane 1."
     assert qc_reports[0].data == {
@@ -130,6 +132,7 @@ def test_multiple_reports():
     )
 
     assert len(qc_reports) == 2
+    assert None not in qc_reports
     for report in qc_reports:
         match report.data["lane"]:
             case 1:
@@ -175,6 +178,7 @@ def test_yield_0():
     )
 
     assert len(qc_reports) == 1
+    assert None not in qc_reports
     assert qc_reports[0].type() == "error"
     assert str(qc_reports[0]) == "Fatal QC error: Yield for lane 1 was 0. No undetermined percentage could be computed"
     assert qc_reports[0].data == {"lane": 1, "percentage_undetermined": None}
@@ -201,6 +205,7 @@ def test_mean_percent_phix_nan():
     )
 
     assert len(qc_reports) == 1
+    assert None not in qc_reports
     assert qc_reports[0].type() == "error"
     assert str(qc_reports[0]) == "Fatal QC error: Percentage of undetermined indices 20.00% (- 1.00% phiX) > 15.00% on lane 3."
     assert qc_reports[0].data == {

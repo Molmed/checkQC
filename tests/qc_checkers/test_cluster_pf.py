@@ -28,6 +28,7 @@ def test_cluster_pf(qc_data):
     )
 
     assert len(qc_reports) == 2
+    assert None not in qc_reports
     for report in qc_reports:
         lane, threshold = report.data["lane"], report.data["threshold"]
         match lane:
@@ -60,6 +61,7 @@ def test_cluster_pf_error_unknown(qc_data):
     )
 
     assert len(qc_reports) == 2
+    assert None not in qc_reports
     for report in qc_reports:
         lane, threshold = report.data["lane"], report.data["threshold"]
         match lane:
@@ -92,6 +94,7 @@ def test_cluster_pf_warning_unknown(qc_data):
     )
 
     assert len(qc_reports) == 1
+    assert None not in qc_reports
     report = qc_reports[0]
     lane, threshold = report.data["lane"], report.data["threshold"]
     match lane:
