@@ -7,15 +7,15 @@ import pytest
 @pytest.fixture
 def samplesheet_matcher():
     return SamplesheetMatcher([
-        {"Index": "CCAA", "Index2": "AGCA", "Lane": 1, "Sample_ID": "dual reverse"},
-        {"Index": "GGTT", "Index2": "TCGT", "Lane": 2, "Sample_ID": "dual reverse complement"},
-        {"Index": "TGCT", "Index2": "TTGG", "Lane": 3, "Sample_ID": "dual complement"},
-        {"Index": "AAAT", "Index2": "ATAT", "Lane": 1, "Sample_ID": "sample_id"},
-        {"Index": "CAAT", "Index2": "CTAT", "Lane": 1, "Sample_ID": "sample_id"},
-        {"Index": "TCCA", "Index2": "", "Lane": 1, "Sample_ID": "reverse"},
-        {"Index": "AGGT", "Index2": "", "Lane": 1, "Sample_ID": "reverse complement"},
-        {"Index": "TGGA", "Index2": "", "Lane": 1, "Sample_ID": "complement"},
-        {"Index": "AAGG", "Index2": "", "Lane": 1, "Sample_ID": "test"},
+        {"index": "CCAA", "index2": "AGCA", "Lane": 1, "Sample_ID": "dual reverse"},
+        {"index": "GGTT", "index2": "TCGT", "Lane": 2, "Sample_ID": "dual reverse complement"},
+        {"index": "TGCT", "index2": "TTGG", "Lane": 3, "Sample_ID": "dual complement"},
+        {"index": "AAAT", "index2": "ATAT", "Lane": 1, "Sample_ID": "sample_id"},
+        {"index": "CAAT", "index2": "CTAT", "Lane": 1, "Sample_ID": "sample_id"},
+        {"index": "TCCA", "index2": "", "Lane": 1, "Sample_ID": "reverse"},
+        {"index": "AGGT", "index2": "", "Lane": 1, "Sample_ID": "reverse complement"},
+        {"index": "TGGA", "index2": "", "Lane": 1, "Sample_ID": "complement"},
+        {"index": "AAGG", "index2": "", "Lane": 1, "Sample_ID": "test"},
     ])
 
 
@@ -35,7 +35,7 @@ def test_check_complement(samplesheet_matcher):
     assert msg == "complement index swap: \"AAGG\" found in samplesheet for sample \"test\", lane 1"
     assert data == (
         "complement",
-        {"Index": "AAGG", "Index2": "", "Lane": 1, "Sample_ID": "test"}
+        {"index": "AAGG", "index2": "", "Lane": 1, "Sample_ID": "test"}
     )
 
 
@@ -53,7 +53,7 @@ def test_check_reverse(samplesheet_matcher):
     assert msg == "reverse index swap: \"AAGG\" found in samplesheet for sample \"test\", lane 1"
     assert data == (
         "reverse",
-        {"Index": "AAGG", "Index2": "", "Lane": 1, "Sample_ID": "test"}
+        {"index": "AAGG", "index2": "", "Lane": 1, "Sample_ID": "test"}
     )
 
 
@@ -71,7 +71,7 @@ def test_check_reverse_complement(samplesheet_matcher):
     assert msg == "reverse complement index swap: \"AAGG\" found in samplesheet for sample \"test\", lane 1"
     assert data == (
         "reverse complement",
-        {"Index": "AAGG", "Index2": "", "Lane": 1, "Sample_ID": "test"}
+        {"index": "AAGG", "index2": "", "Lane": 1, "Sample_ID": "test"}
     )
 
 
@@ -132,8 +132,8 @@ def test_lane_swap(samplesheet_matcher):
     assert data == (
         "lane swap",
         {
-            "Index": "CCAA",
-            "Index2": "AGCA",
+            "index": "CCAA",
+            "index2": "AGCA",
             "Lane": 1,
             "Sample_ID": "dual reverse",
         }
@@ -152,8 +152,8 @@ def test_dual_index_swap(samplesheet_matcher):
     assert data == (
         "dual index swap",
         {
-            "Index": "CCAA",
-            "Index2": "AGCA",
+            "index": "CCAA",
+            "index2": "AGCA",
             "Lane": 1,
             "Sample_ID": "dual reverse",
         }
@@ -173,8 +173,8 @@ def qc_data():
             }
         },
         [
-            {"Index": "ACCT", "Lane": 2, "Sample_ID": "lane swap"},
-            {"Index": "TCCA", "Lane": 1, "Sample_ID": "reverse"},
+            {"index": "ACCT", "Lane": 2, "Sample_ID": "lane swap"},
+            {"index": "TCCA", "Lane": 1, "Sample_ID": "reverse"},
         ]
     )
 
@@ -189,6 +189,21 @@ Possible causes are:
 - reverse index swap: "TCCA" found in samplesheet for sample "reverse", lane 1
 - lane swap: index "ACCT" found in samplesheet for sample "lane swap", lane 2"""
     assert reports[0].type() == "error"
+    assert reports[0].data == {
+        "barcode": {
+            "count": 10,
+            "index": "ACCT",
+            "lane": 1,
+        },
+        "causes": [
+            ("reverse", {"index": "TCCA", "Lane": 1, "Sample_ID": "reverse"}),
+            ("lane swap", {"index": "ACCT", "Lane": 2, "Sample_ID": "lane swap"}),
+        ],
+        "is_white_listed": False,
+        "lane": 1,
+        "significance": 10.0,
+        "threshold": 5.0,
+    }
     assert str(reports[1]) == "Fatal QC error: Overrepresented unknown barcode \"AC\" on lane 1 (50.0% > 5.0%)."
     assert reports[1].type() == "error"
 
