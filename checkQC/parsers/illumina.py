@@ -22,10 +22,7 @@ def from_bclconvert(cls, runfolder_path, parser_config):
         / parser_config["reports_location"]
         / "Top_Unknown_Barcodes.csv"
     )
-    samplesheet = _read_samplesheet(runfolder_path)["BCLConvert_Data"]
-    for row in samplesheet:
-        row["Index"] = row["Index"].replace(" ", "")
-        row["Index2"] = row["Index2"].replace(" ", "")
+    samplesheet = _read_samplesheet(runfolder_path)
 
     instrument, read_length = _read_run_metadata(runfolder_path)
 
@@ -87,6 +84,11 @@ def from_bclconvert(cls, runfolder_path, parser_config):
 
 
 def _read_interop_summary(runfolder_path):
+    """
+    Read interop files and return interop objects for run_summary and index
+    summary.
+    """
+
     runfolder_path = str(runfolder_path)  # interop does not handle Path objects
 
     run_info = interop.py_interop_run.info()
@@ -105,25 +107,53 @@ def _read_interop_summary(runfolder_path):
 
 
 def _read_quality_metrics(quality_metrics_path):
+    """
+    Read quality metrics file
+    """
     with open(quality_metrics_path, encoding="utf-8") as csvfile:
         return list(csv.DictReader(csvfile))
 
 
 def _read_top_unknown_barcodes(top_unknown_barcodes_path):
+    """
+    Read top unknown barcodes file
+    """
     with open(top_unknown_barcodes_path, encoding="utf-8") as csvfile:
-         return list(csv.DictReader(csvfile))
+        return list(csv.DictReader(csvfile))
 
 
-# TODO add docs
 def _read_run_metadata(runfolder_path):
+    """
+    Read intrument, reagent and read_length
+    """
     run_type_recognizer = RunTypeRecognizer(runfolder_path)
 
     return (
         run_type_recognizer.instrument_and_reagent_version(),
-        int(run_type_recognizer.read_length()),
+        # NOTE: read length can be either "151" or "151-151" in case of paired
+        # reads. For now, only symetric read length is supported
+        # see checkQC/app.py#L159
+        int(run_type_recognizer.read_length().split("-")[0]),
     )
 
 
-# TODO reorder helper functions
 def _read_samplesheet(runfolder_path):
-    return read_sectionedsheet(runfolder_path / "SampleSheet.csv")
+    """
+    Parse `BCLConvert_Data` section of samplesheet
+
+    NOTE: column name can sometimes start with an uppercase letter.
+    """
+    samplesheet = read_sectionedsheet(
+        runfolder_path / "SampleSheet.csv")["BCLConvert_Data"]
+
+    for i, row in enumerate(samplesheet):
+        samplesheet[i] = {
+            key.lower(): value
+            for key, value in row.items()
+        }
+
+    for row in samplesheet:
+        row["index"] = row["index"].replace(" ", "")
+        row["index2"] = row["index2"].replace(" ", "")
+
+    return samplesheet
