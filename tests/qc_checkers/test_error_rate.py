@@ -72,6 +72,7 @@ def test_error_rate(qc_data_and_exp_val):
     )
 
     assert len(qc_reports) == sum(len(v) for v in exp_val.values())
+    assert None not in qc_reports
     for qc_report in qc_reports:
         lane, read = qc_report.data['lane'], qc_report.data['read']
         expected_report = exp_val[lane][read]
@@ -92,6 +93,7 @@ def test_error_rate_error_unknown(qc_data_and_exp_val):
     del exp_val[2][1]
 
     assert len(qc_reports) == sum(len(v) for v in exp_val.values())
+    assert None not in qc_reports
     for qc_report in qc_reports:
         lane, read = qc_report.data['lane'], qc_report.data['read']
         expected_report = exp_val[lane][read]
@@ -117,6 +119,7 @@ def test_error_rate_warning_unknown(qc_data_and_exp_val):
     del exp_val[2][1]
 
     assert len(qc_reports) == sum(len(v) for v in exp_val.values())
+    assert None not in qc_reports
     for qc_report in qc_reports:
         lane, read = qc_report.data['lane'], qc_report.data['read']
         expected_report = exp_val[lane][read]
@@ -140,6 +143,7 @@ def test_error_rate_allow_missing(qc_data_and_exp_val):
     del exp_val[1][3]
 
     assert len(qc_reports) == sum(len(v) for v in exp_val.values())
+    assert None not in qc_reports
     for qc_report in qc_reports:
         lane, read = qc_report.data['lane'], qc_report.data['read']
         expected_report = exp_val[lane][read]
