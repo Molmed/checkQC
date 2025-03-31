@@ -96,7 +96,7 @@ class QCReporter:
         if not use_closest_read_len and dist(best_match_read_len) > 0:
             raise KeyError(
                 f"No config entry matching read length {qc_data.read_length}"
-                f"found for instrument {qc_data.instrument}."
+                f" found for instrument {qc_data.instrument}."
             )
 
         return best_match_read_len
