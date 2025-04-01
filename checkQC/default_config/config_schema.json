@@ -3,6 +3,10 @@
     "title": "CheckQC Configuration",
     "type": "object",
     "definitions": {
+        "view": {
+            "type": "string",
+            "enum": [ "illumina_view", "basic_view" ]
+        },
         "handler": {
             "type": "object",
             "required": ["name"],
@@ -48,17 +52,15 @@
         "default_handlers": {
             "type": "array",
             "items": { "$ref": "#/definitions/handler" }
-      }
+        },
+        "default_view": { "$ref": "#/definitions/view" }
     },
     "additionalProperties": {
         "type": "object",
         "additionalProperties": {
             "type": "object",
             "properties": {
-                "view": {
-                    "type": "string",
-                    "enum": [ "illumina_view" ]
-                },
+                "view": { "$ref": "#/definitions/view" },
                 "handlers": {
                     "type": "array",
                     "items": { "$ref": "#/definitions/handler" }

@@ -8,32 +8,34 @@ def illumina_view(checker_configs, qc_data, qc_reports):
     return {
         "lane reports": {
             lane: {
-                "read reports": {
-                    read: [
-                        str(report)
-                        for report in read_reports
-                    ]
-                    for read, read_reports in group_reports(
-                        lane_reports,
-                        key=lambda report: report.data.get("read")
-                    )
-                },
-                "other reports": [
+                qc_checker: [
                     str(report)
-                    for report in lane_reports
-                    if "read" not in report.data
+                    for report in reports
                 ]
+                for qc_checker, reports in group_reports(
+                    lane_reports,
+                    key=lambda report: report.data["qc_checker"],
+                )
             }
             for lane, lane_reports in group_reports(
                 qc_reports,
                 key=lambda report: report.data.get("lane")
             )
         },
-        "other reports": [
-            str(report)
-            for report in qc_reports
-            if "lane" not in report.data
-        ],
+        "other reports": {
+            qc_checker: non_lane_reports
+            for qc_checker, reports in group_reports(
+                qc_reports,
+                key=lambda report: report.data["qc_checker"],
+            )
+            if (
+                non_lane_reports := [
+                    str(report)
+                    for report in reports
+                    if "lane" not in report.data
+                ]
+            )
+        },
         "run_summary": {
             "instrument_and_reagent_version": qc_data.instrument,
             "read_length": qc_data.read_length,

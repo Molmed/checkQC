@@ -37,6 +37,7 @@ def test_error_threshold():
         "percentage_undetermined": 20.,
         "mean_percent_phix_aligned": 1.0,
         "threshold": 15.,
+        "qc_checker": "undetermined_percentage",
     }
 
 
@@ -69,6 +70,7 @@ def test_warning_threshold():
         "percentage_undetermined": 20.,
         "mean_percent_phix_aligned": 1.0,
         "threshold": 5.,
+        "qc_checker": "undetermined_percentage",
     }
 
 
@@ -143,6 +145,7 @@ def test_multiple_reports():
                     "percentage_undetermined": 20.,
                     "mean_percent_phix_aligned": 1.0,
                     "threshold": 15.,
+                    "qc_checker": "undetermined_percentage",
                 }
             case 2:
                 assert report.type() == "warning"
@@ -152,6 +155,7 @@ def test_multiple_reports():
                     "percentage_undetermined": 10.,
                     "mean_percent_phix_aligned": 1.0,
                     "threshold": 5.,
+                    "qc_checker": "undetermined_percentage",
                 }
             case _:
                 assert False, f"An error was unexpectedly reported for lane {report.data['lane']}"
@@ -181,7 +185,11 @@ def test_yield_0():
     assert None not in qc_reports
     assert qc_reports[0].type() == "error"
     assert str(qc_reports[0]) == "Fatal QC error: Yield for lane 1 was 0. No undetermined percentage could be computed"
-    assert qc_reports[0].data == {"lane": 1, "percentage_undetermined": None}
+    assert qc_reports[0].data == {
+        "lane": 1,
+        "percentage_undetermined": None,
+        "qc_checker": "undetermined_percentage",
+    }
 
 
 def test_mean_percent_phix_nan():
@@ -213,4 +221,5 @@ def test_mean_percent_phix_nan():
         "percentage_undetermined": 20.,
         "mean_percent_phix_aligned": 1.0,
         "threshold": 15.,
+        "qc_checker": "undetermined_percentage",
     }
