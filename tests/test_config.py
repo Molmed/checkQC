@@ -85,6 +85,7 @@ class TestConfigFactory(unittest.TestCase):
 
         first_expected_keys = [
             'parser_configurations',
+            'default_view',
             'default_handlers',
             'hiseq2500_rapidhighoutput_v4',
             'hiseq2500_rapidrun_v2',
