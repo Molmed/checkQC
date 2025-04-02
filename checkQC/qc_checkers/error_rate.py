@@ -26,6 +26,7 @@ def error_rate(
             "lane": lane,
             "read": read,
             "error": error,
+            "qc_checker": "error_rate",
         }
         msg = "Error rate {error} > {threshold} on lane {lane} for read {read}."
 

@@ -25,8 +25,6 @@ class QCReporter:
         use_closest_read_len=False,
         downgrade_errors_for=[],
     ):
-        exit_status = 0
-
         config = self._select_configs(
             qc_data,
             use_closest_read_len,
@@ -45,6 +43,8 @@ class QCReporter:
 
         if any(qc_report.type() == "error" for qc_report in qc_reports):
             exit_status = 1
+        else:
+            exit_status = 0
 
         return exit_status, getattr(checkQC.views, config["view"])(
             checker_configs,
@@ -78,7 +78,7 @@ class QCReporter:
 
     def _select_read_len(self, qc_data, use_closest_read_len):
         def dist(read_len):
-            if mtch := re.match(r"(\d+)-(\d+)", read_len):
+            if mtch := re.match(r"(\d+)-(\d+)", str(read_len)):
                 low, high = (int(n) for n in mtch.groups())
                 return (
                     0
@@ -96,7 +96,7 @@ class QCReporter:
         if not use_closest_read_len and dist(best_match_read_len) > 0:
             raise KeyError(
                 f"No config entry matching read length {qc_data.read_length}"
-                f"found for instrument {qc_data.instrument}."
+                f" found for instrument {qc_data.instrument}."
             )
 
         return best_match_read_len
@@ -109,7 +109,7 @@ class QCReporter:
     ):
         checker_configs = {
             checker_config["name"]: {
-                f"{k}_threshold" if k in ["error", "warning"] else k: v
+                (f"{k}_threshold" if k in ["error", "warning"] else k): v
                 for k, v in checker_config.items()
                 if k != "name"
             }

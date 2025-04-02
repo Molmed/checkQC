@@ -18,11 +18,16 @@ def undetermined_percentage(
     )
 
     def _qualify_error(lane_data, lane):
+        data = {
+            "lane": lane,
+            "qc_checker": "undetermined_percentage",
+        }
         if lane_data["yield"] == 0:
+            data["percentage_undetermined"] = None
             return QCErrorFatal(
                 f"Yield for lane {lane} was 0. "
                 "No undetermined percentage could be computed",
-                data={"lane": lane, "percentage_undetermined": None},
+                data=data,
             )
 
         mean_percent_phix_aligned = np.nan_to_num(np.nanmean(
@@ -37,11 +42,8 @@ def undetermined_percentage(
             lane_data["yield_undetermined"] / lane_data["yield"] * 100
         )
 
-        data = {
-            "lane": lane,
-            "percentage_undetermined": percentage_undetermined,
-            "mean_percent_phix_aligned": mean_percent_phix_aligned,
-        }
+        data["percentage_undetermined"] = percentage_undetermined
+        data["mean_percent_phix_aligned"] = mean_percent_phix_aligned
 
         msg = (
             "Percentage of undetermined indices "

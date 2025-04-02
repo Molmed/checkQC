@@ -36,27 +36,55 @@ def qc_data_and_exp_val():
                     "Error rate is 0.0 on lane 1 for read 1. "
                     "This may be because no PhiX was loaded on this lane. "
                     "Use \"allow_missing_error_rate: true\" to disable this error message.",
-                    data={"lane": 1, "read": 1, "error": 0.},
+                    data={
+                        "lane": 1,
+                        "read": 1,
+                        "error": 0.,
+                        "qc_checker": "error_rate",
+                    },
                 ),
                 2: QCErrorFatal(
                     "Error rate 110.0 > 100.0 on lane 1 for read 2.",
-                    data={"lane": 1, "read": 2, "error": 110., "threshold": 100.}
+                    data={
+                        "lane": 1,
+                        "read": 2,
+                        "error": 110.,
+                        "threshold": 100.,
+                        "qc_checker": "error_rate",
+                    }
                 ),
                 3: QCErrorFatal(
                     "Error rate is nan on lane 1 for read 3. "
                     "This may be because no PhiX was loaded on this lane. "
                     "Use \"allow_missing_error_rate: true\" to disable this error message.",
-                    data={"lane": 1, "read": 3, "error": np.nan},
+                    data={
+                        "lane": 1,
+                        "read": 3,
+                        "error": np.nan,
+                        "qc_checker": "error_rate",
+                    },
                 ),
             },
             2: {
                 1: QCErrorWarning(
                     "Error rate 11.0 > 10.0 on lane 2 for read 1.",
-                    data={"lane": 2, "read": 1, "error": 11., "threshold": 10.},
+                    data={
+                        "lane": 2,
+                        "read": 1,
+                        "error": 11.,
+                        "threshold": 10.,
+                        "qc_checker": "error_rate",
+                    },
                 ),
                 2: QCErrorFatal(
                     "Error rate 110.0 > 100.0 on lane 2 for read 2.",
-                    data={"lane": 2, "read": 2, "error": 110., "threshold": 100.},
+                    data={
+                        "lane": 2,
+                        "read": 2,
+                        "error": 110.,
+                        "threshold": 100.,
+                        "qc_checker": "error_rate",
+                    },
                 ),
             }
         }
@@ -80,7 +108,10 @@ def test_error_rate(qc_data_and_exp_val):
         assert qc_report.message == expected_report.message
         assert qc_report.type() == expected_report.type()
         for k, v in expected_report.data.items():
-            assert float_eq(qc_report.data[k], v)
+            if type(v) == float:
+                assert float_eq(qc_report.data[k], v)
+            else:
+                assert qc_report.data[k] == v
 
 def test_error_rate_error_unknown(qc_data_and_exp_val):
     qc_data, exp_val = qc_data_and_exp_val
@@ -106,7 +137,10 @@ def test_error_rate_error_unknown(qc_data_and_exp_val):
             assert qc_report.type() == expected_report.type()
 
         for k, v in expected_report.data.items():
-            assert float_eq(qc_report.data[k], v)
+            if type(v) == float:
+                assert float_eq(qc_report.data[k], v)
+            else:
+                assert qc_report.data[k] == v
 
 def test_error_rate_warning_unknown(qc_data_and_exp_val):
     qc_data, exp_val = qc_data_and_exp_val
@@ -127,7 +161,10 @@ def test_error_rate_warning_unknown(qc_data_and_exp_val):
         assert qc_report.message == expected_report.message
         assert qc_report.type() == expected_report.type()
         for k, v in expected_report.data.items():
-            assert float_eq(qc_report.data[k], v)
+            if type(v) == float:
+                assert float_eq(qc_report.data[k], v)
+            else:
+                assert qc_report.data[k] == v
 
 
 def test_error_rate_allow_missing(qc_data_and_exp_val):
@@ -151,4 +188,7 @@ def test_error_rate_allow_missing(qc_data_and_exp_val):
         assert qc_report.message == expected_report.message
         assert qc_report.type() == expected_report.type()
         for k, v in expected_report.data.items():
-            assert float_eq(qc_report.data[k], v)
+            if type(v) == float:
+                assert float_eq(qc_report.data[k], v)
+            else:
+                assert qc_report.data[k] == v
