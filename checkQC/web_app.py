@@ -1,7 +1,7 @@
-
 import logging
 import logging.config
 import os
+from pathlib import Path
 
 import click
 import json
@@ -11,9 +11,11 @@ import tornado.ioloop
 import tornado.web
 from tornado.web import url, HTTPError
 
-from checkQC.app import App
+from checkQC.app import App, run_new_checkqc
 from checkQC.config import ConfigFactory
 from checkQC.exceptions import *
+from checkQC.qc_data import QCData
+from checkQC.qc_reporter import QCReporter
 
 log = logging.getLogger(__name__)
 
@@ -49,18 +51,54 @@ class CheckQCHandler(tornado.web.RequestHandler):
             self.downgrade_errors_for = self.get_query_argument("downgrade")
         if "useClosestReadLength" in self.request.query_arguments:
             self.use_closest_read_length = True
+
+        if "demultiplexer" in self.request.query_arguments:
+            self.demultiplexer = self.get_query_argument("demultiplexer")
+        else:
+            self.demultiplexer = "bcl2fastq"
+
         try:
-            reports = self._run_check_qc(self.monitor_path, self.qc_config_file,
-                                         runfolder, self.downgrade_errors_for,
-                                         self.use_closest_read_length)
+            if self.demultiplexer == "bcl2fastq":
+                reports = self._run_check_qc(
+                    self.monitor_path,
+                    self.qc_config_file,
+                    runfolder,
+                    self.downgrade_errors_for,
+                    self.use_closest_read_length,
+                )
+            else:
+                runfolder_path = Path(self.monitor_path) / runfolder
+                if not runfolder_path.is_dir():
+                    raise RunfolderNotFoundError(
+                        f"Could not find runfolder: {runfolder_path}. "
+                        "Are you sure the path is correct?"
+                    )
+                exit_status, reports = run_new_checkqc(
+                    self.qc_config_file,
+                    runfolder_path,
+                    self.downgrade_errors_for,
+                    self.use_closest_read_length,
+                    self.demultiplexer,
+                )
+                reports["version"] = checkqc_version
+                reports["exit_status"] = exit_status
+
             self.set_header("Content-Type", "application/json")
             self.write(reports)
         except RunfolderNotFoundError:
-            self._write_error(status_code=404, reason="Could not find requested runfolder.")
+            self._write_error(
+                status_code=404,
+                reason="Could not find requested runfolder."
+            )
         except ConfigurationError:
-            self._write_error(status_code=500, reason="There is a problem with the qc config. Are you sure the "
-                                                      "type of instrument/run configuration on the run you want to "
-                                                      "analyze is available in the qc config?")
+            self._write_error(
+                status_code=500,
+                reason=(
+                    "There is a problem with the qc config. Are you sure the "
+                    "type of instrument/run configuration on the run you want "
+                    "to analyze is available in the qc config?"
+                )
+            )
 
 
 class WebApp(object):

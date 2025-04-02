@@ -11,6 +11,10 @@ parser_configurations:
     bcl2fastq_output_path: Data/Intensities/BaseCalls
   SamplesheetParser:
     samplesheet_name: SampleSheet.csv
+  from_bclconvert:
+    reports_location: Reports
+
+default_view: illumina_view
 
 default_handlers:
   - name: UndeterminedPercentageHandler
@@ -43,3 +47,20 @@ hiseq2500_rapidhighoutput_v4:
       - name: ReadsPerSampleHandler
         warning: unknown
         error: 90 # 50 % of threshold for clusters pass filter
+
+novaseq_SP:
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 1 # Millons of clusters
+        error: unknown
+      - name: Q30Handler
+        warning: 1 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 1 # 50 % of threshold for clusters pass filter

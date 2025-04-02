@@ -86,27 +86,12 @@ def start(
         log.info("------------------------")
         log.info(f"Runfolder is: {runfolder}")
 
-        config = ConfigFactory.from_config_path(config)._config
-
-        try:
-            qc_data_constructor = getattr(QCData, f"from_{demultiplexer}")
-        except AttributeError as exc:
-            raise NotImplementedError(
-                f"Support for {demultiplexer} has not been implemented yet"
-            ) from exc
-        qc_data = qc_data_constructor(
-            runfolder_path=runfolder,
-            parser_config=config
-                .get("parser_configurations", {})
-                .get(f"from_{demultiplexer}", {}),
-        )
-
-        qc_reporter = QCReporter(config)
-
-        exit_status, reports = qc_reporter.gather_reports(
-            qc_data,
-            use_closest_read_len=use_closest_read_length,
-            downgrade_errors_for=downgrade_errors,
+        exit_status, reports = run_new_checkqc(
+            config,
+            runfolder,
+            downgrade_errors,
+            use_closest_read_length,
+            demultiplexer,
         )
 
         if exit_status == 0:
@@ -114,12 +99,48 @@ def start(
         else:
             log.info("Finished with fatal qc errors and will exit with non-zero exit status.")
 
-
         if json_mode:
             print(json.dumps(reports, indent=True))
 
-
         sys.exit(exit_status)
+
+
+def run_new_checkqc(
+    config,
+    runfolder_path,
+    downgrade_errors_for,
+    use_closest_read_length,
+    demultiplexer,
+):
+    runfolder_path = Path(runfolder_path)
+    assert runfolder_path.is_dir()
+
+    config = ConfigFactory.from_config_path(config)._config
+
+    try:
+        qc_data_constructor = getattr(QCData, f"from_{demultiplexer}")
+    except AttributeError as exc:
+        raise NotImplementedError(
+            f"Support for {demultiplexer} has not been implemented yet"
+        ) from exc
+    qc_data = qc_data_constructor(
+        runfolder_path=runfolder_path,
+        parser_config=(
+            config
+            .get("parser_configurations", {})
+            .get(f"from_{demultiplexer}", {})
+        ),
+    )
+
+    qc_reporter = QCReporter(config)
+
+    exit_status, reports = qc_reporter.gather_reports(
+        qc_data,
+        use_closest_read_len=use_closest_read_length,
+        downgrade_errors_for=downgrade_errors_for,
+    )
+
+    return exit_status, reports
 
 
 class App(object):
