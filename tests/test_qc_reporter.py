@@ -26,7 +26,7 @@ def checker_configs():
                     {"name": "mock_checker", "error": 6, "warning": 2},
                 ],
             },
-            "36": {
+            36: {
                 "view": "mock_view",
                 "handlers": [
                     {"name": "mock_checker", "error": 5, "warning": 2},
@@ -96,10 +96,14 @@ def test_report_range_read_len(qc_reporter, qc_data):
 def test_report_use_closest_read_len(qc_reporter, qc_data):
     qc_data = qc_data._replace(read_length=35)
 
-    with pytest.raises(KeyError):
+    with pytest.raises(KeyError) as exc_info:
         exit_status, reports = qc_reporter.gather_reports(qc_data)
     exit_status, reports = qc_reporter.gather_reports(
             qc_data, use_closest_read_len=True)
+    assert (
+        str(exc_info.value)
+        == "'No config entry matching read length 35 found for instrument novaseq_SP.'"
+    )
 
     assert exit_status == 1
     assert len(reports) == 2

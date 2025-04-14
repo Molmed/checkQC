@@ -98,16 +98,16 @@ class SamplesheetMatcher:
         self.samplesheet_single_indices = {}
         self.samplesheet_dual_indices = {}
         for row in samplesheet:
-            if row.get("Index2"):
+            if row.get("index2"):
                 self.samplesheet_dual_indices.setdefault(
-                    row["Index"], []).append(row)
+                    row["index"], []).append(row)
                 self.samplesheet_dual_indices.setdefault(
-                    row["Index2"], []).append(row)
+                    row["index2"], []).append(row)
                 self.samplesheet_dual_indices.setdefault(
-                    f"{row['Index']}+{row['Index2']}", []).append(row)
+                    f"{row['index']}+{row['index2']}", []).append(row)
             else:
                 self.samplesheet_single_indices.setdefault(
-                    row["Index"], []).append(row)
+                    row["index"], []).append(row)
 
     def list_causes(self, barcode_data):
         """
