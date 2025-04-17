@@ -12,7 +12,6 @@ def qc_reports():
         QCErrorWarning("", data={"lane": 1, "read": 1, "qc_checker": "qc2"}),
         QCErrorFatal("", data={"lane": 2, "qc_checker": "qc3"}),
         QCErrorFatal("", data={"lane": 1, "read": 2, "qc_checker": "qc2"}),
-        QCErrorFatal("", data={"qc_checker": "qc1"}),
     ]
 
 
@@ -40,9 +39,6 @@ def test_illumima_view(qc_reports, qc_data, checker_configs):
             2: {
                 'qc3': ['Fatal QC error: ']
             }
-        },
-        'other reports': {
-            'qc1': ['Fatal QC error: ']
         },
         'run_summary': {
             'checkers': checker_configs,

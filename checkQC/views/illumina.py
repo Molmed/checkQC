@@ -5,13 +5,12 @@ def illumina_view(checker_configs, qc_data, qc_reports):
     """
     Group reports by lane and by read
     """
+    assert all("lane" in report.data for report in qc_reports)
+
     return {
         "lane reports": {
             lane: {
-                qc_checker: [
-                    str(report)
-                    for report in reports
-                ]
+                qc_checker: [str(report) for report in reports]
                 for qc_checker, reports in group_reports(
                     lane_reports,
                     key=lambda report: report.data["qc_checker"],
@@ -19,21 +18,7 @@ def illumina_view(checker_configs, qc_data, qc_reports):
             }
             for lane, lane_reports in group_reports(
                 qc_reports,
-                key=lambda report: report.data.get("lane")
-            )
-        },
-        "other reports": {
-            qc_checker: non_lane_reports
-            for qc_checker, reports in group_reports(
-                qc_reports,
-                key=lambda report: report.data["qc_checker"],
-            )
-            if (
-                non_lane_reports := [
-                    str(report)
-                    for report in reports
-                    if "lane" not in report.data
-                ]
+                key=lambda report: report.data["lane"]
             )
         },
         "run_summary": {
