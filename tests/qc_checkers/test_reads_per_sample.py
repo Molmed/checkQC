@@ -41,21 +41,27 @@ def qc_data_and_exp_val():
                 QCErrorFatal(
                     "Number of reads for sample Sample_B on lane 1 were too low:"
                     " 20.0 M (threshold: 25.0 M)",
-                    data={"lane": 1,
-                          "number_of_samples": 2,
-                          "sample_id": "Sample_B",
-                          "sample_reads": 20,
-                          "threshold": 25}
+                    data={
+                        "lane": 1,
+                        "number_of_samples": 2,
+                        "sample_id": "Sample_B",
+                        "sample_reads": 20,
+                        "threshold": 25,
+                        "qc_checker": "reads_per_sample",
+                    }
                 ),
             2:
                 QCErrorWarning(
                     "Number of reads for sample Sample_C on lane 2 were too low:"
                     " 29.0 M (threshold: 30.0 M)",
-                    data={"lane": 2,
-                          "number_of_samples": 2,
-                          "sample_id": "Sample_C",
-                          "sample_reads": 29,
-                          "threshold": 30}
+                    data={
+                        "lane": 2,
+                        "number_of_samples": 2,
+                        "sample_id": "Sample_C",
+                        "sample_reads": 29,
+                        "threshold": 30,
+                        "qc_checker": "reads_per_sample",
+                    }
                 ),
         }
     )
@@ -100,6 +106,7 @@ def test_reads_per_sample_unknown_threshold(qc_data_and_exp_val):
             "sample_id": "Sample_B",
             "sample_reads": 20.,
             "threshold": 30.,
+            "qc_checker": "reads_per_sample",
         }
     )
     assert qc_reports[0].type() == expected_report.type()

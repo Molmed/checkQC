@@ -1,7 +1,7 @@
 from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
 
 
-def percent_q30(
+def q30(
         qc_data,
         error_threshold,
         warning_threshold
@@ -21,6 +21,7 @@ def percent_q30(
             "lane": lane,
             "read": read,
             "q30": q30,
+            "qc_checker": "q30",
         }
 
         read_or_index_text = "read (I)" if is_index_read else "read"

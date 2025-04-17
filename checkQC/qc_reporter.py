@@ -73,7 +73,7 @@ class QCReporter:
         return {
             "checkers": checker_configs,
             "view": self.configs[qc_data.instrument][best_match_read_len].get(
-                "view", "illumina_view"),
+                "view", self.configs.get("default_view", "basic_view")),
         }
 
     def _select_read_len(self, qc_data, use_closest_read_len):

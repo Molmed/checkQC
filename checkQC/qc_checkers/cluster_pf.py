@@ -17,13 +17,14 @@ def cluster_pf(
     if warning_threshold != "unknown":
         warning_threshold = int(warning_threshold * 10**6)
 
-    def format_msg(total_cluster_pf, threshold, lane):
+    def format_msg(total_cluster_pf, threshold, lane, **kwargs):
         return f"Clusters PF {total_cluster_pf / 10**6}M < {threshold / 10**6}M on lane {lane}"
 
     def _qualify_error(total_cluster_pf, lane):
         data = {
             "lane": lane,
             "total_cluster_pf": total_cluster_pf,
+            "qc_checker": "cluster_pf",
         }
 
         match total_cluster_pf:

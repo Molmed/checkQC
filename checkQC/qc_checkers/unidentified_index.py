@@ -60,6 +60,7 @@ def unidentified_index(
                 "threshold": significance_threshold,
                 "lane": lane,
                 "causes": [],
+                "qc_checker": "unidentified_index",
             }
             msg = (
                 f"Overrepresented unknown barcode \"{index}\" on lane {lane} "
