@@ -21,7 +21,13 @@ setup(
         "sample_sheet"],
     packages=find_packages(exclude=["tests*"]),
     test_suite="tests",
-    package_data={'checkQC': ['default_config/config.yaml', 'default_config/logger.yaml']},
+    package_data={
+        'checkQC': [
+            'default_config/config.yaml',
+            'default_config/logger.yaml',
+            'default_config/config_schema.json',
+        ]
+    },
     include_package_data=True,
     license='GPLv3',
     entry_points={
