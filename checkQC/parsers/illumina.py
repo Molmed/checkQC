@@ -10,6 +10,7 @@ from checkQC.run_type_recognizer import RunTypeRecognizer
 @classmethod
 def from_bclconvert(cls, runfolder_path, parser_config):
     runfolder_path = pathlib.Path(runfolder_path)
+    assert runfolder_path.is_dir()
 
     summary, index_summary = _read_interop_summary(runfolder_path)
     quality_metrics = _read_quality_metrics(

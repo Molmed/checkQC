@@ -25,8 +25,6 @@ class QCReporter:
         use_closest_read_len=False,
         downgrade_errors_for=[],
     ):
-        exit_status = 0
-
         config = self._select_configs(
             qc_data,
             use_closest_read_len,
@@ -45,6 +43,8 @@ class QCReporter:
 
         if any(qc_report.type() == "error" for qc_report in qc_reports):
             exit_status = 1
+        else:
+            exit_status = 0
 
         return exit_status, getattr(checkQC.views, config["view"])(
             checker_configs,
