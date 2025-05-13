@@ -15,6 +15,12 @@ from checkQC.qc_data import QCData
 from checkQC.qc_reporter import QCReporter
 
 
+SUPPORTED_DEMUXERS = [
+    "bcl2fastq",
+    "bclconvert",
+]
+
+
 logging.basicConfig(level=logging.INFO,
                     format='%(levelname)-8s %(message)s')
 
@@ -45,7 +51,10 @@ log = logging.getLogger(__name__)
 )
 @click.option(
     "--demultiplexer",
-    type=str,
+    type=click.Choice(
+        SUPPORTED_DEMUXERS,
+        case_sensitive=False,
+    ),
     default="bcl2fastq",
     help="Specify which demultiplexer was used to generate the data",
 )
@@ -117,12 +126,7 @@ def run_new_checkqc(
 
     config = ConfigFactory.from_config_path(config)._config
 
-    try:
-        qc_data_constructor = getattr(QCData, f"from_{demultiplexer}")
-    except AttributeError as exc:
-        raise NotImplementedError(
-            f"Support for {demultiplexer} has not been implemented yet"
-        ) from exc
+    qc_data_constructor = getattr(QCData, f"from_{demultiplexer}")
     qc_data = qc_data_constructor(
         runfolder_path=runfolder_path,
         parser_config=(
