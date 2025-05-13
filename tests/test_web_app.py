@@ -1,4 +1,4 @@
-
+from pathlib import Path
 
 import tornado.web
 from tornado.testing import *
@@ -10,7 +10,10 @@ from checkQC.web_app import WebApp
 class TestWebApp(AsyncHTTPTestCase):
 
     def get_app(self):
-        routes = WebApp._routes(monitoring_path=os.path.join("tests", "resources"), qc_config_file=None)
+        routes = WebApp._routes(
+            monitoring_path="tests/resources/monitored_dir",
+            qc_config_file=None
+        )
         return tornado.web.Application(routes)
 
     def test_qc_endpoint(self):
@@ -35,8 +38,10 @@ class TestWebApp(AsyncHTTPTestCase):
 class TestWebAppWithNonUsefulConfig(AsyncHTTPTestCase):
 
     def get_app(self):
-        routes = WebApp._routes(monitoring_path=os.path.join("tests", "resources"),
-                                qc_config_file=os.path.join("tests", "resources", "incomplete_config.yaml"))
+        routes = WebApp._routes(
+            monitoring_path="tests/resources/monitored_dir",
+            qc_config_file="tests/resources/incomplete_config.yaml"
+        )
         return tornado.web.Application(routes)
 
     def test_qc_fail_fast_for_unknown_config(self):
@@ -47,8 +52,10 @@ class TestWebAppWithNonUsefulConfig(AsyncHTTPTestCase):
 class TestWebAppReadLengthNotInConfig(AsyncHTTPTestCase):
 
     def get_app(self):
-        routes = WebApp._routes(monitoring_path=os.path.join("tests", "resources"),
-                                qc_config_file=os.path.join("tests", "resources", "read_length_not_in_config.yaml"))
+        routes = WebApp._routes(
+            monitoring_path="tests/resources/monitored_dir",
+            qc_config_file="tests/resources/read_length_not_in_config.yaml",
+        )
         return tornado.web.Application(routes)
 
     def test_use_closest_read_length(self):

@@ -1,5 +1,5 @@
 
-import os
+from pathlib import Path
 
 import unittest
 
@@ -32,9 +32,10 @@ class TestInteropParser(unittest.TestCase):
         def send(self, value):
             self.subscriber.send(value)
 
-    runfolder = os.path.join(os.path.dirname(__file__), "..",
-                             "resources",
-                             "230825_M04034_0043_000000000-L6NVV")
+    runfolder = str(
+        Path(__file__).parent.parent
+        / "resources/bcl2fastq/230825_M04034_0043_000000000-L6NVV"
+    )
     interop_parser = InteropParser(runfolder=runfolder,
                                    parser_configurations=None)
     subscriber = Receiver()

@@ -8,7 +8,7 @@ from checkQC.app import run_new_checkqc
 
 @pytest.fixture
 def bcl2fastq_runfolder_path():
-    return str(Path(__file__).parent / "resources/170726_D00118_0303_BCB1TVANXX/")
+    return str(Path(__file__).parent / "resources/bcl2fastq/170726_D00118_0303_BCB1TVANXX/")
 
 
 @pytest.fixture

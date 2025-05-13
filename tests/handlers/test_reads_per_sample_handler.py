@@ -58,7 +58,7 @@ class TestReadsPerSampleHandler(HandlerTestBase):
     def test_multiple_sampleIDs_per_sampleName(self):
         key = "ConversionResults"
         qc_config = {'name': 'ReadsPerSampleHandler', 'error': 'unknown', 'warning': '1000'}
-        value = get_stats_json("180925_A00001_0001_BABCDEFGXX")["ConversionResults"]
+        value = get_stats_json("bcl2fastq/180925_A00001_0001_BABCDEFGXX")["ConversionResults"]
         custom_reads_per_sample_handler = ReadsPerSampleHandler(qc_config)
         custom_reads_per_sample_handler.collect((key, value))
         errors_and_warnings = list(custom_reads_per_sample_handler.check_qc())

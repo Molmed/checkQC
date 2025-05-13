@@ -19,7 +19,7 @@ class TestUnidentifiedIndexHandlerIntegrationTest(HandlerTestBase):
     def setUp(self):
         config = {"StatsJsonParser": {"bcl2fastq_output_path": "Data/Intensities/BaseCalls"},
                   "SamplesheetParser": {"samplesheet_name": "SampleSheet.csv"}}
-        runfolder = "./tests/resources/170726_D00118_0303_BCB1TVANXX"
+        runfolder = "./tests/resources/bcl2fastq/170726_D00118_0303_BCB1TVANXX"
         parsers = [DemuxSummaryParser(runfolder, config),
                    StatsJsonParser(runfolder, config),
                    SamplesheetParser(runfolder, config)]

@@ -24,9 +24,9 @@ class TestDemuxSummaryParser(unittest.TestCase):
             self.subscriber.send(value)
 
     def setUp(self):
-        self.runfolder = Path("tests","resources", "170726_D00118_0303_BCB1TVANXX")
         parser_configs = {"StatsJsonParser": {"bcl2fastq_output_path": "Data/Intensities/BaseCalls"}}
         self.demux_summary_parser = DemuxSummaryParser(runfolder=self.runfolder, parser_configurations=parser_configs)
+        self.runfolder = "tests/resources/bcl2fastq/170726_D00118_0303_BCB1TVANXX"
         self.subscriber = self.Receiver()
         self.demux_summary_parser.add_subscribers(self.subscriber)
 
