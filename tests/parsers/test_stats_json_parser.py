@@ -24,12 +24,16 @@ class TestStatsJsonParser(unittest.TestCase):
         def send(self, value):
             self.subscriber.send(value)
 
-    parser_configs = {"StatsJsonParser": {"bcl2fastq_output_path": "Data/Intensities/BaseCalls"}}
     runfolder = str(
         Path(__file__).parent.parent
         / "resources/bcl2fastq/170726_D00118_0303_BCB1TVANXX"
     )
 
+    parser_configs = {
+        "StatsJsonParser": {
+            "bcl2fastq_output_path": "Data/Intensities/BaseCalls"
+        }
+    }
     stats_json_parser = StatsJsonParser(runfolder=runfolder, parser_configurations=parser_configs)
     subscriber = Receiver()
     stats_json_parser.add_subscribers(subscriber)

@@ -17,8 +17,14 @@ from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
 class TestUnidentifiedIndexHandlerIntegrationTest(HandlerTestBase):
 
     def setUp(self):
-        config = {"StatsJsonParser": {"bcl2fastq_output_path": "Data/Intensities/BaseCalls"},
-                  "SamplesheetParser": {"samplesheet_name": "SampleSheet.csv"}}
+        config = {
+            "StatsJsonParser": {
+                "bcl2fastq_output_path": "Data/Intensities/BaseCalls"
+            },
+            "SamplesheetParser": {
+                "samplesheet_name": "SampleSheet.csv"
+            }
+        }
         runfolder = "./tests/resources/bcl2fastq/170726_D00118_0303_BCB1TVANXX"
         parsers = [DemuxSummaryParser(runfolder, config),
                    StatsJsonParser(runfolder, config),
@@ -26,9 +32,8 @@ class TestUnidentifiedIndexHandlerIntegrationTest(HandlerTestBase):
         qc_config = {
             'name': 'UnidentifiedIndexHandler',
             'significance_threshold': 0.01,
-            'white_listed_indexes':
-                ['.*N.*', 'G{8,}']
-            }
+            'white_listed_indexes': ['.*N.*', 'G{8,}']
+        }
         self.unidentified_index_handler = UnidentifiedIndexHandler(qc_config)
         for parser in parsers:
             parser.add_subscribers(self.unidentified_index_handler)
