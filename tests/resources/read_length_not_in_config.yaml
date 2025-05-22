@@ -14,7 +14,7 @@ parser_configurations:
   from_bclconvert:
     reports_location: Reports
 
-default_view: illumina_view
+default_view: illumina_data_view
 
 default_handlers:
   - name: UndeterminedPercentageHandler

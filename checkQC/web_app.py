@@ -59,7 +59,7 @@ class CheckQCHandler(tornado.web.RequestHandler):
 
         try:
             if self.demultiplexer == "bcl2fastq":
-                reports = self._run_check_qc(
+                output = self._run_check_qc(
                     self.monitor_path,
                     self.qc_config_file,
                     runfolder,
@@ -73,6 +73,7 @@ class CheckQCHandler(tornado.web.RequestHandler):
                         f"Could not find runfolder: {runfolder_path}. "
                         "Are you sure the path is correct?"
                     )
+
                 exit_status, reports = run_new_checkqc(
                     self.qc_config_file,
                     runfolder_path,
@@ -80,11 +81,19 @@ class CheckQCHandler(tornado.web.RequestHandler):
                     self.use_closest_read_length,
                     self.demultiplexer,
                 )
-                reports["version"] = checkqc_version
-                reports["exit_status"] = exit_status
+
+                output = {}
+                try:
+                    output["qc_reports"] = json.loads(reports)
+                except json.decoder.JSONDecodeError:
+                    output["qc_reports"] = reports
+
+                output["version"] = checkqc_version
+                output["exit_status"] = exit_status
 
             self.set_header("Content-Type", "application/json")
-            self.write(reports)
+            self.write(output)
+
         except RunfolderNotFoundError:
             self._write_error(
                 status_code=404,

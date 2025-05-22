@@ -1,4 +1,5 @@
 from collections import namedtuple
+import json
 
 import pytest
 
@@ -31,7 +32,7 @@ def checker_configs():
 def test_basic_view(qc_reports, qc_data, checker_configs):
     result = basic_view(checker_configs, qc_data, qc_reports)
 
-    assert result == {
+    assert json.loads(result) == {
         'reports': [
             "Fatal QC error: ",
             "QC warning: ",

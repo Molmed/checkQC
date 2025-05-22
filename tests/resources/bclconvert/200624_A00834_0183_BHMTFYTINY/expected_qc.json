@@ -1,0 +1,144 @@
+{
+ "lane_reports": {
+  "1": {
+   "error_rate": [
+    {
+     "type": "error",
+     "message": "Error rate is nan on lane 1 for read 1. This may be because no PhiX was loaded on this lane. Use \"allow_missing_error_rate: true\" to disable this error message.",
+     "data": {
+      "lane": 1,
+      "read": 1,
+      "error": NaN,
+      "qc_checker": "error_rate"
+     }
+    }
+   ],
+   "reads_per_sample": [
+    {
+     "type": "error",
+     "message": "Number of reads for sample Sample_14574-Qiagen-IndexSet1-SP-Lane1 on lane 1 were too low: 0.00992 M (threshold: 121.875 M)",
+     "data": {
+      "lane": 1,
+      "number_of_samples": 2,
+      "sample_id": "Sample_14574-Qiagen-IndexSet1-SP-Lane1",
+      "sample_reads": 0.00992,
+      "qc_checker": "reads_per_sample",
+      "threshold": 121.875
+     }
+    },
+    {
+     "type": "error",
+     "message": "Number of reads for sample Sample_14575-Qiagen-IndexSet1-SP-Lane1 on lane 1 were too low: 0.00856 M (threshold: 121.875 M)",
+     "data": {
+      "lane": 1,
+      "number_of_samples": 2,
+      "sample_id": "Sample_14575-Qiagen-IndexSet1-SP-Lane1",
+      "sample_reads": 0.00856,
+      "qc_checker": "reads_per_sample",
+      "threshold": 121.875
+     }
+    }
+   ],
+   "undetermined_percentage": [
+    {
+     "type": "error",
+     "message": "Percentage of undetermined indices 99.46% (- 0.00% phiX) > 9.00% on lane 1.",
+     "data": {
+      "lane": 1,
+      "qc_checker": "undetermined_percentage",
+      "percentage_undetermined": 99.45738123020601,
+      "mean_percent_phix_aligned": 0.0,
+      "threshold": 9
+     }
+    }
+   ]
+  },
+  "2": {
+   "error_rate": [
+    {
+     "type": "error",
+     "message": "Error rate is nan on lane 2 for read 1. This may be because no PhiX was loaded on this lane. Use \"allow_missing_error_rate: true\" to disable this error message.",
+     "data": {
+      "lane": 2,
+      "read": 1,
+      "error": NaN,
+      "qc_checker": "error_rate"
+     }
+    }
+   ],
+   "reads_per_sample": [
+    {
+     "type": "error",
+     "message": "Number of reads for sample Sample_14574-Qiagen-IndexSet1-SP-Lane2 on lane 2 were too low: 0.010208 M (threshold: 121.875 M)",
+     "data": {
+      "lane": 2,
+      "number_of_samples": 2,
+      "sample_id": "Sample_14574-Qiagen-IndexSet1-SP-Lane2",
+      "sample_reads": 0.010208,
+      "qc_checker": "reads_per_sample",
+      "threshold": 121.875
+     }
+    },
+    {
+     "type": "error",
+     "message": "Number of reads for sample Sample_14575-Qiagen-IndexSet1-SP-Lane2 on lane 2 were too low: 0.008672 M (threshold: 121.875 M)",
+     "data": {
+      "lane": 2,
+      "number_of_samples": 2,
+      "sample_id": "Sample_14575-Qiagen-IndexSet1-SP-Lane2",
+      "sample_reads": 0.008672,
+      "qc_checker": "reads_per_sample",
+      "threshold": 121.875
+     }
+    }
+   ],
+   "undetermined_percentage": [
+    {
+     "type": "error",
+     "message": "Percentage of undetermined indices 99.45% (- 0.00% phiX) > 9.00% on lane 2.",
+     "data": {
+      "lane": 2,
+      "qc_checker": "undetermined_percentage",
+      "percentage_undetermined": 99.45405960755329,
+      "mean_percent_phix_aligned": 0.0,
+      "threshold": 9
+     }
+    }
+   ]
+  }
+ },
+ "run_summary": {
+  "instrument_and_reagent_version": "novaseq_SP",
+  "read_length": 36,
+  "checkers": {
+   "UndeterminedPercentageHandler": {
+    "warning_threshold": "unknown",
+    "error_threshold": 9
+   },
+   "UnidentifiedIndexHandler": {
+    "significance_threshold": 1,
+    "white_listed_indexes": [
+     ".*N.*",
+     "G{6,}"
+    ]
+   },
+   "ClusterPFHandler": {
+    "warning_threshold": 325,
+    "error_threshold": "unknown"
+   },
+   "Q30Handler": {
+    "warning_threshold": 90,
+    "error_threshold": "unknown"
+   },
+   "ErrorRateHandler": {
+    "allow_missing_error_rate": false,
+    "warning_threshold": 1,
+    "error_threshold": "unknown"
+   },
+   "ReadsPerSampleHandler": {
+    "warning_threshold": "unknown",
+    "error_threshold": 243.75
+   }
+  }
+ }
+}

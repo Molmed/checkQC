@@ -108,8 +108,7 @@ def start(
         else:
             log.info("Finished with fatal qc errors and will exit with non-zero exit status.")
 
-        if json_mode:
-            print(json.dumps(reports, indent=True))
+        print(reports)
 
         sys.exit(exit_status)
 
