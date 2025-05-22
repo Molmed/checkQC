@@ -40,8 +40,8 @@ Alternatively it can be installed with conda using the bioconda channel:
 conda install -c bioconda checkqc
 ```
 
-Running CheckQC
----------------
+Running CheckQC (bcl2fastq)
+---------------------------
 
 After installing CheckQC you can run it by specifying the path to the runfolder you want to
 analyze like this:
@@ -208,6 +208,32 @@ INFO     Finished with fatal qc errors and will exit with non-zero exit status.
     }
 }
 ```
+
+
+Running CheckQC (other demultiplexers)
+--------------------------------------
+
+If your data has been demultiplexed with another software than bcl2fastq, you
+can specify which one with `--demultiplexer`, e.g.:
+
+```
+checkqc --demultiplexer bclconvert <RUNFOLDER>
+```
+
+NB: for these demultiplexers, the output is defined by the view classes. So
+far the following views are available:
+
+- `basic_view`: outputs a json string containing all reports in a list, as well
+  as another dict summarizing the run parameters. Only the report's messages
+  are returned
+- `illumina_data_view`: outputs a json string where reports are gathered by lane
+and by type of report. Run summary is also attached. Reports include both the
+message string and the data dictionary.
+- `illumina_short_view`: outputs a yaml string gathering all reports by lane
+and report type. This is suitable for cases where CheckQC's output is monitored
+by a human operator.
+
+Views can be selected in the config file.
 
 Running CheckQC as a webservice
 -------------------------------
