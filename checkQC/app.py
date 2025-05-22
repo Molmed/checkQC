@@ -2,6 +2,7 @@ import sys
 import json
 import logging
 from pathlib import Path
+import warnings
 
 import click
 
@@ -21,6 +22,7 @@ SUPPORTED_DEMUXERS = [
 ]
 
 
+warnings.simplefilter("default")
 logging.basicConfig(level=logging.INFO,
                     format='%(levelname)-8s %(message)s')
 
@@ -79,6 +81,13 @@ def start(
     # -----------------------------------
     # This is the application entry point
     # -----------------------------------
+
+    if json_mode:
+        warnings.warn(
+            "`--json` is being deprecated in favor of custom views and only "
+            "works when the demultiplexer is bcl2fastq.",
+            DeprecationWarning
+        )
     if demultiplexer == 'bcl2fastq':
         app = App(
             runfolder,
