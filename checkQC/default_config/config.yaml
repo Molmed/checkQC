@@ -44,6 +44,7 @@ hiseq2500_rapidhighoutput_v4:
       - name: ReadsPerSampleHandler
         warning: unknown
         error: 135 # 75 % of threshold for clusters pass filter
+    view: illumina_data_view
   100-111:
     handlers:
       - name: ClusterPFHandler
