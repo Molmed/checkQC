@@ -83,11 +83,8 @@ def start(
     # -----------------------------------
 
     if json_mode:
-        warnings.warn(
-            "`--json` is being deprecated in favor of custom views and only "
-            "works when the demultiplexer is bcl2fastq.",
-            DeprecationWarning
-        )
+        warnings.warn("`--json` is being deprecated in favor of custom views and only works when the demultiplexer is bcl2fastq.", DeprecationWarning)
+
     if demultiplexer == 'bcl2fastq':
         app = App(
             runfolder,
