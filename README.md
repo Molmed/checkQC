@@ -224,8 +224,7 @@ NB: for these demultiplexers, the output is defined by the view classes. So
 far the following views are available:
 
 - `basic_view`: outputs a json string containing all reports in a list, as well
-  as another dict summarizing the run parameters. Only the report's messages
-  are returned
+  the run summary dict. Only the report's messages are returned.
 - `illumina_data_view`: outputs a json string where reports are gathered by lane
 and by type of report. Run summary is also attached. Reports include both the
 message string and the data dictionary.
