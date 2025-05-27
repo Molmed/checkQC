@@ -1,16 +1,20 @@
-
+from pathlib import Path
 
 import tornado.web
 from tornado.testing import *
 import json
 
 from checkQC.web_app import WebApp
+from checkQC import __version__
 
 
 class TestWebApp(AsyncHTTPTestCase):
 
     def get_app(self):
-        routes = WebApp._routes(monitoring_path=os.path.join("tests", "resources"), qc_config_file=None)
+        routes = WebApp._routes(
+            monitoring_path="tests/resources/monitored_dir",
+            qc_config_file=None
+        )
         return tornado.web.Application(routes)
 
     def test_qc_endpoint(self):
@@ -35,8 +39,10 @@ class TestWebApp(AsyncHTTPTestCase):
 class TestWebAppWithNonUsefulConfig(AsyncHTTPTestCase):
 
     def get_app(self):
-        routes = WebApp._routes(monitoring_path=os.path.join("tests", "resources"),
-                                qc_config_file=os.path.join("tests", "resources", "incomplete_config.yaml"))
+        routes = WebApp._routes(
+            monitoring_path="tests/resources/monitored_dir",
+            qc_config_file="tests/resources/incomplete_config.yaml"
+        )
         return tornado.web.Application(routes)
 
     def test_qc_fail_fast_for_unknown_config(self):
@@ -47,8 +53,10 @@ class TestWebAppWithNonUsefulConfig(AsyncHTTPTestCase):
 class TestWebAppReadLengthNotInConfig(AsyncHTTPTestCase):
 
     def get_app(self):
-        routes = WebApp._routes(monitoring_path=os.path.join("tests", "resources"),
-                                qc_config_file=os.path.join("tests", "resources", "read_length_not_in_config.yaml"))
+        routes = WebApp._routes(
+            monitoring_path="tests/resources/monitored_dir",
+            qc_config_file="tests/resources/read_length_not_in_config.yaml",
+        )
         return tornado.web.Application(routes)
 
     def test_use_closest_read_length(self):
@@ -64,3 +72,21 @@ class TestWebAppReadLengthNotInConfig(AsyncHTTPTestCase):
         self.assertEqual(response.code, 200)
         # Test data produce fatal qc errors
         self.assertEqual(result["exit_status"], 0)
+
+    def test_qc_endpoint_bclconvert(self):
+        expected_keys = [
+            'qc_reports' ,
+            'version',
+            'exit_status'
+        ]
+
+        response = self.fetch(
+            "/qc/200624_A00834_0183_BHMTFYTINY"
+            "?demultiplexer=bclconvert"
+            "&useClosestReadLength"
+        )
+        self.assertEqual(response.code, 200)
+        result = json.loads(response.body)
+        self.assertEqual(result["exit_status"], 1)
+        self.assertEqual(result["version"], __version__)
+        self.assertEqual(list(result.keys()), expected_keys)

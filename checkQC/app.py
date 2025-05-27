@@ -1,8 +1,8 @@
-
 import sys
 import json
 import logging
 from pathlib import Path
+import warnings
 
 import click
 
@@ -12,8 +12,17 @@ from checkQC.run_type_recognizer import RunTypeRecognizer
 from checkQC.run_type_summarizer import RunTypeSummarizer
 from checkQC.exceptions import CheckQCException, RunfolderNotFoundError
 from checkQC import __version__ as checkqc_version
+from checkQC.qc_data import QCData
+from checkQC.qc_reporter import QCReporter
 
 
+SUPPORTED_DEMUXERS = [
+    "bcl2fastq",
+    "bclconvert",
+]
+
+
+warnings.simplefilter("default")
 logging.basicConfig(level=logging.INFO,
                     format='%(levelname)-8s %(message)s')
 
@@ -22,13 +31,48 @@ log = logging.getLogger(__name__)
 
 
 @click.command("checkqc")
-@click.option("--config", help="Path to the checkQC configuration file", type=click.Path())
-@click.option('--json', is_flag=True, default=False, help="Print the results of the run as json to stdout")
-@click.option('--downgrade-errors', type=str, multiple=True, help="Downgrade errors to warnings for a specific handler, can be used multiple times")
-@click.option('--use-closest-read-length', is_flag=True, default=False, help="Use the closest read length if the read length used isn't specified in the config")
+@click.option(
+    "--config",
+    type=click.Path(exists=True, dir_okay=False),
+    help="Path to the checkQC configuration file",
+)
+@click.option(
+    "--json", "json_mode",
+    is_flag=True, default=False,
+    help="Print the results of the run as json to stdout",
+)
+@click.option(
+    "--downgrade-errors",
+    type=str, multiple=True,
+    help="Downgrade errors to warnings for a specific handler, can be used multiple times",
+)
+@click.option(
+    "--use-closest-read-length",
+    is_flag=True, default=False,
+    help="Use the closest read length if the read length used isn't specified in the config",
+)
+@click.option(
+    "--demultiplexer",
+    type=click.Choice(
+        SUPPORTED_DEMUXERS,
+        case_sensitive=False,
+    ),
+    default="bcl2fastq",
+    help="Specify which demultiplexer was used to generate the data",
+)
 @click.version_option(checkqc_version)
-@click.argument('runfolder', type=click.Path())
-def start(config, json, downgrade_errors, use_closest_read_length, runfolder):
+@click.argument(
+    "runfolder",
+    type=click.Path(exists=True, file_okay=False),
+)
+def start(
+    config,
+    json_mode,
+    downgrade_errors,
+    use_closest_read_length,
+    demultiplexer,
+    runfolder,
+):
     """
     checkQC is a command line utility designed to quickly gather and assess quality control metrics from an
     Illumina sequencing run. It is highly customizable and which quality controls modules should be run
@@ -37,9 +81,75 @@ def start(config, json, downgrade_errors, use_closest_read_length, runfolder):
     # -----------------------------------
     # This is the application entry point
     # -----------------------------------
-    app = App(runfolder, config, json, downgrade_errors, use_closest_read_length)
-    app.run()
-    sys.exit(app.exit_status)
+
+    if json_mode:
+        warnings.warn("`--json` is being deprecated in favor of custom views and only works when the demultiplexer is bcl2fastq.", DeprecationWarning)
+
+    if demultiplexer == 'bcl2fastq':
+        app = App(
+            runfolder,
+            config,
+            json_mode,
+            downgrade_errors,
+            use_closest_read_length,
+        )
+        app.run()
+        sys.exit(app.exit_status)
+    else:
+        log.info("------------------------")
+        log.info(f"Starting checkQC ({checkqc_version})")
+        log.info("------------------------")
+        log.info(f"Runfolder is: {runfolder}")
+
+        exit_status, reports = run_new_checkqc(
+            config,
+            runfolder,
+            downgrade_errors,
+            use_closest_read_length,
+            demultiplexer,
+        )
+
+        if exit_status == 0:
+            log.info("Finished without finding any fatal qc errors.")
+        else:
+            log.info("Finished with fatal qc errors and will exit with non-zero exit status.")
+
+        print(reports)
+
+        sys.exit(exit_status)
+
+
+def run_new_checkqc(
+    config,
+    runfolder_path,
+    downgrade_errors_for,
+    use_closest_read_length,
+    demultiplexer,
+):
+    runfolder_path = Path(runfolder_path)
+    assert runfolder_path.is_dir()
+
+    config = ConfigFactory.from_config_path(config)._config
+
+    qc_data_constructor = getattr(QCData, f"from_{demultiplexer}")
+    qc_data = qc_data_constructor(
+        runfolder_path=runfolder_path,
+        parser_config=(
+            config
+            .get("parser_configurations", {})
+            .get(f"from_{demultiplexer}", {})
+        ),
+    )
+
+    qc_reporter = QCReporter(config)
+
+    exit_status, reports = qc_reporter.gather_reports(
+        qc_data,
+        use_closest_read_len=use_closest_read_length,
+        downgrade_errors_for=downgrade_errors_for,
+    )
+
+    return exit_status, reports
 
 
 class App(object):
@@ -47,8 +157,14 @@ class App(object):
     This is the main application object for CheckQC.
     """
 
-    def __init__(self, runfolder, config_file=None, json_mode=False,
-                 downgrade_errors_for=(), use_closest_read_length=False):
+    def __init__(
+        self,
+        runfolder,
+        config_file=None,
+        json_mode=False,
+        downgrade_errors_for=(),
+        use_closest_read_length=False,
+    ):
         self._runfolder = runfolder
         self._config_file = config_file
         self._json_mode = json_mode

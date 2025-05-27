@@ -5,7 +5,7 @@
     "definitions": {
         "view": {
             "type": "string",
-            "enum": [ "illumina_view", "basic_view" ]
+            "enum": [ "illumina_data_view", "illumina_short_view", "basic_view" ]
         },
         "handler": {
             "type": "object",

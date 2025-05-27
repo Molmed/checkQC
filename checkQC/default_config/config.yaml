@@ -11,7 +11,7 @@ parser_configurations:
   from_bclconvert:
     reports_location: Reports
 
-default_view: illumina_view
+default_view: illumina_data_view
 
 default_handlers:
   - name: UndeterminedPercentageHandler
@@ -44,6 +44,7 @@ hiseq2500_rapidhighoutput_v4:
       - name: ReadsPerSampleHandler
         warning: unknown
         error: 135 # 75 % of threshold for clusters pass filter
+    view: illumina_data_view
   100-111:
     handlers:
       - name: ClusterPFHandler
