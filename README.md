@@ -230,8 +230,9 @@ far the following views are available:
 and by type of report. Run summary is also attached. Reports include both the
 message string and the data dictionary.
 - `illumina_short_view`: outputs a yaml string gathering all reports by lane
-and report type. This is suitable for cases where CheckQC's output is monitored
-by a human operator.
+and report type. Only the report's message is printed. This also include the
+run summary and is suitable for cases where CheckQC's output is monitored by a
+human operator.
 
 Views can be selected in the config file.
 
