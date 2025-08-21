@@ -13,15 +13,21 @@ def from_bclconvert(cls, runfolder_path, parser_config):
     assert runfolder_path.is_dir()
 
     summary, index_summary = _read_interop_summary(runfolder_path)
-    quality_metrics = _read_quality_metrics(
+    quality_metrics = _read_demultiplexing_metrics(
         runfolder_path
         / parser_config["reports_location"]
         / "Quality_Metrics.csv"
     )
-    top_unknown_barcodes = _read_top_unknown_barcodes(
+    top_unknown_barcodes = _read_demultiplexing_metrics(
         runfolder_path
         / parser_config["reports_location"]
         / "Top_Unknown_Barcodes.csv"
+    )
+
+    demultiplex_stats = _read_demultiplexing_metrics(
+        runfolder_path
+        / parser_config["reports_location"]
+        / "Demultiplex_Stats.csv"
     )
     samplesheet = _read_samplesheet(runfolder_path)
 
@@ -30,6 +36,11 @@ def from_bclconvert(cls, runfolder_path, parser_config):
     sequencing_metrics = {
         lane + 1: {
             "total_cluster_pf": summary.at(0).at(lane).reads_pf(),
+            "total_cluster": summary.at(0).at(lane).reads(),
+            "pf_clusters": summary.at(0).at(lane).cluster_count_pf().mean(),
+            "raw_clusters": summary.at(0).at(lane).cluster_count().mean(),
+            "raw_density":summary.at(0).at(lane).density().mean(),
+            "pf_density":summary.at(0).at(lane).density_pf().mean(),
             "yield": sum(
                 int(row["Yield"])
                 for row in quality_metrics
@@ -69,6 +80,36 @@ def from_bclconvert(cls, runfolder_path, parser_config):
                         sample_summary := index_summary.at(lane).at(sample_no)
                     ).sample_id(),
                     "cluster_count": sample_summary.cluster_count(),
+                    "percent_of_lane":next(
+                        round(float(sample_stat["% Reads"]) * 100, 2)
+                        for sample_stat in demultiplex_stats
+                        if sample_stat["Lane"] == str(lane + 1) and
+                        sample_stat["SampleID"] == sample_summary.sample_id()
+                    ),
+                    "percent_perfect_index_reads": next(
+                        round(float(sample_stat["% Perfect Index Reads"]) * 100, 2)
+                        for sample_stat in demultiplex_stats
+                        if sample_stat["Lane"] == str(lane + 1) and
+                        sample_stat["SampleID"] == sample_summary.sample_id()
+                    ),
+                    "mean_q30": next(
+                        float(row["Mean Quality Score (PF)"])
+                        for row in quality_metrics
+                        if (
+                            row["Lane"] == str(lane + 1)
+                            and row["SampleID"] == sample_summary.sample_id()
+                        )
+                    ),
+                    "percent_q30": next(
+                        float(row["% Q30"])
+                        for row in quality_metrics
+                        if (
+                            row["Lane"] == str(lane + 1)
+                            and row["SampleID"] == sample_summary.sample_id()
+                        )
+                    )
+
+
                 }
                 for sample_no in range(index_summary.at(lane).size())
             ],
@@ -107,21 +148,13 @@ def _read_interop_summary(runfolder_path):
     return run_summary, index_summary
 
 
-def _read_quality_metrics(quality_metrics_path):
+def _read_demultiplexing_metrics(metrics_path):
     """
-    Read quality metrics file
+    Read demultiplexing metrics file
     """
-    with open(quality_metrics_path, encoding="utf-8") as csvfile:
+    with open(metrics_path, encoding="utf-8") as csvfile:
         return list(csv.DictReader(csvfile))
-
-
-def _read_top_unknown_barcodes(top_unknown_barcodes_path):
-    """
-    Read top unknown barcodes file
-    """
-    with open(top_unknown_barcodes_path, encoding="utf-8") as csvfile:
-        return list(csv.DictReader(csvfile))
-
+    
 
 def _read_run_metadata(runfolder_path):
     """

@@ -4,8 +4,7 @@ import pytest
 
 from checkQC.parsers.illumina import (
     _read_interop_summary,
-    _read_quality_metrics,
-    _read_top_unknown_barcodes,
+    _read_demultiplexing_metrics,
     _read_run_metadata,
     _read_samplesheet,
 )
@@ -30,7 +29,7 @@ def test_read_interop_summary(runfolder_path):
 
 
 def test_read_quality_metrics(runfolder_path):
-    quality_metrics = _read_quality_metrics(
+    quality_metrics = _read_demultiplexing_metrics(
             runfolder_path / "Reports/Quality_Metrics.csv")
 
     assert len(quality_metrics) == 6
@@ -50,7 +49,7 @@ def test_read_quality_metrics(runfolder_path):
 
 
 def test_read_to_unknown_barcodes(runfolder_path):
-    top_unknown_barcodes = _read_top_unknown_barcodes(
+    top_unknown_barcodes = _read_demultiplexing_metrics(
             runfolder_path / "Reports/Top_Unknown_Barcodes.csv")
 
     assert len(top_unknown_barcodes) == 2084
