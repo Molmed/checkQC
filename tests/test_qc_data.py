@@ -35,6 +35,7 @@ def bclconvert_runfolder():
                     "index": "GAACTGAGCG",
                     "index2": "TCGTGGAGCG",
                     "sample_project": "AB-1234",
+                    "description": "LIBRARY_NAME:test",
                 },
                 {
                     "lane": 1,
@@ -42,6 +43,7 @@ def bclconvert_runfolder():
                     "index": "AGGTCAGATA",
                     "index2": "CTACAAGATA",
                     "sample_project": "CD-5678",
+                    "description": "LIBRARY_NAME:test",
                 },
                 {
                     "lane": 2,
@@ -49,6 +51,7 @@ def bclconvert_runfolder():
                     "index": "GAACTGAGCG",
                     "index2": "TCGTGGAGCG",
                     "sample_project": "AB-1234",
+                    "description": "LIBRARY_NAME:test",
                 },
                 {
                     "lane": 2,
@@ -56,12 +59,17 @@ def bclconvert_runfolder():
                     "index": "AGGTCAGATA",
                     "index2": "CTACAAGATA",
                     "sample_project": "CD-5678",
+                    "description": "LIBRARY_NAME:test",
                 },
             ],
         },
         "expected_sequencing_metrics": {
             1: {
                 "total_cluster_pf": 532_464_327,
+                "pf_clusters": 3_413_232.5,
+                "raw_clusters": 4_091_904.0,
+                "raw_density": 2_961_270.5,
+                "pf_density": 2_470_118.25,
                 "yield": 122_605_416,
                 "yield_undetermined": 121_940_136,
                 "top_unknown_barcodes": {
@@ -113,15 +121,27 @@ def bclconvert_runfolder():
                     {
                         "sample_id": "Sample_14574-Qiagen-IndexSet1-SP-Lane1",
                         "cluster_count": 9920,
+                        "percent_of_lane": 0.29,
+                        "percent_perfect_index_reads": 97.96,
+                        "mean_q30": 36.37,
+                        "percent_q30": 0.96,
                     },
                     {
                         "sample_id": "Sample_14575-Qiagen-IndexSet1-SP-Lane1",
                         "cluster_count": 8560,
+                        "percent_of_lane": 0.25,
+                        "percent_perfect_index_reads": 98.15,
+                        "mean_q30": 36.43,
+                        "percent_q30": 0.96,
                     },
                 ],
             },
             2: {
                 "total_cluster_pf": 530_917_565,
+                "pf_clusters": 3_403_318.25,
+                "raw_clusters": 4_091_904.0,
+                "raw_density": 2_961_270.5,
+                "pf_density": 2_462_942.5,
                 "yield": 124_497_108,
                 "yield_undetermined": 123_817_428,
                 "top_unknown_barcodes": {
@@ -173,10 +193,18 @@ def bclconvert_runfolder():
                     {
                         "sample_id": "Sample_14574-Qiagen-IndexSet1-SP-Lane2",
                         "cluster_count": 10208,
+                        "percent_of_lane": 0.3,
+                        "percent_perfect_index_reads": 98.2,
+                        "mean_q30": 36.4,
+                        "percent_q30": 0.96,
                     },
                     {
                         "sample_id": "Sample_14575-Qiagen-IndexSet1-SP-Lane2",
                         "cluster_count": 8672,
+                        "percent_of_lane": 0.25,
+                        "percent_perfect_index_reads": 98.29,
+                        "mean_q30": 36.48,
+                        "percent_q30": 0.97,
                     },
                 ],
             },

@@ -18,7 +18,7 @@ FastqCompressionFormat,gzip,,
 SoftwareVersion,4.1.5,,
 ,,,
 [BCLConvert_Data],,,
-Lane,Sample_ID,Index,Index2,Sample_Project, Description
+Lane,Sample_ID,Index,Index2,Sample_Project,Description
 1,Sample_14574-Qiagen-IndexSet1-SP-Lane1,GAACTGAGCG,TCGTGGAGCG,AB-1234,LIBRARY_NAME:test
 1,Sample_14575-Qiagen-IndexSet1-SP-Lane1,AGGTCAGATA,CTACAAGATA,CD-5678,LIBRARY_NAME:test
 2,Sample_14574-Qiagen-IndexSet1-SP-Lane2,GAACTGAGCG,TCGTGGAGCG,AB-1234,LIBRARY_NAME:test
