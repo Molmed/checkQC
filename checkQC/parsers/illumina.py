@@ -79,7 +79,7 @@ def from_bclconvert(cls, runfolder_path, parser_config):
                         sample_summary := index_summary.at(lane).at(sample_no)
                     ).sample_id(),
                     "cluster_count": sample_summary.cluster_count(),
-                    "percent_of_lane":next(
+                    "percent_of_lane": next(
                         round(float(sample_stat["% Reads"]) * 100, 2)
                         for sample_stat in demultiplex_stats
                         if sample_stat["Lane"] == str(lane + 1) and
@@ -100,7 +100,7 @@ def from_bclconvert(cls, runfolder_path, parser_config):
                         )
                     ),
                     "percent_q30": next(
-                        float(row["% Q30"])
+                        float(row["% Q30"]) * 100
                         for row in quality_metrics
                         if (
                             row["Lane"] == str(lane + 1)
