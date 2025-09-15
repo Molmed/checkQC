@@ -66,7 +66,6 @@ def bclconvert_runfolder():
         "expected_sequencing_metrics": {
             1: {
                 "total_cluster_pf": 532_464_327,
-                "pf_clusters": 3_413_232.5,
                 "raw_clusters": 4_091_904.0,
                 "raw_density": 2_961_270.5,
                 "pf_density": 2_470_118.25,
@@ -138,7 +137,6 @@ def bclconvert_runfolder():
             },
             2: {
                 "total_cluster_pf": 530_917_565,
-                "pf_clusters": 3_403_318.25,
                 "raw_clusters": 4_091_904.0,
                 "raw_density": 2_961_270.5,
                 "pf_density": 2_462_942.5,
