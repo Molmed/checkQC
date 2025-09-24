@@ -35,7 +35,7 @@ def bclconvert_runfolder():
                     "index": "GAACTGAGCG",
                     "index2": "TCGTGGAGCG",
                     "sample_project": "AB-1234",
-                    "description": "LIBRARY_NAME:test",
+                    "custom_description": "LIBRARY_NAME:test",
                 },
                 {
                     "lane": 1,
@@ -43,7 +43,7 @@ def bclconvert_runfolder():
                     "index": "AGGTCAGATA",
                     "index2": "CTACAAGATA",
                     "sample_project": "CD-5678",
-                    "description": "LIBRARY_NAME:test",
+                     "custom_description": "LIBRARY_NAME:test",
                 },
                 {
                     "lane": 2,
@@ -51,7 +51,7 @@ def bclconvert_runfolder():
                     "index": "GAACTGAGCG",
                     "index2": "TCGTGGAGCG",
                     "sample_project": "AB-1234",
-                    "description": "LIBRARY_NAME:test",
+                     "custom_description": "LIBRARY_NAME:test",
                 },
                 {
                     "lane": 2,
@@ -59,14 +59,14 @@ def bclconvert_runfolder():
                     "index": "AGGTCAGATA",
                     "index2": "CTACAAGATA",
                     "sample_project": "CD-5678",
-                    "description": "LIBRARY_NAME:test",
+                     "custom_description": "LIBRARY_NAME:test",
                 },
             ],
         },
         "expected_sequencing_metrics": {
             1: {
-                "total_cluster_pf": 532_464_327,
-                "raw_clusters": 4_091_904.0,
+                "total_reads_pf": 532_464_327,
+                "total_reads": 638337024,
                 "raw_density": 2_961_270.5,
                 "pf_density": 2_470_118.25,
                 "yield": 122_605_416,
@@ -136,8 +136,8 @@ def bclconvert_runfolder():
                 ],
             },
             2: {
-                "total_cluster_pf": 530_917_565,
-                "raw_clusters": 4_091_904.0,
+                "total_reads_pf": 530_917_565,
+                "total_reads": 638337024,
                 "raw_density": 2_961_270.5,
                 "pf_density": 2_462_942.5,
                 "yield": 124_497_108,

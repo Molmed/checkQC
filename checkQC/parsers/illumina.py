@@ -35,8 +35,8 @@ def from_bclconvert(cls, runfolder_path, parser_config):
 
     sequencing_metrics = {
         lane + 1: {
-            "total_cluster_pf": summary.at(0).at(lane).reads_pf(),
-            "raw_clusters": summary.at(0).at(lane).cluster_count().mean(),
+            "total_reads_pf": summary.at(0).at(lane).reads_pf(),
+            "total_reads": summary.at(0).at(lane).reads(),
             "raw_density":summary.at(0).at(lane).density().mean(),
             "pf_density":summary.at(0).at(lane).density_pf().mean(),
             "yield": sum(

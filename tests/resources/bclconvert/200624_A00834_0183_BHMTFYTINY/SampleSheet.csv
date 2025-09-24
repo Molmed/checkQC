@@ -4,10 +4,10 @@ Date,6/24/2020,,
 Application,Illumina DRAGEN COVIDSeq Test Pipeline,,
 Instrument Type,NovaSeq6000,,
 Assay,Illumina COVIDSeq Test,,
-Index Adapters,IDT-ILMN DNA-RNA UDP Indexes ,,
+Index Adapters,"IDT-ILMN DNA-RNA UDP Indexes ",,
 Chemistry,Amplicon,,
 ,,,
-[Reads],,,,,,
+[Reads],,,,,
 Read1Cycles,36,,
 Index1Cycles,10,,
 Index2Cycles,10,,
@@ -18,7 +18,7 @@ FastqCompressionFormat,gzip,,
 SoftwareVersion,4.1.5,,
 ,,,
 [BCLConvert_Data],,,
-Lane,Sample_ID,Index,Index2,Sample_Project,Description
+Lane,Sample_ID,Index,Index2,Sample_Project,custom_Description
 1,Sample_14574-Qiagen-IndexSet1-SP-Lane1,GAACTGAGCG,TCGTGGAGCG,AB-1234,LIBRARY_NAME:test
 1,Sample_14575-Qiagen-IndexSet1-SP-Lane1,AGGTCAGATA,CTACAAGATA,CD-5678,LIBRARY_NAME:test
 2,Sample_14574-Qiagen-IndexSet1-SP-Lane2,GAACTGAGCG,TCGTGGAGCG,AB-1234,LIBRARY_NAME:test

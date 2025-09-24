@@ -8,16 +8,16 @@ from checkQC.handlers.qc_handler import QCErrorFatal, QCErrorWarning
 def qc_data():
     return namedtuple("QCData", "sequencing_metrics")(
         {
-            1: {"total_cluster_pf":  1_000_000_000},
-            2: {"total_cluster_pf":     10_000_000},
-            3: {"total_cluster_pf":    100_000_000},
-            4: {"total_cluster_pf": 10_000_000_000},
+            1: {"total_reads_pf":  1_000_000_000},
+            2: {"total_reads_pf":     10_000_000},
+            3: {"total_reads_pf":    100_000_000},
+            4: {"total_reads_pf": 10_000_000_000},
         }
     )
 
 
-def format_msg(total_cluster_pf, threshold, lane, **kwargs):
-    return f"Clusters PF {total_cluster_pf / 10**6}M < {threshold / 10**6}M on lane {lane}"
+def format_msg(total_reads_pf, threshold, lane, **kwargs):
+    return f"Clusters PF {total_reads_pf / 10**6}M < {threshold / 10**6}M on lane {lane}"
 
 
 def test_cluster_pf(qc_data):
@@ -34,7 +34,7 @@ def test_cluster_pf(qc_data):
         match lane:
             case 2:
                 exp_data = {
-                    "total_cluster_pf": qc_data.sequencing_metrics[lane]["total_cluster_pf"],
+                    "total_reads_pf": qc_data.sequencing_metrics[lane]["total_reads_pf"],
                     "threshold": 50_000_000,
                     "lane": lane,
                     "qc_checker": "cluster_pf",
@@ -44,7 +44,7 @@ def test_cluster_pf(qc_data):
                 assert report.data == exp_data
             case 3:
                 exp_data = {
-                    "total_cluster_pf": qc_data.sequencing_metrics[lane]["total_cluster_pf"],
+                    "total_reads_pf": qc_data.sequencing_metrics[lane]["total_reads_pf"],
                     "threshold": 500_500_000,
                     "lane": lane,
                     "qc_checker": "cluster_pf",
@@ -69,7 +69,7 @@ def test_cluster_pf_error_unknown(qc_data):
         match lane:
             case 2:
                 exp_data = {
-                    "total_cluster_pf": qc_data.sequencing_metrics[lane]["total_cluster_pf"],
+                    "total_reads_pf": qc_data.sequencing_metrics[lane]["total_reads_pf"],
                     "threshold": 500_000_000,
                     "lane": lane,
                     "qc_checker": "cluster_pf",
@@ -79,7 +79,7 @@ def test_cluster_pf_error_unknown(qc_data):
                 assert report.data == exp_data
             case 3:
                 exp_data = {
-                    "total_cluster_pf": qc_data.sequencing_metrics[lane]["total_cluster_pf"],
+                    "total_reads_pf": qc_data.sequencing_metrics[lane]["total_reads_pf"],
                     "threshold": 500_000_000,
                     "lane": lane,
                     "qc_checker": "cluster_pf",
@@ -104,7 +104,7 @@ def test_cluster_pf_warning_unknown(qc_data):
     match lane:
         case 2:
             exp_data = {
-                "total_cluster_pf": qc_data.sequencing_metrics[lane]["total_cluster_pf"],
+                "total_reads_pf": qc_data.sequencing_metrics[lane]["total_reads_pf"],
                 "threshold": 50_000_000,
                 "lane": lane,
                 "qc_checker": "cluster_pf",

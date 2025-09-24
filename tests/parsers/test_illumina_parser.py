@@ -21,8 +21,8 @@ def runfolder_path():
 def test_read_interop_summary(runfolder_path):
     run_summary, index_summary = _read_interop_summary(runfolder_path)
 
-    total_cluster_pf = run_summary.at(0).at(0).reads_pf()
-    assert total_cluster_pf == 532464327
+    total_reads_pf = run_summary.at(0).at(0).reads_pf()
+    assert total_reads_pf == 532464327
 
     sample_id = index_summary.at(0).at(0).sample_id()
     assert sample_id == "Sample_14574-Qiagen-IndexSet1-SP-Lane1"
@@ -107,5 +107,5 @@ def test_read_samplesheet(runfolder_path):
         'lane': 1,
         'sample_id': 'Sample_14574-Qiagen-IndexSet1-SP-Lane1',
         'sample_project': 'AB-1234',
-        'description': 'LIBRARY_NAME:test',
+        'custom_description': 'LIBRARY_NAME:test',
     }

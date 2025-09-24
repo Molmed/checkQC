@@ -40,7 +40,7 @@ def unidentified_index(
     qc_errors = []
     for lane, lane_data in qc_data.sequencing_metrics.items():
         for barcode in lane_data["top_unknown_barcodes"]:
-            significance = barcode["count"] / lane_data["total_cluster_pf"] * 100.
+            significance = barcode["count"] / lane_data["total_reads_pf"] * 100.
             if significance < significance_threshold:
                 continue
             index = (
