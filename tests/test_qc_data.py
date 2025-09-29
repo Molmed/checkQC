@@ -66,7 +66,7 @@ def bclconvert_runfolder():
         "expected_sequencing_metrics": {
             1: {
                 "total_reads_pf": 532_464_327,
-                "total_reads": 638337024,
+                "total_reads": 638_337_024,
                 "raw_density": 2_961_270.5,
                 "pf_density": 2_470_118.25,
                 "yield": 122_605_416,
@@ -137,7 +137,7 @@ def bclconvert_runfolder():
             },
             2: {
                 "total_reads_pf": 530_917_565,
-                "total_reads": 638337024,
+                "total_reads": 638_337_024,
                 "raw_density": 2_961_270.5,
                 "pf_density": 2_462_942.5,
                 "yield": 124_497_108,
