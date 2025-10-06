@@ -12,7 +12,7 @@ def from_bclconvert(cls, runfolder_path, parser_config):
     runfolder_path = pathlib.Path(runfolder_path)
     assert runfolder_path.is_dir()
 
-    summary, index_summary = _read_interop_summary(runfolder_path)
+    summary, index_summary, run_info = _read_interop_summary(runfolder_path)
     quality_metrics = _read_demultiplexing_metrics(
         runfolder_path
         / parser_config["reports_location"]
@@ -143,7 +143,7 @@ def _read_interop_summary(runfolder_path):
     index_summary = interop.py_interop_summary.index_flowcell_summary()
     interop.py_interop_summary.summarize_index_metrics(run_metrics, index_summary)
 
-    return run_summary, index_summary
+    return run_summary, index_summary, run_info
 
 
 def _read_demultiplexing_metrics(metrics_path):

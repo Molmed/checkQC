@@ -19,7 +19,7 @@ def runfolder_path():
 
 
 def test_read_interop_summary(runfolder_path):
-    run_summary, index_summary = _read_interop_summary(runfolder_path)
+    run_summary, index_summary, _ = _read_interop_summary(runfolder_path)
 
     total_reads_pf = run_summary.at(0).at(0).reads_pf()
     assert total_reads_pf == 532464327
