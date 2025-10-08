@@ -18,8 +18,8 @@ FastqCompressionFormat,gzip,,
 SoftwareVersion,4.1.5,,
 ,,,
 [BCLConvert_Data],,,
-Lane,Sample_ID,Index,Index2,Sample_Project,custom_Description
-1,Sample_14574-Qiagen-IndexSet1-SP-Lane1,GAACTGAGCG,TCGTGGAGCG,AB-1234,LIBRARY_NAME:test
-1,Sample_14575-Qiagen-IndexSet1-SP-Lane1,AGGTCAGATA,CTACAAGATA,CD-5678,LIBRARY_NAME:test
-2,Sample_14574-Qiagen-IndexSet1-SP-Lane2,GAACTGAGCG,TCGTGGAGCG,AB-1234,LIBRARY_NAME:test
-2,Sample_14575-Qiagen-IndexSet1-SP-Lane2,AGGTC  AGATA,C TACAA GATA,CD-5678,LIBRARY_NAME:test
+Lane,Sample_ID,Index,Index2,Sample_Project,OverrideCycles,custom_Description
+1,Sample_14574-Qiagen-IndexSet1-SP-Lane1,GAACTGAGCG,TCGTGGAGCG,AB-1234,Y36;I10;I10,LIBRARY_NAME:test
+1,Sample_14575-Qiagen-IndexSet1-SP-Lane1,AGGTCAGATA,CTACAAGATA,CD-5678,Y36;I10;I10,LIBRARY_NAME:test
+2,Sample_14574-Qiagen-IndexSet1-SP-Lane2,GAACTGAGCG,TCGTGGAGCG,AB-1234,Y36;I10;I10,LIBRARY_NAME:test
+2,Sample_14575-Qiagen-IndexSet1-SP-Lane2,AGGTC  AGATA,C TACAA GATA,CD-5678,Y36;I10;I10,LIBRARY_NAME:test

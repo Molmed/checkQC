@@ -107,5 +107,6 @@ def test_read_samplesheet(runfolder_path):
         'lane': 1,
         'sample_id': 'Sample_14574-Qiagen-IndexSet1-SP-Lane1',
         'sample_project': 'AB-1234',
+        "overridecycles": "Y36;I10;I10",
         'custom_description': 'LIBRARY_NAME:test',
     }

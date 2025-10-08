@@ -15,6 +15,7 @@ def bclconvert_test_runfolder(qc_data):
                     "index": "GAACTGAGCG",
                     "index2": "TCGTGGAGCG",
                     "sample_project": "AB-1234",
+                    "overridecycles": "Y36;I10;I10",
                     "custom_description": "LIBRARY_NAME:test",
                 },
                 {
@@ -23,6 +24,7 @@ def bclconvert_test_runfolder(qc_data):
                     "index": "AGGTCAGATA",
                     "index2": "CTACAAGATA",
                     "sample_project": "CD-5678",
+                    "overridecycles": "Y36;I10;I10",
                      "custom_description": "LIBRARY_NAME:test",
                 },
                 {
@@ -31,6 +33,7 @@ def bclconvert_test_runfolder(qc_data):
                     "index": "GAACTGAGCG",
                     "index2": "TCGTGGAGCG",
                     "sample_project": "AB-1234",
+                    "overridecycles": "Y36;I10;I10",
                      "custom_description": "LIBRARY_NAME:test",
                 },
                 {
@@ -39,6 +42,7 @@ def bclconvert_test_runfolder(qc_data):
                     "index": "AGGTCAGATA",
                     "index2": "CTACAAGATA",
                     "sample_project": "CD-5678",
+                    "overridecycles": "Y36;I10;I10",
                      "custom_description": "LIBRARY_NAME:test",
                 },
             ],
