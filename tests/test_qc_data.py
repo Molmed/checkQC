@@ -12,12 +12,12 @@ def bclconvert_runfolder():
     parser_config = {
         "reports_location": "Reports"
     }
-
+    runfolder_path = Path(__file__).parent / f"resources/bclconvert/200624_A00834_0183_BHMTFYTINY"
     qc_data = QCData.from_bclconvert(
-        Path(__file__).parent / "resources/bclconvert/200624_A00834_0183_BHMTFYTINY",
+        runfolder_path,
         parser_config,
     )
-    return bclconvert_test_runfolder(qc_data)
+    return bclconvert_test_runfolder(qc_data, runfolder_path)
 
 
 
