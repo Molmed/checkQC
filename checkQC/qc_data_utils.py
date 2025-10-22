@@ -196,4 +196,8 @@ def bclconvert_test_runfolder(qc_data, runfolder_path):
                 },
             },
         }
+    else:
+        raise Exception("Excpected flowcell_id value as 'HMTFYDRXX' only for "
+                        f"this fuction but got {flowcell_id}"
+        )
 
