@@ -197,7 +197,8 @@ def bclconvert_test_runfolder(qc_data, runfolder_path):
             },
         }
     else:
-        raise Exception("Excpected flowcell_id value as 'HMTFYDRXX' only for "
-                        f"this fuction but got {flowcell_id}"
+        raise Exception(
+            "This function is only compatible with the run with flowcell_id: 'HMTFYDRXX', "
+                f"the supplied runfolder has flowcell_id: {flowcell_id}"
         )
 
