@@ -165,7 +165,7 @@ def qc_data():
     return namedtuple("QCData", ["sequencing_metrics", "samplesheet"])(
         {
             1: {
-                "total_cluster_pf": 100,
+                "total_reads_pf": 100,
                 "top_unknown_barcodes": [
                     {"lane": 1, "index": "ACCT", "count": 10},
                     {"lane": 1, "index": "AC", "count": 50},

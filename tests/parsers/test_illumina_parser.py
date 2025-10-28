@@ -4,8 +4,7 @@ import pytest
 
 from checkQC.parsers.illumina import (
     _read_interop_summary,
-    _read_quality_metrics,
-    _read_top_unknown_barcodes,
+    _read_demultiplexing_metrics,
     _read_run_metadata,
     _read_samplesheet,
 )
@@ -20,17 +19,17 @@ def runfolder_path():
 
 
 def test_read_interop_summary(runfolder_path):
-    run_summary, index_summary = _read_interop_summary(runfolder_path)
+    run_summary, index_summary, _ = _read_interop_summary(runfolder_path)
 
-    total_cluster_pf = run_summary.at(0).at(0).reads_pf()
-    assert total_cluster_pf == 532464327
+    total_reads_pf = run_summary.at(0).at(0).reads_pf()
+    assert total_reads_pf == 532464327
 
     sample_id = index_summary.at(0).at(0).sample_id()
     assert sample_id == "Sample_14574-Qiagen-IndexSet1-SP-Lane1"
 
 
 def test_read_quality_metrics(runfolder_path):
-    quality_metrics = _read_quality_metrics(
+    quality_metrics = _read_demultiplexing_metrics(
             runfolder_path / "Reports/Quality_Metrics.csv")
 
     assert len(quality_metrics) == 6
@@ -50,7 +49,7 @@ def test_read_quality_metrics(runfolder_path):
 
 
 def test_read_to_unknown_barcodes(runfolder_path):
-    top_unknown_barcodes = _read_top_unknown_barcodes(
+    top_unknown_barcodes = _read_demultiplexing_metrics(
             runfolder_path / "Reports/Top_Unknown_Barcodes.csv")
 
     assert len(top_unknown_barcodes) == 2084
@@ -108,4 +107,6 @@ def test_read_samplesheet(runfolder_path):
         'lane': 1,
         'sample_id': 'Sample_14574-Qiagen-IndexSet1-SP-Lane1',
         'sample_project': 'AB-1234',
+        "overridecycles": "Y36;I10;I10",
+        'custom_description': 'LIBRARY_NAME:test',
     }
