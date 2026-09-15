@@ -339,7 +339,7 @@ novaseqxplus_1.5B:
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
-        warning: 1
+        warning: 2.5
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
@@ -354,7 +354,7 @@ novaseqxplus_1.5B:
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
-        warning: 2
+        warning: 2.5
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
@@ -369,12 +369,59 @@ novaseqxplus_1.5B:
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
-        warning: 5
+        warning: 2.5
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
         error: 600
 
+novaseqxplus_5B:
+  51:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 625
+        error: unknown
+      - name: Q30Handler
+        warning: 90
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2.5 
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 468.75
+  101:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 625
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2.5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 468.75
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 625
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2.5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 468.75
+          
 novaseqxplus_10B:
   51:
     handlers:
@@ -386,7 +433,7 @@ novaseqxplus_10B:
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
-        warning: 1
+        warning: 2.5
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
@@ -401,7 +448,7 @@ novaseqxplus_10B:
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
-        warning: 2
+        warning: 2.5
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
@@ -416,7 +463,7 @@ novaseqxplus_10B:
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
-        warning: 5
+        warning: 2.5
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
@@ -433,7 +480,7 @@ novaseqxplus_25B:
         error: unknown
       - name: ErrorRateHandler
         allow_missing_error_rate: False
-        warning: 5
+        warning: 2.5
         error: unknown
       - name: ReadsPerSampleHandler
         warning: unknown
