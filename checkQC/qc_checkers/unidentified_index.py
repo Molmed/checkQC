@@ -149,7 +149,7 @@ class SamplesheetMatcher:
                 for row in samplesheet_indices.get(variation, []):
                     msg = (
                         f"{cause} index swap: \"{variation}\" found in samplesheet"
-                        f" for sample \"{row['Sample_ID']}\", lane {row['Lane']}"
+                        f" for sample \"{row['sample_id']}\", lane {row['lane']}"
                     )
                     data = (cause, row)
                     causes.append((msg, data))
@@ -175,10 +175,10 @@ class SamplesheetMatcher:
 
         causes = []
         for row in samplesheet_indices.get(index, []):
-            if row["Lane"] != barcode_data["lane"]:
+            if row["lane"] != barcode_data["lane"]:
                 msg = (
                     f"lane swap: index \"{index}\" found in samplesheet "
-                    f"for sample \"{row['Sample_ID']}\", lane {row['Lane']}"
+                    f"for sample \"{row['sample_id']}\", lane {row['lane']}"
                 )
                 data = ("lane swap", row)
                 causes.append((msg, data))
@@ -196,7 +196,7 @@ class SamplesheetMatcher:
         for row in self.samplesheet_dual_indices.get(swaped_index, []):
             msg = (
                 f"dual index swap: barcode \"{swaped_index}\" found"
-                f" in samplesheet for sample \"{row['Sample_ID']}\", lane {row['Lane']}"
+                f" in samplesheet for sample \"{row['sample_id']}\", lane {row['lane']}"
             )
             data = ("dual index swap", row)
             causes.append((msg, data))
