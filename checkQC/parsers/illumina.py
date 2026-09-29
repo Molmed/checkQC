@@ -152,7 +152,7 @@ def _read_demultiplexing_metrics(metrics_path):
     """
     with open(metrics_path, encoding="utf-8") as csvfile:
         return list(csv.DictReader(csvfile))
-    
+
 
 def _read_run_metadata(runfolder_path):
     """
