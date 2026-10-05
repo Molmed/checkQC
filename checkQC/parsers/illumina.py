@@ -32,6 +32,22 @@ def from_bclconvert(cls, runfolder_path, parser_config):
     samplesheet = _read_samplesheet(runfolder_path)
 
     instrument, read_length = _read_run_metadata(runfolder_path)
+    
+    def get_quality_metrics_row(lane, sample_summary):
+        return next(row
+                for row in quality_metrics
+                if ((
+                    row["Lane"] == str(lane + 1)
+                    and sample_summary and row["SampleID"] == sample_summary.sample_id())
+                )
+            )
+        
+    def get_demux_row(lane, sample_summary):
+        return next(sample_stat 
+                for sample_stat in demultiplex_stats
+                if sample_stat["Lane"] == str(lane + 1) and
+                sample_stat["SampleID"] == sample_summary.sample_id())
+
 
     sequencing_metrics = {
         lane + 1: {
@@ -78,36 +94,18 @@ def from_bclconvert(cls, runfolder_path, parser_config):
                         sample_summary := index_summary.at(lane).at(sample_no)
                     ).sample_id(),
                     "cluster_count": sample_summary.cluster_count(),
-                    "percent_of_lane": next(
-                        round(float(sample_stat["% Reads"]) * 100, 2)
-                        for sample_stat in demultiplex_stats
-                        if sample_stat["Lane"] == str(lane + 1) and
-                        sample_stat["SampleID"] == sample_summary.sample_id()
-                    ),
-                    "percent_perfect_index_reads": next(
-                        round(float(sample_stat["% Perfect Index Reads"]) * 100, 2)
-                        for sample_stat in demultiplex_stats
-                        if sample_stat["Lane"] == str(lane + 1) and
-                        sample_stat["SampleID"] == sample_summary.sample_id()
-                    ),
-                    "mean_q30": next(
-                        float(row["Mean Quality Score (PF)"])
-                        for row in quality_metrics
-                        if (
-                            row["Lane"] == str(lane + 1)
-                            and row["SampleID"] == sample_summary.sample_id()
-                        )
-                    ),
-                    "percent_q30": next(
-                        float(row["% Q30"]) * 100
-                        for row in quality_metrics
-                        if (
-                            row["Lane"] == str(lane + 1)
-                            and row["SampleID"] == sample_summary.sample_id()
-                        )
-                    )
-
-
+                    "reads_pf": int(get_demux_row(lane, sample_summary)["# Reads"]),
+                    "percent_of_lane": round(float(
+                            get_demux_row(lane, sample_summary)["% Reads"])
+                        * 100, 2),
+                    "percent_perfect_index_reads": round(float(
+                            (get_demux_row(lane, sample_summary))["% Perfect Index Reads"]) 
+                        * 100, 2),
+                    "mean_q30": float(
+                        get_quality_metrics_row(lane, sample_summary)["Mean Quality Score (PF)"]),
+                    "percent_q30": float(
+                            get_quality_metrics_row(lane, sample_summary)["% Q30"])
+                        * 100, 
                 }
                 for sample_no in range(index_summary.at(lane).size())
             ],
@@ -121,7 +119,6 @@ def from_bclconvert(cls, runfolder_path, parser_config):
         samplesheet,
         sequencing_metrics,
     )
-
 
 def _read_interop_summary(runfolder_path):
     """

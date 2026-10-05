@@ -14,11 +14,11 @@ def qc_data_and_exp_val():
                     "reads_per_sample": [
                         {
                             "sample_id": "Sample_A",
-                            "cluster_count": 100_000_000
+                            "reads_pf": 100_000_000
                             },
                         {
                             "sample_id": "Sample_B",
-                            "cluster_count": 20_000_000
+                            "reads_pf": 20_000_000
                             },
                     ],
                 },
@@ -26,11 +26,11 @@ def qc_data_and_exp_val():
                     "reads_per_sample": [
                         {
                             "sample_id": "Sample_C",
-                            "cluster_count": 29_000_000
+                            "reads_pf": 29_000_000
                             },
                         {
                             "sample_id": "Sample_D",
-                            "cluster_count": 60_000_000
+                            "reads_pf": 60_000_000
                             },
                     ],
                 },
