@@ -7,15 +7,15 @@ import pytest
 @pytest.fixture
 def samplesheet_matcher():
     return SamplesheetMatcher([
-        {"index": "CCAA", "index2": "AGCA", "Lane": 1, "Sample_ID": "dual reverse"},
-        {"index": "GGTT", "index2": "TCGT", "Lane": 2, "Sample_ID": "dual reverse complement"},
-        {"index": "TGCT", "index2": "TTGG", "Lane": 3, "Sample_ID": "dual complement"},
-        {"index": "AAAT", "index2": "ATAT", "Lane": 1, "Sample_ID": "sample_id"},
-        {"index": "CAAT", "index2": "CTAT", "Lane": 1, "Sample_ID": "sample_id"},
-        {"index": "TCCA", "index2": "", "Lane": 1, "Sample_ID": "reverse"},
-        {"index": "AGGT", "index2": "", "Lane": 1, "Sample_ID": "reverse complement"},
-        {"index": "TGGA", "index2": "", "Lane": 1, "Sample_ID": "complement"},
-        {"index": "AAGG", "index2": "", "Lane": 1, "Sample_ID": "test"},
+        {"index": "CCAA", "index2": "AGCA", "lane": 1, "sample_id": "dual reverse"},
+        {"index": "GGTT", "index2": "TCGT", "lane": 2, "sample_id": "dual reverse complement"},
+        {"index": "TGCT", "index2": "TTGG", "lane": 3, "sample_id": "dual complement"},
+        {"index": "AAAT", "index2": "ATAT", "lane": 1, "sample_id": "sample_id"},
+        {"index": "CAAT", "index2": "CTAT", "lane": 1, "sample_id": "sample_id"},
+        {"index": "TCCA", "index2": "", "lane": 1, "sample_id": "reverse"},
+        {"index": "AGGT", "index2": "", "lane": 1, "sample_id": "reverse complement"},
+        {"index": "TGGA", "index2": "", "lane": 1, "sample_id": "complement"},
+        {"index": "AAGG", "index2": "", "lane": 1, "sample_id": "test"},
     ])
 
 
@@ -33,9 +33,10 @@ def test_check_complement(samplesheet_matcher):
     msg, data = causes[0]
 
     assert msg == "complement index swap: \"AAGG\" found in samplesheet for sample \"test\", lane 1"
+    print(data)
     assert data == (
         "complement",
-        {"index": "AAGG", "index2": "", "Lane": 1, "Sample_ID": "test"}
+        {"index": "AAGG", "index2": "", "lane": 1, "sample_id": "test"}
     )
 
 
@@ -53,7 +54,7 @@ def test_check_reverse(samplesheet_matcher):
     assert msg == "reverse index swap: \"AAGG\" found in samplesheet for sample \"test\", lane 1"
     assert data == (
         "reverse",
-        {"index": "AAGG", "index2": "", "Lane": 1, "Sample_ID": "test"}
+        {"index": "AAGG", "index2": "", "lane": 1, "sample_id": "test"}
     )
 
 
@@ -71,7 +72,7 @@ def test_check_reverse_complement(samplesheet_matcher):
     assert msg == "reverse complement index swap: \"AAGG\" found in samplesheet for sample \"test\", lane 1"
     assert data == (
         "reverse complement",
-        {"index": "AAGG", "index2": "", "Lane": 1, "Sample_ID": "test"}
+        {"index": "AAGG", "index2": "", "lane": 1, "sample_id": "test"}
     )
 
 
@@ -87,7 +88,7 @@ def test_check_complement_and_reverse(samplesheet_matcher):
     assert any(data[0] == "reverse" for _, data in causes)
     assert any(data[0] == "complement" for _, data in causes)
     assert any(data[0] == "reverse complement" for _, data in causes)
-    assert all(data[1]["Sample_ID"].startswith("dual") for _, data in causes)
+    assert all(data[1]["sample_id"].startswith("dual") for _, data in causes)
 
     barcode_data = {
         "barcode": {"index": "ACGT"},
@@ -134,8 +135,8 @@ def test_lane_swap(samplesheet_matcher):
         {
             "index": "CCAA",
             "index2": "AGCA",
-            "Lane": 1,
-            "Sample_ID": "dual reverse",
+            "lane": 1,
+            "sample_id": "dual reverse",
         }
     )
 
@@ -154,8 +155,8 @@ def test_dual_index_swap(samplesheet_matcher):
         {
             "index": "CCAA",
             "index2": "AGCA",
-            "Lane": 1,
-            "Sample_ID": "dual reverse",
+            "lane": 1,
+            "sample_id": "dual reverse",
         }
     )
 
@@ -173,8 +174,8 @@ def qc_data():
             }
         },
         [
-            {"index": "ACCT", "Lane": 2, "Sample_ID": "lane swap"},
-            {"index": "TCCA", "Lane": 1, "Sample_ID": "reverse"},
+            {"index": "ACCT", "lane": 2, "sample_id": "lane swap"},
+            {"index": "TCCA", "lane": 1, "sample_id": "reverse"},
         ]
     )
 
@@ -196,8 +197,8 @@ Possible causes are:
             "lane": 1,
         },
         "causes": [
-            ("reverse", {"index": "TCCA", "Lane": 1, "Sample_ID": "reverse"}),
-            ("lane swap", {"index": "ACCT", "Lane": 2, "Sample_ID": "lane swap"}),
+            ("reverse", {"index": "TCCA", "lane": 1, "sample_id": "reverse"}),
+            ("lane swap", {"index": "ACCT", "lane": 2, "sample_id": "lane swap"}),
         ],
         "is_white_listed": False,
         "lane": 1,
