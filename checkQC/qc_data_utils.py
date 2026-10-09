@@ -108,6 +108,7 @@ def bclconvert_test_runfolder(qc_data, runfolder_path):
                         {
                             "sample_id": "Sample_14574-Qiagen-IndexSet1-SP-Lane1",
                             "cluster_count": 9920,
+                            "reads_pf":9920,
                             "percent_of_lane": 0.29,
                             "percent_perfect_index_reads": 97.96,
                             "mean_q30": 36.37,
@@ -116,6 +117,7 @@ def bclconvert_test_runfolder(qc_data, runfolder_path):
                         {
                             "sample_id": "Sample_14575-Qiagen-IndexSet1-SP-Lane1",
                             "cluster_count": 8560,
+                            "reads_pf":8560,
                             "percent_of_lane": 0.25,
                             "percent_perfect_index_reads": 98.15,
                             "mean_q30": 36.43,
@@ -179,6 +181,7 @@ def bclconvert_test_runfolder(qc_data, runfolder_path):
                         {
                             "sample_id": "Sample_14574-Qiagen-IndexSet1-SP-Lane2",
                             "cluster_count": 10208,
+                            "reads_pf":10208,
                             "percent_of_lane": 0.3,
                             "percent_perfect_index_reads": 98.2,
                             "mean_q30": 36.4,
@@ -187,6 +190,7 @@ def bclconvert_test_runfolder(qc_data, runfolder_path):
                         {
                             "sample_id": "Sample_14575-Qiagen-IndexSet1-SP-Lane2",
                             "cluster_count": 8672,
+                            "reads_pf":8672,
                             "percent_of_lane": 0.25,
                             "percent_perfect_index_reads": 98.29,
                             "mean_q30": 36.48,
