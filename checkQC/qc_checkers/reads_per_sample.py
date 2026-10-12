@@ -25,7 +25,7 @@ def reads_per_sample(
             "qc_checker": "reads_per_sample",
         }
         msg = "Number of reads for sample {sample_id} on lane {lane} were too low: "\
-              "{sample_reads} M (threshold: {threshold} M)"
+              "{sample_reads:.3f} M (threshold: {threshold} M)"
 
         match sample_reads:
             case sample_reads if (

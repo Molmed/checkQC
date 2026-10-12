@@ -40,7 +40,7 @@ def qc_data_and_exp_val():
             1:
                 QCErrorFatal(
                     "Number of reads for sample Sample_B on lane 1 were too low:"
-                    " 20.0 M (threshold: 25.0 M)",
+                    " 20.000 M (threshold: 25.0 M)",
                     data={
                         "lane": 1,
                         "number_of_samples": 2,
@@ -53,7 +53,7 @@ def qc_data_and_exp_val():
             2:
                 QCErrorWarning(
                     "Number of reads for sample Sample_C on lane 2 were too low:"
-                    " 29.0 M (threshold: 30.0 M)",
+                    " 29.000 M (threshold: 30.0 M)",
                     data={
                         "lane": 2,
                         "number_of_samples": 2,

@@ -25,7 +25,7 @@ def q30(
         }
 
         read_or_index_text = "read (I)" if is_index_read else "read"
-        msg = ("%Q30 {q30} was too low on lane: {lane} "
+        msg = ("%Q30 {q30:.2f} was too low on lane: {lane} "
                "for {read_or_index_text}: {read}")
 
         if (q30 and error_threshold != "unknown" and

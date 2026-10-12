@@ -14,18 +14,18 @@ def qc_data_and_exp_val():
             {
                 1:{
                     "reads": {
-                        1: {"percent_q30": 82., "is_index": False},
-                        2: {"percent_q30": 65., "is_index": True},
-                        3: {"percent_q30": 50., "is_index": True},
-                        4: {"percent_q30": 80., "is_index": False},
+                        1: {"percent_q30": 82.000, "is_index": False},
+                        2: {"percent_q30": 65.000, "is_index": True},
+                        3: {"percent_q30": 50.000, "is_index": True},
+                        4: {"percent_q30": 80.000, "is_index": False},
                     },
                 },
                 2:{
                     "reads": {
-                        1: {"percent_q30": 90., "is_index": False},
-                        2: {"percent_q30": 48., "is_index": True},
-                        3: {"percent_q30": 80., "is_index": False},
-                        4: {"percent_q30": 64., "is_index": False},
+                        1: {"percent_q30": 90.000, "is_index": False},
+                        2: {"percent_q30": 48.000, "is_index": True},
+                        3: {"percent_q30": 80.000, "is_index": False},
+                        4: {"percent_q30": 64.000, "is_index": False},
                     },
                 }
 
@@ -34,7 +34,7 @@ def qc_data_and_exp_val():
         {
             1: {
                 2: QCErrorWarning(
-                    "%Q30 65.0 was too low on lane: 1 for read (I): 2",
+                    "%Q30 65.00 was too low on lane: 1 for read (I): 2",
                     data={
                         "lane": 1,
                         "read": 2,
@@ -44,7 +44,7 @@ def qc_data_and_exp_val():
                     },
                 ),
                 3: QCErrorFatal(
-                    "%Q30 50.0 was too low on lane: 1 for read (I): 3",
+                    "%Q30 50.00 was too low on lane: 1 for read (I): 3",
                     data={
                         "lane": 1,
                         "read": 3,
@@ -56,7 +56,7 @@ def qc_data_and_exp_val():
             },
             2: {
                 2: QCErrorFatal(
-                    "%Q30 48.0 was too low on lane: 2 for read (I): 2",
+                    "%Q30 48.00 was too low on lane: 2 for read (I): 2",
                     data={
                         "lane": 2,
                         "read": 2,
@@ -66,7 +66,7 @@ def qc_data_and_exp_val():
                     },
                 ),
                 4: QCErrorWarning(
-                    "%Q30 64.0 was too low on lane: 2 for read: 4",
+                    "%Q30 64.00 was too low on lane: 2 for read: 4",
                     data={
                         "lane": 2,
                         "read": 4,
@@ -110,17 +110,17 @@ def test_error_rate_error_unknown(qc_data_and_exp_val):
     )
 
     exp_val[1][3] = QCErrorWarning(
-                    "%Q30 50.0 was too low on lane: 1 for read (I): 3",
+                    "%Q30 50.00 was too low on lane: 1 for read (I): 3",
                     data={
                         "lane": 1,
                         "read": 3,
-                        "q30": 50.,
+                        "q30": 50.00,
                         "threshold": 80.,
                         "qc_checker": "q30",
                     },
                 )
     exp_val[2][2] = QCErrorWarning(
-                    "%Q30 48.0 was too low on lane: 2 for read (I): 2",
+                    "%Q30 48.00 was too low on lane: 2 for read (I): 2",
                     data={
                         "lane": 2,
                         "read": 2,
