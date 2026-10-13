@@ -14,11 +14,11 @@ def qc_data_and_exp_val():
                     "reads_per_sample": [
                         {
                             "sample_id": "Sample_A",
-                            "cluster_count": 100_000_000
+                            "reads_pf": 100_000_000
                             },
                         {
                             "sample_id": "Sample_B",
-                            "cluster_count": 20_000_000
+                            "reads_pf": 20_000_000
                             },
                     ],
                 },
@@ -26,11 +26,11 @@ def qc_data_and_exp_val():
                     "reads_per_sample": [
                         {
                             "sample_id": "Sample_C",
-                            "cluster_count": 29_000_000
+                            "reads_pf": 29_000_000
                             },
                         {
                             "sample_id": "Sample_D",
-                            "cluster_count": 60_000_000
+                            "reads_pf": 60_000_000
                             },
                     ],
                 },
@@ -40,7 +40,7 @@ def qc_data_and_exp_val():
             1:
                 QCErrorFatal(
                     "Number of reads for sample Sample_B on lane 1 were too low:"
-                    " 20.0 M (threshold: 25.0 M)",
+                    " 20.000 M (threshold: 25.0 M)",
                     data={
                         "lane": 1,
                         "number_of_samples": 2,
@@ -53,7 +53,7 @@ def qc_data_and_exp_val():
             2:
                 QCErrorWarning(
                     "Number of reads for sample Sample_C on lane 2 were too low:"
-                    " 29.0 M (threshold: 30.0 M)",
+                    " 29.000 M (threshold: 30.0 M)",
                     data={
                         "lane": 2,
                         "number_of_samples": 2,
